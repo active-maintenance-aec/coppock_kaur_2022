@@ -20,6 +20,8 @@
 - [In-text quantities](#in-text-quantities)
 - [R environment](#r-environment)
 
+*Drafted by Claude Opus 5 under the supervision of Alex Coppock.*
+
 This repository holds the actively maintained replication code for
 Coppock and Kaur (2022), together with the reproducibility report that
 documents what the original archive did and did not do. It is part of a
@@ -82,9 +84,8 @@ has been removed from the language; what has accumulated is deprecation.
 `geom_errorbarh()` and the `<ggplot> %+% data` idiom were deprecated in
 ggplot2 4.0.0, the `size` aesthetic for lines in 3.4.0, and
 `reshape2::melt` and `dcast` are superseded by tidyr. All of them still
-work and all of them warn. On the classification this program uses, the
-archive is Category 2: resolvable, and resolvable entirely by
-substitution.
+work and all of them warn. Everything that stands between this archive
+and a clean run is resolvable by substitution.
 
 Running is not the same as reproducing, and one thing keeps the archive
 from reproducing its own figures exactly. `figures_2_3_A1_A2.R`

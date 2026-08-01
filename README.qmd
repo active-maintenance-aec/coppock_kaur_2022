@@ -38,6 +38,8 @@ gt <- read_csv(here::here("ground_truth", "coppock_kaur_2022_ground_truth.csv"),
 manifest <- read_csv(here::here("original_manifest.csv"), show_col_types = FALSE)
 ```
 
+*Drafted by Claude Opus 5 under the supervision of Alex Coppock.*
+
 This repository holds the actively maintained replication code for Coppock and Kaur (2022), together with the reproducibility report that documents what the original archive did and did not do. It is part of a program applying the maintenance proposal in Peer, Orr and Coppock (2021, *PS: Political Science & Politics*, doi [10.1017/S1049096521000366](https://doi.org/10.1017/S1049096521000366)) to a set of published archives.
 
 | | |
@@ -77,7 +79,7 @@ Two questions, answered before the detail.
 
 ## Does the deposited archive run?
 
-Yes. All five analysis scripts and the helpers file execute without error on R 4.6.0. Every package the archive names still installs from CRAN: tidyverse, xtable, janitor and reshape2. Nothing in the archive has been removed from the language; what has accumulated is deprecation. `geom_errorbarh()` and the `<ggplot> %+% data` idiom were deprecated in ggplot2 4.0.0, the `size` aesthetic for lines in 3.4.0, and `reshape2::melt` and `dcast` are superseded by tidyr. All of them still work and all of them warn. On the classification this program uses, the archive is Category 2: resolvable, and resolvable entirely by substitution.
+Yes. All five analysis scripts and the helpers file execute without error on R 4.6.0. Every package the archive names still installs from CRAN: tidyverse, xtable, janitor and reshape2. Nothing in the archive has been removed from the language; what has accumulated is deprecation. `geom_errorbarh()` and the `<ggplot> %+% data` idiom were deprecated in ggplot2 4.0.0, the `size` aesthetic for lines in 3.4.0, and `reshape2::melt` and `dcast` are superseded by tidyr. All of them still work and all of them warn. Everything that stands between this archive and a clean run is resolvable by substitution.
 
 Running is not the same as reproducing, and one thing keeps the archive from reproducing its own figures exactly. `figures_2_3_A1_A2.R` estimates the bounds by simulation, 1,000 draws for Figures 2 and A1 and 10,000 for Figures 3 and A2, and it sets no seed. The published figures are labelled with rounded percentage points, so most of the simulation noise is absorbed by the rounding, but not all of it: repeating the Figure 2 and A1 simulation at twenty seeds moves at least one of the `r 2 * 14` rounded labels off its published value in `r sum(seeds$labels_moved > 0)` of them. A reader running the deposited script today has close to even odds of seeing a figure that disagrees with the article somewhere, with no error and no warning. The maintained rewrite fixes the seed at 12345, which reproduces all `r 2 * 14` published labels of Figures 2 and A1 and all `r 2 * 28` of Figures 3 and A2.
 
