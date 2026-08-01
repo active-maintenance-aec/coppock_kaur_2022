@@ -1,0 +1,11 @@
+file,dataverse_file_id,file_persistent_id,bytes,md5_served,md5_published,unf,served_as
+replication_archive/cases_clean.csv,5414338,,21433,0a238c073307a0d2a03841f82fedeb94,0a238c073307a0d2a03841f82fedeb94,UNF:6:9AQE5YElqHiF+AoWuy8s/A==,cases_clean.tab
+replication_archive/codebook_cases_clean.pdf,5414344,,348561,87154446febfdd83e53850d3017f0c93,87154446febfdd83e53850d3017f0c93,,codebook_cases_clean.pdf
+replication_archive/figure_4.R,5414343,,4282,d62dbb3dc25adbcfbb1021366a19c938,d62dbb3dc25adbcfbb1021366a19c938,,figure_4.R
+replication_archive/figures_2_3_A1_A2.R,5414335,,5859,b06b1c39bfbaf65040ee8bf302ac40f0,b06b1c39bfbaf65040ee8bf302ac40f0,,figures_2_3_A1_A2.R
+replication_archive/logfile.html,5414339,,278521,831c13a4b09cdc234f436de4bbc786e3,831c13a4b09cdc234f436de4bbc786e3,,logfile.html
+replication_archive/quimpo_helpers.R,5414341,,1517,876ec89e03d6ea51048167bb97f03dcf,876ec89e03d6ea51048167bb97f03dcf,,quimpo_helpers.R
+replication_archive/README.txt,5414337,,1712,634560b77b47f70975b93f29ecfd65f2,634560b77b47f70975b93f29ecfd65f2,,README.txt
+replication_archive/table_3_figure_1.R,5414342,,3456,e8fb68e7b47814e0daefa6e55e4ae8f2,e8fb68e7b47814e0daefa6e55e4ae8f2,,table_3_figure_1.R
+replication_archive/table_4.R,5414336,,2220,237c27908efb06a450a5cc3a989ec0a3,237c27908efb06a450a5cc3a989ec0a3,,table_4.R
+replication_archive/table_5.R,5414340,,1184,fd0efb3ad0e666e2d5612fa5143c8c19,fd0efb3ad0e666e2d5612fa5143c8c19,,table_5.R

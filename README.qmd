@@ -1,0 +1,447 @@
+---
+title: "Active Maintenance Report: coppock_kaur_2022"
+subtitle: "Coppock and Kaur (2022, American Journal of Political Science): Qualitative Imputation of Missing Potential Outcomes"
+date: "2026-08-01"
+format:
+  gfm:
+    output-file: README.md
+    toc: true
+  pdf:
+    output-file: coppock_kaur_2022_report.pdf
+    toc: true
+    toc-depth: 2
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(here)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+here::i_am("README.qmd")
+
+# kableExtra styling is LaTeX-only; the GitHub README build takes plain pipe tables.
+latex_out <- knitr::is_latex_output()
+
+latex_only <- function(k, f) if (latex_out) f(k) else k
+
+out <- function(f) read_csv(here::here("maintained", "output", f), show_col_types = FALSE)
+
+gt <- read_csv(here::here("ground_truth", "coppock_kaur_2022_ground_truth.csv"),
+               show_col_types = FALSE)
+
+manifest <- read_csv(here::here("original_manifest.csv"), show_col_types = FALSE)
+```
+
+This repository holds the actively maintained replication code for Coppock and Kaur (2022), together with the reproducibility report that documents what the original archive did and did not do. It is part of a program applying the maintenance proposal in Peer, Orr and Coppock (2021, *PS: Political Science & Politics*, doi [10.1017/S1049096521000366](https://doi.org/10.1017/S1049096521000366)) to a set of published archives.
+
+| | |
+|---|---|
+| Article | [10.1111/ajps.12697](https://doi.org/10.1111/ajps.12697) |
+| Replication archive | [10.7910/DVN/2IVKXD](https://doi.org/10.7910/DVN/2IVKXD) |
+
+**The data are not redistributed here.** The deposit is `r nrow(manifest)` files and about `r round(sum(manifest$bytes) / 1e6, 1)` MB, and lives at Harvard Dataverse, which is the only copy this repository points at. `download_original.R` fetches it and verifies every file; `original_manifest.csv` pins the file identifiers, sizes and checksums, so the exact bytes this code was written against are recorded in version control even though the bytes themselves are not.
+
+**Repository layout.** `maintained/` is the maintained rewrite: one script per published table or figure, writing to `output/`, which is committed so a reader can compare a fresh run against it without downloading anything. `ground_truth/` ties every published number to the code that produces it. `original/` is created by the download script and is deliberately absent from the repository. This file is the reproducibility report, also available as a PDF in `report/`.
+
+**License.** CC0 1.0 Universal, matching the terms of the deposit this repository maintains. See `LICENSE`.
+
+**To reproduce.** Clone or download the repository, open `coppock_kaur_2022.Rproj`, and run:
+
+``` r
+source("run_all.R")
+```
+
+That fetches the deposit, verifies its `r nrow(manifest)` files, and produces every table and figure into `maintained/output/`. Required packages: tidyverse, janitor, here, and for this report knitr and kableExtra. Paths resolve through `here`, so nothing depends on the working directory. The full run takes about a minute, most of it in the twenty-seed sensitivity check at the end. A successful run overwrites `maintained/output/`, which is committed: **`git diff` on that folder is the reproduction check.** The figure PDFs always differ, because a PDF records the time it was written; the CSV and PNG output comes back byte-identical.
+
+# Summary
+
+```{r summary_setup, include=FALSE}
+n_claims <- nrow(gt)
+n_archive_verifiable <- sum(!is.na(gt$match))
+n_archive_match <- sum(gt$match == 1, na.rm = TRUE)
+n_archive_fail <- sum(gt$match == 0, na.rm = TRUE)
+n_rewrite_verifiable <- sum(!is.na(gt$match_rewrite))
+n_rewrite_match <- sum(gt$match_rewrite == 1, na.rm = TRUE)
+n_rewrite_fail <- sum(gt$match_rewrite == 0, na.rm = TRUE)
+n_unverifiable <- sum(is.na(gt$match_rewrite))
+seeds <- out("text_seed_sensitivity.csv")
+```
+
+Two questions, answered before the detail.
+
+## Does the deposited archive run?
+
+Yes. All five analysis scripts and the helpers file execute without error on R 4.6.0. Every package the archive names still installs from CRAN: tidyverse, xtable, janitor and reshape2. Nothing in the archive has been removed from the language; what has accumulated is deprecation. `geom_errorbarh()` and the `<ggplot> %+% data` idiom were deprecated in ggplot2 4.0.0, the `size` aesthetic for lines in 3.4.0, and `reshape2::melt` and `dcast` are superseded by tidyr. All of them still work and all of them warn. On the classification this program uses, the archive is Category 2: resolvable, and resolvable entirely by substitution.
+
+Running is not the same as reproducing, and one thing keeps the archive from reproducing its own figures exactly. `figures_2_3_A1_A2.R` estimates the bounds by simulation, 1,000 draws for Figures 2 and A1 and 10,000 for Figures 3 and A2, and it sets no seed. The published figures are labelled with rounded percentage points, so most of the simulation noise is absorbed by the rounding, but not all of it: repeating the Figure 2 and A1 simulation at twenty seeds moves at least one of the `r 2 * 14` rounded labels off its published value in `r sum(seeds$labels_moved > 0)` of them. A reader running the deposited script today has close to even odds of seeing a figure that disagrees with the article somewhere, with no error and no warning. The maintained rewrite fixes the seed at 12345, which reproduces all `r 2 * 14` published labels of Figures 2 and A1 and all `r 2 * 28` of Figures 3 and A2.
+
+Two smaller things. `table_4.R` prints its bounds as fractions where the paper prints percentage points, so the deposited output reads `[0, 0.3]` against the article's `[0, 30]`. It is a display inconsistency and not a numerical one. And the writing of every table and figure is commented out: each script builds the object and prints it, but the `xtable` and `ggsave` calls that would put it on disk are behind `#`. The archive is a set of scripts that show their work rather than a pipeline that produces the article's floats.
+
+## Does the maintained rewrite reproduce the paper?
+
+Yes. `r n_rewrite_match` of the `r n_rewrite_verifiable` verifiable ground truth claims match the published values to reported precision: every cell and bound of Table 3, every bound of Figure 1, every row of Table 4, the democratization row of Table 5, all `r 2 * 14` labels of Figures 2 and A1, all `r 2 * 28` of Figures 3 and A2, all ten bounds of Figure 4, and every in-text quantity from the abstract, the Expert Survey section and Appendix A.
+
+The `r n_rewrite_fail` that do not match are places where the article's prose disagrees with the article's own tables and figures, and they are set out in the errata section below. The rewrite agrees with the tables and figures in every case; it is the sentences that are wrong. The remaining `r n_unverifiable` recorded quantities are the end-of-conflict row of the imputation summary, which the rewrite computes and neither the article nor the appendix prints, so they are marked unverifiable rather than matched.
+
+# Paper overview
+
+**Citation**: Coppock, A. and Kaur, D. (2022). "Qualitative imputation of missing potential outcomes." *American Journal of Political Science*, 66(3), 681-695. DOI: 10.1111/ajps.12697
+
+**Summary**: The paper proposes a framework for meta-analysing qualitative causal inferences. A causal claim about a single case is a claim about the value of a missing potential outcome, so a set of such claims can be treated as imputations and fed into Manski (1999) extreme value bounds, which are the logical range of average causal effects consistent with what has been observed. Bounds on a binary outcome start 200 percentage points wide and narrow to 100 once the world reveals half the potential outcomes; each qualitative imputation narrows them further, and cases too murky to call are left unimputed rather than guessed. Where the analyst holds a probability rather than a point belief, the extension enumerates the 2^k consistent worlds and takes the probability-weighted bounds. The application is to 63 cases eligible for a transitional truth commission upon democratization, eight of which received one, with authoritarian resumption within ten years as the outcome. Imputation in four steps takes the bounds on the ATE to [-2, 49], 51 points wide. An email survey of country experts, 20 of whom responded, supplies an independent set of imputations; deferring to the experts where they answered narrows the bounds to 44 points. Appendix A repeats the exercise for 54 end-of-conflict cases.
+
+# Original archive reproducibility
+
+```{r repro_table}
+tibble(
+  Script = c(
+    "quimpo_helpers.R",
+    "table_3_figure_1.R",
+    "table_4.R",
+    "table_5.R",
+    "figures_2_3_A1_A2.R",
+    "figure_4.R"
+  ),
+  Status = c(
+    "Clean (sourced by the analysis scripts)",
+    "Runs; deprecation warning",
+    "Runs clean",
+    "Runs clean",
+    "Runs; three deprecation warnings; unseeded simulation",
+    "Runs; deprecation warning and a melt() id-variable warning"
+  ),
+  Resolution = c(
+    "%>% to |>, map_df() to map() + bind_rows()",
+    "size= to linewidth=",
+    "Multiply the bounds by 100 to print percentage points, as the paper does",
+    "recode_factor() to case_when() + factor()",
+    "melt/dcast to pivot_longer/pivot_wider; geom_errorbarh() to geom_errorbar(orientation='y'); %+% to a named plot function; do() to reframe(); set.seed(12345)",
+    "melt to pivot_longer with an explicit names_to; size= to linewidth="
+  )
+) |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("Script", "Status on current R", "Resolution"),
+    caption = "Original archive reproducibility, checked against R 4.6.0 on 1 August 2026."
+  ) |>
+  latex_only(\(k) k |>
+    kable_styling(latex_options = c("hold_position", "scale_down"), font_size = 7) |>
+    column_spec(1, width = "3.5cm") |>
+    column_spec(2, width = "4cm") |>
+    column_spec(3, width = "5cm"))
+```
+
+## The unseeded simulation
+
+The probabilistic extension is what makes Figures 2, 3, A1 and A2 stochastic. Where the authors hold a probability rather than a point belief about a missing potential outcome, `sample_bounds()` draws binary potential outcomes from those probabilities and recomputes the bounds, and the reported estimate is the mean over draws. That is a design decision the paper explains and the rewrite keeps. What the archive omits is `set.seed()`, so the figures are one unlabelled draw.
+
+```{r seed_table}
+seeds |>
+  count(labels_moved, name = "seeds") |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("Rounded labels moved", "Seeds"),
+    caption = "Repeating the Figure 2 and A1 simulation at twenty seeds. Of the 28 rounded labels those two figures carry, the number that move off the value the rewrite commits, which is also the value the published figures carry."
+  ) |>
+  latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 9))
+```
+
+The size of the disturbance is one percentage point in the rounded label, never more, and it never touches the substantive claims: the final bounds are [-2, 49] at every seed tested. The point is not that the archive gets a different answer but that it gets a slightly different figure each time it is run, and it offers a reader no way to tell whether a discrepancy is noise or a mistake.
+
+## Checksums
+
+```{r checksum_table}
+manifest |>
+  transmute(
+    file = str_remove(file, "^replication_archive/"),
+    bytes,
+    md5 = str_sub(md5_served, 1, 12),
+    agrees = if_else(md5_served == md5_published, "yes", "NO")
+  ) |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("File", "Bytes", "MD5 served (first 12)", "Published MD5 agrees"),
+    caption = "The deposit as Dataverse serves it with ?format=original. All ten files match the checksums Dataverse publishes, and all ten match the copy this program downloaded in March 2026."
+  ) |>
+  latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 8))
+```
+
+Harvard Dataverse ingests `cases_clean.csv` as tabular data and derives a `.tab` representation from it, so the manifest records `originalFileName` and `originalFileSize` rather than the derived names and sizes, and `download_original.R` asks for `?format=original`. The published MD5 describes the deposited bytes, not the derived ones, and here it verifies them exactly. Other deposits in this program carry published checksums that verify neither file, so the download script checks against the served checksum and reports any published disagreement rather than failing on it.
+
+# Errata
+
+Nothing in the deposited code is wrong. Three claims in the article's prose are, each contradicted by a table or figure in the same article, and the maintained rewrite therefore disagrees with the sentence and agrees with the float.
+
+**The toy example's treated outcomes.** The text introducing the toy example says "the outcome for three of the treated units and one of the untreated units is 1". Table 3 on the facing page shows units 1 through 4 treated with an observed outcome of 1, which is four, and the deposited `Y <- rep(c(1, 0, 1, 0), c(4, 3, 1, 2))` encodes four. Four is also what the bounds require: the initial bounds of [-40, 60] follow from four treated ones and would be [-50, 50] with three.
+
+**The probabilistic extension's probabilities.** The text says that instead of imputing 0 for units 6 and 7, "we think the probabilities of being a '1' for units 6 and 7 are .3 and .4". Table 4 gives the four scenario probabilities as 0.56, 0.14, 0.24 and 0.06, which is the product distribution of 0.2 and 0.3, not of 0.3 and 0.4, which would give 0.42, 0.18, 0.28 and 0.12. The deposited `table_4.R` uses 0.2 and 0.3 and reproduces Table 4 exactly, as does the rewrite.
+
+**Appendix A's bounds width.** Appendix A says the imputations shrink "the width of the extreme value bounds from 100 to 41 points" and then, in the next sentence, that "the bounds come to [-3, 42] (only 45 points wide)". Both cannot hold. The pipeline gives final end-of-conflict bounds of [-2.9, 41.5], a width of 44.4 points, which rounds to 44 and which is 45 if taken as the difference of the rounded endpoints, as the second sentence does. The 41 matches nothing.
+
+None of the three changes a substantive conclusion, and no ground truth row is marked `match_rewrite = 0` for a reason other than these.
+
+# Number-by-number comparison
+
+```{r gt_table}
+gt |>
+  mutate(across(everything(), \(x) replace_na(as.character(x), ""))) |>
+  select(table_figure, claim, value_paper, value_script, value_rewrite, match, match_rewrite) |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("Location", "Quantity", "Paper", "Archive", "Rewrite", "Match", "Match (rw)"),
+    caption = "Ground truth: the published value against the deposited script and against the maintained rewrite. A blank Paper column means the quantity is not stated in the article or its appendix; a blank Archive column means no deposited script prints it."
+  ) |>
+  latex_only(\(k) k |>
+    kable_styling(latex_options = c("hold_position", "repeat_header"), font_size = 5) |>
+    column_spec(2, width = "5cm"))
+```
+
+Of the `r n_claims` recorded claims, `r n_archive_verifiable` can be compared against both the article and a deposited script, and `r n_archive_match` of those match. Six further claims are stated in the article but computed by no deposited script: the probability-weighted point estimate of the bounds in the probabilistic extension, [-5, 25], and the 2.5th and 97.5th quantiles of each bound, [-20, 0] and [10, 30]. The rewrite computes all six from the enumerated scenarios in `table_4_probabilistic.R` and all six match.
+
+# Maintained rewrite
+
+The rewrite lives in `maintained/`: a helpers file, one cleaning script, three table scripts, four figure scripts and three in-text scripts. It is a translation, not a reanalysis. `ev_bounds()`, `bounds_width()`, `sample_bounds()` and the probabilistic-extension functions are the paper's contribution and are carried over with their logic unchanged; what changes is the tidyverse around them.
+
+## Architecture
+
+```{r scripts_table}
+tibble(
+  Script = c(
+    "helpers.R",
+    "clean_cases.R",
+    "table_3_toy_example.R",
+    "table_4_probabilistic.R",
+    "table_5_imputation_summary.R",
+    "figure_1_toy_bounds.R",
+    "figures_2_a1_ate_bounds.R",
+    "figures_3_a2_att_atu_bounds.R",
+    "figure_4_expert_validation.R",
+    "text_expert_agreement.R",
+    "text_summary_stats.R",
+    "text_seed_sensitivity.R"
+  ),
+  Output = c(
+    "none; packages, the QUIMPO functions and the toy example",
+    "cases_long.rds",
+    "table_3_toy_example.csv, table_3_bounds.csv",
+    "table_4_probabilistic.csv, table_4_summary.csv",
+    "table_5_imputation_summary.csv",
+    "figure_1_toy_bounds.pdf/.png/.csv",
+    "figure_2_dem_ate_bounds.pdf/.png, figure_a1_eoc_ate_bounds.pdf/.png, figures_2_a1_gg_df.csv",
+    "figure_3_dem_att_atu_bounds.pdf/.png, figure_a2_eoc_att_atu_bounds.pdf/.png, figures_3_a2_gg_df.csv",
+    "figure_4_expert_validation.pdf/.png/.csv",
+    "text_expert_agreement.csv, text_expert_agreement_counts.csv",
+    "text_summary_stats.csv",
+    "text_seed_sensitivity.csv"
+  )
+) |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("Script", "Output"),
+    caption = "The maintained rewrite."
+  ) |>
+  latex_only(\(k) k |>
+    kable_styling(latex_options = c("hold_position", "scale_down"), font_size = 7) |>
+    column_spec(1, width = "5cm") |>
+    column_spec(2, width = "8cm"))
+```
+
+Three departures from a line-by-line translation are worth naming.
+
+The toy example is defined once, in `quimpo_toy_example()` in `helpers.R`, rather than retyped in each of the three scripts that need it. In the archive, `table_3_figure_1.R` and `table_4.R` each set up the ten units and walk them through the imputation steps independently, which is the arrangement in which Table 3, Figure 1 and Table 4 can silently come to describe different examples.
+
+Figures 2 and A1 come from one script and Figures 3 and A2 from another, because in each pair the two figures are two facets of a single simulation and splitting them would mean running it twice at the same seed. The archive's `figures_2_3_A1_A2.R` puts all four in one file; the rewrite splits along the simulation boundary rather than the file boundary.
+
+`text_summary_stats.R` reads the bounds back out of the figure output rather than recomputing them, so the widths quoted in the abstract and the body cannot drift from the figures they summarise. Every number it prints is traceable to a committed CSV, and no published value is typed into any script in `maintained/`.
+
+## Deprecated patterns replaced
+
+```{r replacements_table}
+tibble(
+  Original = c(
+    "`rm(list = ls())`",
+    "commented-out `setwd()`",
+    "magrittr pipe",
+    "`reshape2::melt()` / `dcast()`",
+    "`do(sample_bounds(...))`",
+    "`map_df(enframe, .id = )`",
+    "`geom_errorbarh(height = )`",
+    "`geom_linerange(size = )`",
+    "`<ggplot> %+% data`",
+    "`separate()`",
+    "`recode_factor()`",
+    "`xtable` + `print.xtable` (commented out)",
+    "`ggsave()` (commented out)",
+    "unseeded `rbinom()` simulation",
+    "bounds printed as fractions in `table_4.R`"
+  ),
+  Replacement = c(
+    "(omitted)",
+    "`here::here()`",
+    "native pipe",
+    "`pivot_longer()` / `pivot_wider()`",
+    "`reframe(sample_bounds(...))`",
+    "`map(enframe) |> bind_rows(.id = )`",
+    "`geom_errorbar(orientation = \"y\", width = )`",
+    "`geom_linerange(linewidth = )`",
+    "a named plot function taking the data as an argument",
+    "`separate_wider_delim()`",
+    "`case_when()` + `factor()`",
+    "`write_csv()` to `output/`",
+    "`ggsave()` to `output/`, PDF and PNG",
+    "`set.seed(12345)`",
+    "multiplied by 100, as the paper prints them"
+  )
+) |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("Original pattern", "Replacement"),
+    caption = "Deprecated patterns and their replacements in the maintained rewrite."
+  ) |>
+  latex_only(\(k) k |>
+    kable_styling(latex_options = c("hold_position", "scale_down"), font_size = 8) |>
+    column_spec(1, width = "6cm") |>
+    column_spec(2, width = "6.5cm"))
+```
+
+# Figures
+
+```{r fig1_image, out.width="100%", fig.cap="Figure 1: extreme value bounds at each step of the toy example."}
+knitr::include_graphics(
+  if (latex_out) {
+    here::here("maintained", "output", "figure_1_toy_bounds.pdf")
+  } else {
+    "maintained/output/figure_1_toy_bounds.png"
+  }
+)
+```
+
+```{r fig2_image, out.width="100%", fig.cap="Figure 2: transitional truth commissions, extreme value bounds on the ATE."}
+knitr::include_graphics(
+  if (latex_out) {
+    here::here("maintained", "output", "figure_2_dem_ate_bounds.pdf")
+  } else {
+    "maintained/output/figure_2_dem_ate_bounds.png"
+  }
+)
+```
+
+```{r fig3_image, out.width="100%", fig.cap="Figure 3: extreme value bounds by treatment status."}
+knitr::include_graphics(
+  if (latex_out) {
+    here::here("maintained", "output", "figure_3_dem_att_atu_bounds.pdf")
+  } else {
+    "maintained/output/figure_3_dem_att_atu_bounds.png"
+  }
+)
+```
+
+```{r fig4_image, out.width="100%", fig.cap="Figure 4: extreme value bounds implied by the expert imputations."}
+knitr::include_graphics(
+  if (latex_out) {
+    here::here("maintained", "output", "figure_4_expert_validation.pdf")
+  } else {
+    "maintained/output/figure_4_expert_validation.png"
+  }
+)
+```
+
+```{r figa1_image, out.width="100%", fig.cap="Figure A1: end-of-conflict cases, extreme value bounds on the ATE."}
+knitr::include_graphics(
+  if (latex_out) {
+    here::here("maintained", "output", "figure_a1_eoc_ate_bounds.pdf")
+  } else {
+    "maintained/output/figure_a1_eoc_ate_bounds.png"
+  }
+)
+```
+
+```{r figa2_image, out.width="100%", fig.cap="Figure A2: end-of-conflict cases, extreme value bounds by treatment status."}
+knitr::include_graphics(
+  if (latex_out) {
+    here::here("maintained", "output", "figure_a2_eoc_att_atu_bounds.pdf")
+  } else {
+    "maintained/output/figure_a2_eoc_att_atu_bounds.png"
+  }
+)
+```
+
+# Expert survey verification
+
+The Expert Survey section carries eleven quantities that no deposited script writes to disk, three of them recorded only in a code comment in `figure_4.R`. `text_expert_agreement.R` recomputes all of them from the deposited case data.
+
+```{r expert_table}
+counts <- out("text_expert_agreement_counts.csv")
+claims <- out("text_expert_agreement.csv")
+
+paper_values <- tribble(
+  ~quantity, ~published,
+  "agreement", 7,
+  "disagreement", 3,
+  "They declined, we imputed", 3,
+  "They imputed, we declined", 7,
+  "expert responses received", 20,
+  "democratization cases without an expert response", 43,
+  "cases the experts imputed", 14,
+  "cases we imputed", 10,
+  "experts who declined to impute", 6,
+  "declining experts assigned to an untreated case", 6,
+  "expert imputations differing from the observed outcome", 0
+)
+
+bind_rows(
+  counts |> transmute(quantity = agreement_coding, value = cases),
+  claims |> transmute(quantity = claim, value)
+) |>
+  left_join(paper_values, by = "quantity") |>
+  arrange(match(quantity, paper_values$quantity)) |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("Quantity", "Rewrite", "Paper"),
+    caption = "The Expert Survey section, recomputed. Agreement means the two sides made the same imputation or both declined; the last row checks the claim that all 20 respondents either declined or imputed the observed outcome."
+  ) |>
+  latex_only(\(k) k |>
+    kable_styling(latex_options = "hold_position", font_size = 8) |>
+    column_spec(1, width = "8cm"))
+```
+
+The archive's `figure_4.R` computes the agreement coding and prints it with `table()`, then records the answer in three comment lines: "uruguay, burundi, south africa are 'disagreements'", "7 cases, they imputed when we did not", "3 cases, we imputed and they did not". All three are correct. They are also the only place the numbers exist, which is the pattern this program treats as a defect regardless of whether the comment is right: a comment is not an output, and nothing checks it.
+
+# In-text quantities
+
+```{r text_table}
+out("text_summary_stats.csv") |>
+  mutate(value = sprintf("%.2f", value)) |>
+  select(claim, value, rounded) |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("Quantity", "Rewrite", "Rounded"),
+    caption = "Bounds widths and summary effects quoted in the abstract, the body and Appendix A, read back out of the figure output that produced them."
+  ) |>
+  latex_only(\(k) k |>
+    kable_styling(latex_options = "hold_position", font_size = 8) |>
+    column_spec(1, width = "9cm"))
+```
+
+The abstract and the body describe the same starting point in two ways, and both are right. The body says the bounds are 200 points wide "before any data are collected" and shrink to 100 "after the world reveals half the potential outcomes". The abstract skips the first of those and says the bounds are 100 points wide "prior to any analysis", meaning after data collection and before imputation. Both numbers are in the pipeline and both reproduce.
+
+# R environment
+
+```{r r_env}
+tibble(
+  Package = c("tidyverse", "here", "janitor", "knitr", "kableExtra", "ggplot2", "dplyr", "tidyr"),
+  Version = map_chr(
+    c("tidyverse", "here", "janitor", "knitr", "kableExtra", "ggplot2", "dplyr", "tidyr"),
+    \(p) as.character(packageVersion(p))
+  )
+) |>
+  kable(booktabs = TRUE, caption = "Package versions used for this report.") |>
+  latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 9))
+```
+
+R version: `r R.version$version.string`. The archive was written against R 4.1.2.

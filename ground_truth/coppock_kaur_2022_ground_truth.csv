@@ -1,0 +1,192 @@
+paper_id,table_figure,claim,value_script,value_paper,match,notes,value_rewrite,match_rewrite
+coppock_kaur_2022,table_3,column d,"1,1,1,1,1,1,1,0,0,0","1,1,1,1,1,1,1,0,0,0",1,Table 3 column read down the ten units,"1,1,1,1,1,1,1,0,0,0",1
+coppock_kaur_2022,table_3,column Y,"1,1,1,1,0,0,0,1,0,0","1,1,1,1,0,0,0,1,0,0",1,Table 3 column read down the ten units,"1,1,1,1,0,0,0,1,0,0",1
+coppock_kaur_2022,table_3,column Y0_initial,"?,?,?,?,?,?,?,1,0,0","?,?,?,?,?,?,?,1,0,0",1,Table 3 column read down the ten units,"?,?,?,?,?,?,?,1,0,0",1
+coppock_kaur_2022,table_3,column Y1_initial,"1,1,1,1,0,0,0,?,?,?","1,1,1,1,0,0,0,?,?,?",1,Table 3 column read down the ten units,"1,1,1,1,0,0,0,?,?,?",1
+coppock_kaur_2022,table_3,column Y0_easy,"1,1,?,?,0,?,?,1,0,0","1,1,?,?,0,?,?,1,0,0",1,Table 3 column read down the ten units,"1,1,?,?,0,?,?,1,0,0",1
+coppock_kaur_2022,table_3,column Y1_easy,"1,1,1,1,0,0,0,1,0,?","1,1,1,1,0,0,0,1,0,?",1,Table 3 column read down the ten units,"1,1,1,1,0,0,0,1,0,?",1
+coppock_kaur_2022,table_3,column Y0_nulls,"1,1,?,?,0,0,0,1,0,0","1,1,?,?,0,0,0,1,0,0",1,Table 3 column read down the ten units,"1,1,?,?,0,0,0,1,0,0",1
+coppock_kaur_2022,table_3,column Y1_nulls,"1,1,1,1,0,0,0,1,0,?","1,1,1,1,0,0,0,1,0,?",1,Table 3 column read down the ten units,"1,1,1,1,0,0,0,1,0,?",1
+coppock_kaur_2022,table_3,column Y0_hard,"1,1,0,0,0,0,0,1,0,0","1,1,0,0,0,0,0,1,0,0",1,Table 3 column read down the ten units,"1,1,0,0,0,0,0,1,0,0",1
+coppock_kaur_2022,table_3,column Y1_hard,"1,1,1,1,0,0,0,1,0,?","1,1,1,1,0,0,0,1,0,?",1,Table 3 column read down the ten units,"1,1,1,1,0,0,0,1,0,?",1
+coppock_kaur_2022,table_3,"EV bounds low, Initial Values",-40,-40,1,Printed beneath Table 3; the deposited script prints fractions,-40,1
+coppock_kaur_2022,table_3,"EV bounds high, Initial Values",60,60,1,,60,1
+coppock_kaur_2022,table_3,"EV bounds low, Easy Cases",-20,-20,1,Printed beneath Table 3; the deposited script prints fractions,-20,1
+coppock_kaur_2022,table_3,"EV bounds high, Easy Cases",30,30,1,,30,1
+coppock_kaur_2022,table_3,"EV bounds low, Nulls for 6&7",0,0,1,Printed beneath Table 3; the deposited script prints fractions,0,1
+coppock_kaur_2022,table_3,"EV bounds high, Nulls for 6&7",30,30,1,,30,1
+coppock_kaur_2022,table_3,"EV bounds low, Hard Cases",20,20,1,Printed beneath Table 3; the deposited script prints fractions,20,1
+coppock_kaur_2022,table_3,"EV bounds high, Hard Cases",30,30,1,,30,1
+coppock_kaur_2022,figure_1,"low bound, Before Any Data",-100,-100,1,,-100,1
+coppock_kaur_2022,figure_1,"high bound, Before Any Data",100,100,1,,100,1
+coppock_kaur_2022,figure_1,"low bound, Initial Values",-40,-40,1,,-40,1
+coppock_kaur_2022,figure_1,"high bound, Initial Values",60,60,1,,60,1
+coppock_kaur_2022,figure_1,"low bound, Easy Cases",-20,-20,1,,-20,1
+coppock_kaur_2022,figure_1,"high bound, Easy Cases",30,30,1,,30,1
+coppock_kaur_2022,figure_1,"low bound, Nulls for 6&7",0,0,1,,0,1
+coppock_kaur_2022,figure_1,"high bound, Nulls for 6&7",30,30,1,,30,1
+coppock_kaur_2022,figure_1,"low bound, Hard Cases",20,20,1,,20,1
+coppock_kaur_2022,figure_1,"high bound, Hard Cases",30,30,1,,30,1
+coppock_kaur_2022,table_4,"EV bounds low, unit 6 = 0, unit 7 = 0",0,0,1,Deposited script prints the bounds as fractions; the paper prints percentage points,0,1
+coppock_kaur_2022,table_4,"EV bounds high, unit 6 = 0, unit 7 = 0",30,30,1,,30,1
+coppock_kaur_2022,table_4,"probability, unit 6 = 0, unit 7 = 0",0.56,0.56,1,,0.56,1
+coppock_kaur_2022,table_4,"EV bounds low, unit 6 = 1, unit 7 = 0",-10,-10,1,Deposited script prints the bounds as fractions; the paper prints percentage points,-10,1
+coppock_kaur_2022,table_4,"EV bounds high, unit 6 = 1, unit 7 = 0",20,20,1,,20,1
+coppock_kaur_2022,table_4,"probability, unit 6 = 1, unit 7 = 0",0.14,0.14,1,,0.14,1
+coppock_kaur_2022,table_4,"EV bounds low, unit 6 = 0, unit 7 = 1",-10,-10,1,Deposited script prints the bounds as fractions; the paper prints percentage points,-10,1
+coppock_kaur_2022,table_4,"EV bounds high, unit 6 = 0, unit 7 = 1",20,20,1,,20,1
+coppock_kaur_2022,table_4,"probability, unit 6 = 0, unit 7 = 1",0.24,0.24,1,,0.24,1
+coppock_kaur_2022,table_4,"EV bounds low, unit 6 = 1, unit 7 = 1",-20,-20,1,Deposited script prints the bounds as fractions; the paper prints percentage points,-20,1
+coppock_kaur_2022,table_4,"EV bounds high, unit 6 = 1, unit 7 = 1",10,10,1,,10,1
+coppock_kaur_2022,table_4,"probability, unit 6 = 1, unit 7 = 1",0.06,0.06,1,,0.06,1
+coppock_kaur_2022,table_4,"probability-weighted point estimate, lower bound",,-5,,Stated in the Probabilistic Extension section; the deposited scripts do not compute it,-5,1
+coppock_kaur_2022,table_4,"probability-weighted point estimate, upper bound",,25,,,25,1
+coppock_kaur_2022,table_4,2.5th quantile of the lower bound,,-20,,,-20,1
+coppock_kaur_2022,table_4,97.5th quantile of the lower bound,,0,,,0,1
+coppock_kaur_2022,table_4,2.5th quantile of the upper bound,,10,,,10,1
+coppock_kaur_2022,table_4,97.5th quantile of the upper bound,,30,,,30,1
+coppock_kaur_2022,table_4,probability that unit 6 has Y0 = 1,0.2,0.3,0,"The text says the probabilities for units 6 and 7 are .3 and .4; the probabilities printed in Table 4 require .2 and .3, which is what the deposited script uses",0.2,0
+coppock_kaur_2022,table_4,probability that unit 7 has Y0 = 1,0.3,0.4,0,,0.3,0
+coppock_kaur_2022,table_5,"democratization, Negative Effect",2% (1),2% (1),1,"Paper column headings are Prevents Authoritarianism, No Effect, Causes Authoritarianism, Unimputed",2% (1),1
+coppock_kaur_2022,table_5,"end of conflict, Negative Effect",0% (0),,,The paper prints only the democratization row; this cell is unverifiable,0% (0),
+coppock_kaur_2022,table_5,"democratization, No Effect",40% (25),40% (25),1,"Paper column headings are Prevents Authoritarianism, No Effect, Causes Authoritarianism, Unimputed",40% (25),1
+coppock_kaur_2022,table_5,"end of conflict, No Effect",43% (23),,,The paper prints only the democratization row; this cell is unverifiable,43% (23),
+coppock_kaur_2022,table_5,"democratization, Positive Effect",8% (5),8% (5),1,"Paper column headings are Prevents Authoritarianism, No Effect, Causes Authoritarianism, Unimputed",8% (5),1
+coppock_kaur_2022,table_5,"end of conflict, Positive Effect",13% (7),,,The paper prints only the democratization row; this cell is unverifiable,13% (7),
+coppock_kaur_2022,table_5,"democratization, Unimputed",51% (32),51% (32),1,"Paper column headings are Prevents Authoritarianism, No Effect, Causes Authoritarianism, Unimputed",51% (32),1
+coppock_kaur_2022,table_5,"end of conflict, Unimputed",44% (24),,,The paper prints only the democratization row; this cell is unverifiable,44% (24),
+coppock_kaur_2022,figure_2,"low bound, Before Any Data",-100,-100,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-100,1
+coppock_kaur_2022,figure_2,"high bound, Before Any Data",100,100,1,,100,1
+coppock_kaur_2022,figure_2,"low bound, Initial Values",-25,-25,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-25,1
+coppock_kaur_2022,figure_2,"high bound, Initial Values",75,75,1,,75,1
+coppock_kaur_2022,figure_2,"low bound, Disbanded and Discredited Cases",-25,-25,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-25,1
+coppock_kaur_2022,figure_2,"high bound, Disbanded and Discredited Cases",72,72,1,,72,1
+coppock_kaur_2022,figure_2,"low bound, Treated Cases",-16,-16,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-16,1
+coppock_kaur_2022,figure_2,"high bound, Treated Cases",68,68,1,,68,1
+coppock_kaur_2022,figure_2,"low bound, Non-transitional Cases",-12,-12,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-12,1
+coppock_kaur_2022,figure_2,"high bound, Non-transitional Cases",62,62,1,,62,1
+coppock_kaur_2022,figure_2,"low bound, Untreated Cases",-2,-2,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-2,1
+coppock_kaur_2022,figure_2,"high bound, Untreated Cases",49,49,1,,49,1
+coppock_kaur_2022,figure_2,"low bound, Unimputable Cases",-2,-2,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-2,1
+coppock_kaur_2022,figure_2,"high bound, Unimputable Cases",49,49,1,,49,1
+coppock_kaur_2022,figure_a1,"low bound, Before Any Data",-100,-100,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-100,1
+coppock_kaur_2022,figure_a1,"high bound, Before Any Data",100,100,1,,100,1
+coppock_kaur_2022,figure_a1,"low bound, Initial Values",-33,-33,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-33,1
+coppock_kaur_2022,figure_a1,"high bound, Initial Values",67,67,1,,67,1
+coppock_kaur_2022,figure_a1,"low bound, Disbanded and Discredited Cases",-32,-32,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-32,1
+coppock_kaur_2022,figure_a1,"high bound, Disbanded and Discredited Cases",61,61,1,,61,1
+coppock_kaur_2022,figure_a1,"low bound, Treated Cases",-26,-26,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-26,1
+coppock_kaur_2022,figure_a1,"high bound, Treated Cases",56,56,1,,56,1
+coppock_kaur_2022,figure_a1,"low bound, Non-transitional Cases",-24,-24,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-24,1
+coppock_kaur_2022,figure_a1,"high bound, Non-transitional Cases",54,54,1,,54,1
+coppock_kaur_2022,figure_a1,"low bound, Untreated Cases",-3,-3,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-3,1
+coppock_kaur_2022,figure_a1,"high bound, Untreated Cases",42,42,1,,42,1
+coppock_kaur_2022,figure_a1,"low bound, Unimputable Cases",-3,-3,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-3,1
+coppock_kaur_2022,figure_a1,"high bound, Unimputable Cases",42,42,1,,42,1
+coppock_kaur_2022,figure_3,"low bound, ATU, Before Any Data",-100,-100,1,Rounded label; the deposited script sets no seed,-100,1
+coppock_kaur_2022,figure_3,"high bound, ATU, Before Any Data",100,100,1,,100,1
+coppock_kaur_2022,figure_3,"low bound, ATU, Initial Values",-16,-16,1,Rounded label; the deposited script sets no seed,-16,1
+coppock_kaur_2022,figure_3,"high bound, ATU, Initial Values",84,84,1,,84,1
+coppock_kaur_2022,figure_3,"low bound, ATU, Disbanded and Discredited Cases",-16,-16,1,Rounded label; the deposited script sets no seed,-16,1
+coppock_kaur_2022,figure_3,"high bound, ATU, Disbanded and Discredited Cases",80,80,1,,80,1
+coppock_kaur_2022,figure_3,"low bound, ATU, Treated Cases",-16,-16,1,Rounded label; the deposited script sets no seed,-16,1
+coppock_kaur_2022,figure_3,"high bound, ATU, Treated Cases",80,80,1,,80,1
+coppock_kaur_2022,figure_3,"low bound, ATU, Non-transitional Cases",-12,-12,1,Rounded label; the deposited script sets no seed,-12,1
+coppock_kaur_2022,figure_3,"high bound, ATU, Non-transitional Cases",74,74,1,,74,1
+coppock_kaur_2022,figure_3,"low bound, ATU, Untreated Cases",0,0,1,Rounded label; the deposited script sets no seed,0,1
+coppock_kaur_2022,figure_3,"high bound, ATU, Untreated Cases",58,58,1,,58,1
+coppock_kaur_2022,figure_3,"low bound, ATU, Unimputable Cases",0,0,1,Rounded label; the deposited script sets no seed,0,1
+coppock_kaur_2022,figure_3,"high bound, ATU, Unimputable Cases",58,58,1,,58,1
+coppock_kaur_2022,figure_3,"low bound, ATT, Before Any Data",-100,-100,1,Rounded label; the deposited script sets no seed,-100,1
+coppock_kaur_2022,figure_3,"high bound, ATT, Before Any Data",100,100,1,,100,1
+coppock_kaur_2022,figure_3,"low bound, ATT, Initial Values",-88,-88,1,Rounded label; the deposited script sets no seed,-88,1
+coppock_kaur_2022,figure_3,"high bound, ATT, Initial Values",12,12,1,,12,1
+coppock_kaur_2022,figure_3,"low bound, ATT, Disbanded and Discredited Cases",-88,-88,1,Rounded label; the deposited script sets no seed,-88,1
+coppock_kaur_2022,figure_3,"high bound, ATT, Disbanded and Discredited Cases",12,12,1,,12,1
+coppock_kaur_2022,figure_3,"low bound, ATT, Treated Cases",-15,-15,1,Rounded label; the deposited script sets no seed,-15,1
+coppock_kaur_2022,figure_3,"high bound, ATT, Treated Cases",-15,-15,1,,-15,1
+coppock_kaur_2022,figure_3,"low bound, ATT, Non-transitional Cases",-15,-15,1,Rounded label; the deposited script sets no seed,-15,1
+coppock_kaur_2022,figure_3,"high bound, ATT, Non-transitional Cases",-15,-15,1,,-15,1
+coppock_kaur_2022,figure_3,"low bound, ATT, Untreated Cases",-15,-15,1,Rounded label; the deposited script sets no seed,-15,1
+coppock_kaur_2022,figure_3,"high bound, ATT, Untreated Cases",-15,-15,1,,-15,1
+coppock_kaur_2022,figure_3,"low bound, ATT, Unimputable Cases",-15,-15,1,Rounded label; the deposited script sets no seed,-15,1
+coppock_kaur_2022,figure_3,"high bound, ATT, Unimputable Cases",-15,-15,1,,-15,1
+coppock_kaur_2022,figure_a2,"low bound, ATU, Before Any Data",-100,-100,1,Rounded label; the deposited script sets no seed,-100,1
+coppock_kaur_2022,figure_a2,"high bound, ATU, Before Any Data",100,100,1,,100,1
+coppock_kaur_2022,figure_a2,"low bound, ATU, Initial Values",-29,-29,1,Rounded label; the deposited script sets no seed,-29,1
+coppock_kaur_2022,figure_a2,"high bound, ATU, Initial Values",71,71,1,,71,1
+coppock_kaur_2022,figure_a2,"low bound, ATU, Disbanded and Discredited Cases",-27,-27,1,Rounded label; the deposited script sets no seed,-27,1
+coppock_kaur_2022,figure_a2,"high bound, ATU, Disbanded and Discredited Cases",64,64,1,,64,1
+coppock_kaur_2022,figure_a2,"low bound, ATU, Treated Cases",-27,-27,1,Rounded label; the deposited script sets no seed,-27,1
+coppock_kaur_2022,figure_a2,"high bound, ATU, Treated Cases",64,64,1,,64,1
+coppock_kaur_2022,figure_a2,"low bound, ATU, Non-transitional Cases",-26,-26,1,Rounded label; the deposited script sets no seed,-26,1
+coppock_kaur_2022,figure_a2,"high bound, ATU, Non-transitional Cases",62,62,1,,62,1
+coppock_kaur_2022,figure_a2,"low bound, ATU, Untreated Cases",-2,-2,1,Rounded label; the deposited script sets no seed,-2,1
+coppock_kaur_2022,figure_a2,"high bound, ATU, Untreated Cases",48,48,1,,48,1
+coppock_kaur_2022,figure_a2,"low bound, ATU, Unimputable Cases",-2,-2,1,Rounded label; the deposited script sets no seed,-2,1
+coppock_kaur_2022,figure_a2,"high bound, ATU, Unimputable Cases",48,48,1,,48,1
+coppock_kaur_2022,figure_a2,"low bound, ATT, Before Any Data",-100,-100,1,Rounded label; the deposited script sets no seed,-100,1
+coppock_kaur_2022,figure_a2,"high bound, ATT, Before Any Data",100,100,1,,100,1
+coppock_kaur_2022,figure_a2,"low bound, ATT, Initial Values",-67,-67,1,Rounded label; the deposited script sets no seed,-67,1
+coppock_kaur_2022,figure_a2,"high bound, ATT, Initial Values",33,33,1,,33,1
+coppock_kaur_2022,figure_a2,"low bound, ATT, Disbanded and Discredited Cases",-67,-67,1,Rounded label; the deposited script sets no seed,-67,1
+coppock_kaur_2022,figure_a2,"high bound, ATT, Disbanded and Discredited Cases",33,33,1,,33,1
+coppock_kaur_2022,figure_a2,"low bound, ATT, Treated Cases",-10,-10,1,Rounded label; the deposited script sets no seed,-10,1
+coppock_kaur_2022,figure_a2,"high bound, ATT, Treated Cases",-10,-10,1,,-10,1
+coppock_kaur_2022,figure_a2,"low bound, ATT, Non-transitional Cases",-10,-10,1,Rounded label; the deposited script sets no seed,-10,1
+coppock_kaur_2022,figure_a2,"high bound, ATT, Non-transitional Cases",-10,-10,1,,-10,1
+coppock_kaur_2022,figure_a2,"low bound, ATT, Untreated Cases",-10,-10,1,Rounded label; the deposited script sets no seed,-10,1
+coppock_kaur_2022,figure_a2,"high bound, ATT, Untreated Cases",-10,-10,1,,-10,1
+coppock_kaur_2022,figure_a2,"low bound, ATT, Unimputable Cases",-10,-10,1,Rounded label; the deposited script sets no seed,-10,1
+coppock_kaur_2022,figure_a2,"high bound, ATT, Unimputable Cases",-10,-10,1,,-10,1
+coppock_kaur_2022,figure_4,"low bound, us, The 20 Cases with Expert Responses",-10,-10,1,,-10,1
+coppock_kaur_2022,figure_4,"high bound, us, The 20 Cases with Expert Responses",40,40,1,,40,1
+coppock_kaur_2022,figure_4,"low bound, expert, The 20 Cases with Expert Responses",-15,-15,1,,-15,1
+coppock_kaur_2022,figure_4,"high bound, expert, The 20 Cases with Expert Responses",15,15,1,,15,1
+coppock_kaur_2022,figure_4,"low bound, us, All 63 Democratization Cases",-2,-2,1,,-2,1
+coppock_kaur_2022,figure_4,"high bound, us, All 63 Democratization Cases",49,49,1,,49,1
+coppock_kaur_2022,figure_4,"low bound, expert, All 63 Democratization Cases",-19,-19,1,,-19,1
+coppock_kaur_2022,figure_4,"high bound, expert, All 63 Democratization Cases",59,59,1,,59,1
+coppock_kaur_2022,figure_4,"low bound, combined, All 63 Democratization Cases",-3,-3,1,,-3,1
+coppock_kaur_2022,figure_4,"high bound, combined, All 63 Democratization Cases",41,41,1,,41,1
+coppock_kaur_2022,abstract,bounds width prior to any analysis,100,100,1,The abstract says 100 points; the body says the bounds are 200 points wide before any data and 100 once half the potential outcomes are revealed,100,1
+coppock_kaur_2022,abstract,bounds width after imputation,51,51,1,,51,1
+coppock_kaur_2022,abstract,bounds width after the expert survey,44,44,1,,44,1
+coppock_kaur_2022,text,democratization cases,63,63,1,,63,1
+coppock_kaur_2022,text,treated democratization cases,8,8,1,,8,1
+coppock_kaur_2022,text,bounds width before any data are collected,200,200,1,,200,1
+coppock_kaur_2022,text,bounds width once half the potential outcomes are revealed,100,100,1,,100,1
+coppock_kaur_2022,text,final ATE lower bound,-2,-2,1,,-2,1
+coppock_kaur_2022,text,final ATE upper bound,49,49,1,,49,1
+coppock_kaur_2022,text,final ATE bounds width,51,51,1,,51,1
+coppock_kaur_2022,text,toy example: treated units with outcome 1,4,3,0,The text says the outcome is 1 for three treated units; Table 3 and the deposited data show four,4,0
+coppock_kaur_2022,text,toy example: untreated units with outcome 1,1,1,1,,1,1
+coppock_kaur_2022,text,toy example: bounds width before any data,200,200,1,,200,1
+coppock_kaur_2022,text,toy example: final bounds width,10,10,1,,10,1
+coppock_kaur_2022,text,ATU final bounds width,58,58,1,The text says the ATU bounds are greater than 58 points wide,58,1
+coppock_kaur_2022,text,ATT summarised as a point effect,-15,-15,1,,-15,1
+coppock_kaur_2022,text,cases imputed as a non-zero causal effect,6,6,1,,6,1
+coppock_kaur_2022,text,expert responses received,20,20,1,,20,1
+coppock_kaur_2022,text,democratization cases without an expert response,43,43,1,,43,1
+coppock_kaur_2022,text,"our bounds width, 20 responding cases",50,50,1,,50,1
+coppock_kaur_2022,text,"expert bounds width, 20 responding cases",30,30,1,,30,1
+coppock_kaur_2022,text,"our bounds width, all 63 cases",51,51,1,,51,1
+coppock_kaur_2022,text,"expert bounds width, all 63 cases",78,78,1,,78,1
+coppock_kaur_2022,text,"combined bounds width, all 63 cases",44,44,1,,44,1
+coppock_kaur_2022,text,expert and author imputations agreed,7,7,1,,7,1
+coppock_kaur_2022,text,expert and author imputations conflicted,3,3,1,,3,1
+coppock_kaur_2022,text,"we imputed, the experts did not",3,3,1,,3,1
+coppock_kaur_2022,text,"the experts imputed, we did not",7,7,1,,7,1
+coppock_kaur_2022,text,cases the experts imputed,14,14,1,,14,1
+coppock_kaur_2022,text,cases we imputed,10,10,1,,10,1
+coppock_kaur_2022,text,experts who declined to impute,6,6,1,,6,1
+coppock_kaur_2022,text,declining experts assigned to an untreated case,6,6,1,,6,1
+coppock_kaur_2022,text,expert imputations differing from the observed outcome,0,0,1,The text says all 20 respondents either made no imputation or imputed the observed outcome,0,1
+coppock_kaur_2022,appendix_a,end-of-conflict cases,54,54,1,,54,1
+coppock_kaur_2022,appendix_a,treated end-of-conflict cases,6,6,1,,6,1
+coppock_kaur_2022,appendix_a,bounds width once half the potential outcomes are revealed,100,100,1,,100,1
+coppock_kaur_2022,appendix_a,bounds width after imputation,44,41,0,"Appendix A says the width shrinks from 100 to 41 points, then in the same breath calls the resulting bounds 45 points wide; the pipeline gives 44.4, which rounds to 44",44,0
+coppock_kaur_2022,appendix_a,final ATE lower bound,-3,-3,1,,-3,1
+coppock_kaur_2022,appendix_a,final ATE upper bound,42,42,1,,42,1
+coppock_kaur_2022,appendix_a,final ATE bounds width from the rounded endpoints,45,45,1,42 minus -3; the unrounded width is 44.4,45,1
+coppock_kaur_2022,appendix_a,ATT summarised as a point effect,-10,-10,1,,-10,1

@@ -1,0 +1,7 @@
+set,person,li,ui,description,width
+The 20 Cases with Expert Responses,expert,-15.000000000000002,14.999999999999995,Expert bounds,29.999999999999996
+The 20 Cases with Expert Responses,us,-10,40,Our original bounds,50
+All 63 Democratization Cases,expert,-19.04761904761904,58.73015873015872,Expert bounds,77.77777777777776
+All 63 Democratization Cases,us,-1.5873015873015817,49.2063492063492,Our original bounds,50.793650793650784
+All 63 Democratization Cases,combined,-3.174603174603177,41.269841269841265,"Our bounds, deferring
+to expert imputations",44.44444444444444

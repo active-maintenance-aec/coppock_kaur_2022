@@ -1,0 +1,21 @@
+claim,value,rounded
+dem: bounds width before any data,200,200
+dem: bounds width once the world reveals half the potential outcomes,100,100
+dem: final ATE lower bound,-2.1365079365079347,-2
+dem: final ATE upper bound,48.65714285714286,49
+dem: final ATE bounds width,50.79365079365079,51
+dem: ATU final bounds width,58.18181818181818,58
+dem: ATT final lower bound,-15.050000000000011,-15
+dem: ATT final upper bound,-15.050000000000011,-15
+"expert: our bounds width, 20 responding cases",50,50
+"expert: expert bounds width, 20 responding cases",29.999999999999996,30
+"expert: our bounds width, all 63 cases",50.793650793650784,51
+"expert: expert bounds width, all 63 cases",77.77777777777776,78
+"expert: combined bounds width, all 63 cases",44.44444444444444,44
+dem: cases imputed as a non-zero causal effect,6,6
+eoc: bounds width once the world reveals half the potential outcomes,100,100
+eoc: final ATE lower bound,-2.9148148148148127,-3
+eoc: final ATE upper bound,41.52962962962963,42
+eoc: final ATE bounds width,44.44444444444444,44
+eoc: ATT final lower bound,-10.143333333333334,-10
+eoc: ATT final upper bound,-10.143333333333334,-10
