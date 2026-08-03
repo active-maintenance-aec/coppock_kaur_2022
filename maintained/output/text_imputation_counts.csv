@@ -1,0 +1,21 @@
+transition_fac,quantity,value
+Democratization,cases,63
+Democratization,cases at step: Disbanded and Discredited Cases,2
+Democratization,cases at step: Non-transitional Cases,6
+Democratization,cases at step: Treated Cases,8
+Democratization,cases at step: Unimputable Cases,32
+Democratization,cases at step: Untreated Cases,15
+Democratization,imputed_probabilistically,27
+Democratization,imputed_with_certainty,4
+Democratization,left_unimputed,32
+Democratization,treated,8
+End of conflict,cases,54
+End of conflict,cases at step: Disbanded and Discredited Cases,4
+End of conflict,cases at step: Non-transitional Cases,2
+End of conflict,cases at step: Treated Cases,6
+End of conflict,cases at step: Unimputable Cases,24
+End of conflict,cases at step: Untreated Cases,18
+End of conflict,imputed_probabilistically,30
+End of conflict,imputed_with_certainty,0
+End of conflict,left_unimputed,24
+End of conflict,treated,6

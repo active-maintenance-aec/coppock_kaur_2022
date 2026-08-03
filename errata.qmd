@@ -1,0 +1,138 @@
+---
+title: "Errata"
+subtitle: "On Coppock and Kaur (2022), *American Journal of Political Science* 66(3)"
+format:
+  pdf:
+    output-file: coppock_kaur_2022_errata.pdf
+    geometry: margin=1.25in
+    fontsize: 11pt
+    include-in-header:
+      text: |
+        \usepackage{caption}
+        \captionsetup{labelformat=empty}
+        \usepackage{float}
+        \floatplacement{table}{H}
+        \floatplacement{figure}{H}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(here)
+library(tidyverse)
+library(knitr)
+here::i_am("errata.qmd")
+
+out <- function(file) read_csv(here::here("maintained", "output", file), show_col_types = FALSE)
+
+table_3 <- out("table_3_toy_example.csv")
+table_4 <- out("table_4_probabilistic.csv")
+summary_stats <- out("text_summary_stats.csv")
+imputation_counts <- out("text_imputation_counts.csv")
+
+summary_value <- function(which_claim) {
+  hit <- summary_stats$value[summary_stats$claim == which_claim]
+  stopifnot(length(hit) == 1)
+  hit
+}
+
+count_value <- function(sample, quantity_label) {
+  hit <- imputation_counts$value[imputation_counts$transition_fac == sample &
+                                   imputation_counts$quantity == quantity_label]
+  stopifnot(length(hit) == 1)
+  hit
+}
+
+# Two of the corrected values replace a number the article spells out, so they are
+# spelled out too rather than printed as digits: the correction is one token.
+english_number <- function(x) {
+  words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
+  stopifnot(x >= 1, x <= 10, x == round(x))
+  words[x]
+}
+
+treated_ones <- sum(table_3$d == 1 & table_3$Y == 1)
+unit_6_probability <- sum(table_4$prob[table_4$unit_6 == 1])
+unit_7_probability <- sum(table_4$prob[table_4$unit_7 == 1])
+disbanded_cases <- count_value("Democratization", "cases at step: Disbanded and Discredited Cases")
+```
+
+This note lists five misstated numbers in "Qualitative Imputation of Missing Potential Outcomes," published in *American Journal of Political Science* 66(3), doi [10.1111/ajps.12697](https://doi.org/10.1111/ajps.12697). **None of them changes a conclusion of the article.** Each is recorded because a reader who quoted the sentence would be quoting a number the article's own tables and data do not support. In every case below the table is the authority and the sentence is what is corrected.
+
+Every corrected value is computed from the deposited replication archive ([10.7910/DVN/2IVKXD](https://doi.org/10.7910/DVN/2IVKXD)) at the time this document is rendered. The code supporting each correction is at [github.com/active-maintenance-aec/coppock_kaur_2022](https://github.com/active-maintenance-aec/coppock_kaur_2022).
+
+## 1. The toy example's treated outcomes
+
+Published, *A Toy Example*:
+
+> The outcome for **three** of the treated units and one of the untreated units is 1; the outcome is equal to 0 for the remaining units.
+
+Corrected:
+
+> The outcome for **`r english_number(treated_ones)`** of the treated units and one of the untreated units is 1; the outcome is equal to 0 for the remaining units.
+
+Table 3, reprinted below, shows `r english_number(treated_ones)` treated units with an observed outcome of 1, and the deposited code that builds the example encodes `r english_number(treated_ones)`. Four is also what the [-40, 60] initial bounds two sentences later require; three would give [-50, 50].
+
+```{r table-3}
+table_3 |>
+  select(Unit = unit, `$d_i$` = d, `$Y_i$` = Y) |>
+  kable(format = "latex", booktabs = TRUE, escape = FALSE, align = "ccc", linesep = "")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} The observed columns of Table 3, drawn from the deposited replication archive by \texttt{maintained/table\_3\_toy\_example.R}. Nothing in the table is corrected; it is reprinted because it is the authority the sentence disagrees with.}
+
+## 2. The probabilistic extension's stated probabilities
+
+Published, *Probabilistic Extension*:
+
+> Instead of being sure that the untreated potential outcomes for units 6 and 7 are 0, we think the probabilities of being a `1' for units 6 and 7 are **.3 and .4**, respectively ($k = 2$).
+
+Corrected:
+
+> Instead of being sure that the untreated potential outcomes for units 6 and 7 are 0, we think the probabilities of being a `1' for units 6 and 7 are **`r sprintf("%.1f", unit_6_probability)` and `r sprintf("%.1f", unit_7_probability)`**, respectively ($k = 2$).
+
+The four scenario probabilities Table 4 prints are the product distribution of `r sprintf("%.1f", unit_6_probability)` and `r sprintf("%.1f", unit_7_probability)`, and the deposited code uses those two values. At 0.3 and 0.4 the four probabilities would read 0.42, 0.18, 0.28 and 0.12 rather than the published 0.56, 0.14, 0.24 and 0.06.
+
+```{r table-4}
+table_4 |>
+  transmute(`Unit 6` = unit_6, `Unit 7` = unit_7, `EV Bounds` = ev_bounds,
+            Probability = sprintf("%.2f", prob)) |>
+  kable(format = "latex", booktabs = TRUE, align = "cclc")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Table 4, drawn from the deposited replication archive by \texttt{maintained/table\_4\_probabilistic.R}. No cell is corrected; the table is reprinted because its probability column is what the sentence disagrees with.}
+
+## 3. How the 63 missing potential outcomes were imputed
+
+Published, *Imputing Missing Potential Outcomes*:
+
+> For all 63 unobserved potential outcomes, we imputed **5** with certainty, **26** probabilistically and we left 32 unimputed.
+
+Corrected:
+
+> For all 63 unobserved potential outcomes, we imputed **`r sprintf("%.0f", count_value("Democratization", "imputed_with_certainty"))`** with certainty, **`r sprintf("%.0f", count_value("Democratization", "imputed_probabilistically"))`** probabilistically and we left 32 unimputed.
+
+An imputation is made with certainty when the stated probability that the missing potential outcome equals 1 is exactly 0 or exactly 1. Appendix Table B.2 shows `r sprintf("%.0f", count_value("Democratization", "imputed_with_certainty"))` such cases and `r sprintf("%.0f", count_value("Democratization", "imputed_probabilistically"))` whose probability lies strictly between, and the deposited data agree. The number left unimputed, and the 31 imputed in total, are unaffected.
+
+## 4. The end-of-conflict bounds width
+
+Published, Appendix A:
+
+> The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from 100 to **41** points.
+
+Corrected:
+
+> The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from 100 to **`r sprintf("%.0f", summary_value("eoc: final ATE bounds width"))`** points.
+
+The next clause of the same sentence calls the resulting bounds 45 points wide, which is the difference of the rounded endpoints [-3, 42]. The unrounded width is `r sprintf("%.1f", summary_value("eoc: final ATE bounds width"))`, so `r sprintf("%.0f", summary_value("eoc: final ATE bounds width"))` and 45 are the two defensible roundings of one quantity. 41 corresponds to nothing in the analysis.
+
+## 5. The count of disbanded and discredited democratization cases
+
+Published, *Imputing Missing Potential Outcomes*, Step 1:
+
+> The observed outcome $Y_i(0)$ in each of these **four** cases was 0, as authoritarianism did not resume within 10 years of transition.
+
+Corrected:
+
+> The observed outcome $Y_i(0)$ in each of these **`r english_number(disbanded_cases)`** cases was 0, as authoritarianism did not resume within 10 years of transition.
+
+The sentence before it names `r english_number(disbanded_cases)` cases, Bolivia and the Philippines, and appendix Table B.2 lists `r english_number(disbanded_cases)` at this step. Appendix Table B.1 lists four end-of-conflict cases at the same step, which is where the count appears to have come from.

@@ -1,0 +1,118 @@
+table,step,case,d,Y,observed,imputed_y0,imputed_y1,probability,tau
+B.1,Disbanded and Discredited,Nepal - CPN-M (1966-2006),0,0,0,0,0,0.1,0
+B.1,Disbanded and Discredited,Sri Lanka - LTTE (1984-2009),0,0,0,0,0,0.1,0
+B.1,Disbanded and Discredited,Serbia (Yugoslavia) - Croatia (1991-1991),0,0,0,0,0,0.3,0
+B.1,Disbanded and Discredited,Serbia (Federal Republic of Yugoslavia) (1998-1999),0,0,0,0,0,0.3,0
+B.1,Treated Cases,Liberia (2000-2003),1,0,0,0,0,0.1,0
+B.1,Treated Cases,El Salvador - FMLN (1979-1991),1,0,0,0,0,0.2,0
+B.1,Treated Cases,Sierra Leone (1991-2001),1,0,0,0,0,0.2,0
+B.1,Treated Cases,Indonesia - East Timor (1997-1999),1,0,0,0,0,0.3,0
+B.1,Treated Cases,Peru - Shining Path (1982-1999),1,1,1,1,1,0.9,0
+B.1,Treated Cases,Uganda (1962-1986),1,1,1,1,1,0.9,0
+B.1,Non-transitional Cases,Sri Lanka - JVP (1971-1990),0,0,0,0,0,0.1,0
+B.1,Non-transitional Cases,Burundi (1991-2008),0,0,0,0,1,0.8,1
+B.1,Untreated Cases,India - Punjab (1983-1993),0,0,0,0,0,0.1,0
+B.1,Untreated Cases,United Kingdom - Northern Ireland (1998-1998),0,0,0,0,0,0.2,0
+B.1,Untreated Cases,Bosnia-Herzegovina (1992-1995),0,0,0,0,0,0.2,0
+B.1,Untreated Cases,Cambodia (Kampuchea) (1979-1998),0,0,0,0,0,0.3,0
+B.1,Untreated Cases,Bosnia-Herzegovina (1993-1994),0,0,0,0,0,0.3,0
+B.1,Untreated Cases,South Africa - Namibia (1966-1988),0,0,0,0,0,0.8,0
+B.1,Untreated Cases,Thailand (1974-1982),0,0,0,0,1,0.7,1
+B.1,Untreated Cases,Bangladesh (1975-1997),0,0,0,0,1,0.7,1
+B.1,Untreated Cases,Myanmar (Burma) - Arakan (1948-1994),0,0,0,0,1,0.8,1
+B.1,Untreated Cases,Myanmar (Burma) - Kachin (1961-1992),0,0,0,0,1,0.8,1
+B.1,Untreated Cases,Angola (1998-2002),0,0,0,0,1,0.8,1
+B.1,Untreated Cases,Nicaragua (1982-1990),0,0,0,0,1,0.9,1
+B.1,Untreated Cases,Angola (1975-1995),0,1,1,1,1,0.6,0
+B.1,Untreated Cases,India - Nagaland (1992-1997),0,1,1,1,1,0.7,0
+B.1,Untreated Cases,United Kingdom.- Northern Ireland (1971-1991),0,1,1,1,1,0.8,0
+B.1,Untreated Cases,Liberia (1989-1990),0,1,1,1,1,0.9,0
+B.1,Untreated Cases,India - Manipur (1982-1988),0,1,1,1,1,0.9,0
+B.1,Untreated Cases,India - Assam (1983-1990),0,1,1,1,1,0.9,0
+B.1,Unimputable Cases,Iran (1946-1996),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Yemen (North Yemen) (1979-1982),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Lebanon (1958-1990),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Laos (1959-1990),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Iraq (1961-1996),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Ethiopia (1976-1991),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Indonesia - ELF (1965-1984),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Syria (1979-1982),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Guinea (2000-2001),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Morocco (1975-1989),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Mozambique (1977-1992),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Indonesia - Aceh (1999-2005),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Yemen (North Yemen) (1994-1994),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Pakistan (1990-1996),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Congo (Brazzaville) (1993-2002),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Israel (2006-2006),0,0,0,0,?,NA,?
+B.1,Unimputable Cases,Iraq (1982-1996),0,1,1,1,?,NA,?
+B.1,Unimputable Cases,Ethiopia (1976-1983),0,1,1,1,?,NA,?
+B.1,Unimputable Cases,Indonesia - Aceh (1990-1991),0,1,1,1,?,NA,?
+B.1,Unimputable Cases,Rwanda (1990-2002),0,1,1,1,?,NA,?
+B.1,Unimputable Cases,Senegal (1988-2003),0,1,1,1,?,NA,?
+B.1,Unimputable Cases,Georgia (1992-1993),0,1,1,1,?,NA,?
+B.1,Unimputable Cases,Tajikistan (1992-1999),0,1,1,1,?,NA,?
+B.1,Unimputable Cases,Israel (1990-1999),0,1,1,1,?,NA,?
+B.2,Disbanded and Discredited,Bolivia (1980-1982),0,0,0,0,0,0.1,0
+B.2,Disbanded and Discredited,Philippines (1972-1986),0,0,0,0,0,0.1,0
+B.2,Treated Cases,Guatemala (1985-1995),1,0,0,0,0,0.1,0
+B.2,Treated Cases,Nepal - Panchayat (1951-1991),1,0,0,0,0,0.1,0
+B.2,Treated Cases,Nigeria (1993-1999),1,0,0,0,0,0.1,0
+B.2,Treated Cases,Sri Lanka (1978-1994),1,0,0,0,0,0.1,0
+B.2,Treated Cases,Argentina (1976-1983),1,0,0,0,0,0.3,0
+B.2,Treated Cases,Chile (1973-1989),1,0,0,0,0,0.4,0
+B.2,Treated Cases,South Africa (1910-1994),1,0,0,1,0,0.2,-1
+B.2,Treated Cases,Haiti (1991-1994),1,1,1,1,1,0.9,0
+B.2,Non-transitional Cases,Ghana (1981-1993),0,0,0,0,0,0.1,0
+B.2,Non-transitional Cases,South Korea (1961-1987),0,0,0,0,0,0.1,0
+B.2,Non-transitional Cases,Paraguay (1954-1993),0,0,0,0,0,0.2,0
+B.2,Non-transitional Cases,Brazil (1964-1985),0,0,0,0,0,0,0
+B.2,Non-transitional Cases,Panama (1982-1989),0,0,0,0,1,0.9,1
+B.2,Non-transitional Cases,Uruguay (1973-1984),0,0,0,0,1,1,1
+B.2,Untreated Cases,El Salvador (1982-1994),0,0,0,0,0,0.1,0
+B.2,Untreated Cases,Mexico (1916-2000),0,0,0,0,0,0.1,0
+B.2,Untreated Cases,Peru - Fujimori (1992-2000),0,0,0,0,0,0.1,0
+B.2,Untreated Cases,Serbia (1991-2000),0,0,0,0,0,0.1,0
+B.2,Untreated Cases,Liberia (1997-2003),0,0,0,0,0,0.2,0
+B.2,Untreated Cases,Sierra Leone (1997-1998),0,0,0,0,0,0.2,0
+B.2,Untreated Cases,Haiti (1999-2004),0,0,0,0,0,0.3,0
+B.2,Untreated Cases,Nepal (2002-2006),0,0,0,0,0,0.3,0
+B.2,Untreated Cases,Nicaragua (1979-1990),0,0,0,0,1,0.8,1
+B.2,Untreated Cases,Burundi (1996-2005),0,0,0,0,1,0.9,1
+B.2,Untreated Cases,Honduras (1972-1981),0,0,0,0,1,0.9,1
+B.2,Untreated Cases,Central African Rep (1981-1993),0,1,1,1,1,0.3,0
+B.2,Untreated Cases,Sierra Leone (1992-1996),0,1,1,1,1,0.3,0
+B.2,Untreated Cases,Thailand (1976-1988),0,1,1,1,1,1,0
+B.2,Untreated Cases,Thailand (1991-1992),0,1,1,1,1,1,0
+B.2,Unimputable Cases,Albania (1944-1991),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Azerbaijan (1991-1992),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Benin (1972-1990),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Bulgaria (1944-1990),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Congo (Brazzaville) (1968-1991),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Czechoslovakia (1948-1989),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Georgia (1992-2003),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Guinea (2008-2010),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Guinea-Bissau (2002-2005),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Hungary (1947-1990),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Indonesia (1966-1999),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Kenya (1963-2002),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Lesotho (1986-1993),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Madagascar (1975-1993),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Malawi (1964-1994),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Mali (1968-1992),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Mongolia (1921-1993),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Niger (1996-1999),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Pakistan (1977-1988),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Pakistan (1999-2008),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Peru - Military (1968-1980),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Poland (1944-1989),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Romania (1945-1989),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Senegal (1960-2000),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Sudan (1985-1986),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Taiwan (1949-2000),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Turkey (1980-1983),0,0,0,0,?,NA,?
+B.2,Unimputable Cases,Bangladesh (1982-1990),0,0,1,1,?,NA,?
+B.2,Unimputable Cases,Guinea-Bissau (1980-1999),0,1,1,1,?,NA,?
+B.2,Unimputable Cases,Haiti (1988-1990),0,1,1,1,?,NA,?
+B.2,Unimputable Cases,Niger (1974-1991),0,1,1,1,?,NA,?
+B.2,Unimputable Cases,Zambia (1967-1991),0,1,1,1,?,NA,?

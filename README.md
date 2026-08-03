@@ -1,6 +1,6 @@
 # Active Maintenance Report: coppock_kaur_2022
 
-2026-08-01
+2026-08-03
 
 - [Summary](#summary)
   - [Does the deposited archive run?](#does-the-deposited-archive-run)
@@ -11,7 +11,13 @@
   - [The unseeded simulation](#the-unseeded-simulation)
   - [Checksums](#checksums)
 - [Errata](#errata)
+  - [Two appendix cells the deposit does not
+    support](#two-appendix-cells-the-deposit-does-not-support)
+  - [One probability the deposit carries as its
+    complement](#one-probability-the-deposit-carries-as-its-complement)
 - [Number-by-number comparison](#number-by-number-comparison)
+  - [Coverage](#coverage)
+  - [Appendix Tables B.1 and B.2](#appendix-tables-b1-and-b2)
 - [Maintained rewrite](#maintained-rewrite)
   - [Architecture](#architecture)
   - [Deprecated patterns replaced](#deprecated-patterns-replaced)
@@ -46,8 +52,14 @@ in version control even though the bytes themselves are not.
 script per published table or figure, writing to `output/`, which is
 committed so a reader can compare a fresh run against it without
 downloading anything. `ground_truth/` ties every published number to the
-code that produces it. `original/` is created by the download script and
-is deliberately absent from the repository. This file is the
+code that produces it: `published_claims.csv` is the exhaustive list of
+numbers the article and its supporting information print, the ground
+truth CSV is the comparison against the deposit and against the rewrite,
+and `build_ground_truth.R` is the gate that stops the run if a published
+number is checked by neither instrument. `coppock_kaur_2022_errata.pdf`
+at the root lists the sentences in the article that its own tables
+contradict. `original/` is created by the download script and is
+deliberately absent from the repository. This file is the
 reproducibility report, also available as a PDF in `report/`.
 
 **License.** CC0 1.0 Universal, matching the terms of the deposit this
@@ -111,20 +123,27 @@ produces the article’s floats.
 
 ## Does the maintained rewrite reproduce the paper?
 
-Yes. 183 of the 187 verifiable ground truth claims match the published
+Yes. 217 of the 227 verifiable ground truth claims match the published
 values to reported precision: every cell and bound of Table 3, every
 bound of Figure 1, every row of Table 4, the democratization row of
 Table 5, all 28 labels of Figures 2 and A1, all 56 of Figures 3 and A2,
-all ten bounds of Figure 4, and every in-text quantity from the
-abstract, the Expert Survey section and Appendix A.
+all ten bounds of Figure 4, 761 of the 763 cells the two appendix case
+tables print, and every in-text quantity from the abstract, the Expert
+Survey section and Appendix A.
 
-The 4 that do not match are places where the article’s prose disagrees
-with the article’s own tables and figures, and they are set out in the
-errata section below. The rewrite agrees with the tables and figures in
-every case; it is the sentences that are wrong. The remaining 4 recorded
-quantities are the end-of-conflict row of the imputation summary, which
-the rewrite computes and neither the article nor the appendix prints, so
-they are marked unverifiable rather than matched.
+The 10 that do not match fall into three groups. Seven are the five
+sentences in the article that the article’s own tables contradict, two
+of the five stating a pair of numbers rather than one; the rewrite
+agrees with the tables in every case, and all five are set out in the
+errata section below and in `coppock_kaur_2022_errata.pdf`. Two are
+cells of appendix Table B.2, one a probability the appendix contradicts
+elsewhere and one an observed outcome the deposited data record
+differently. The last is a probability the article states twice in prose
+and the deposited data carry as its complement. The remaining 5 recorded
+quantities have no comparison to make: four are the end-of-conflict row
+of the imputation summary, which the rewrite computes and neither the
+article nor the appendix prints, and one is a survey fact the deposit
+never recorded.
 
 # Paper overview
 
@@ -225,10 +244,12 @@ disagreement rather than failing on it.
 
 # Errata
 
-Nothing in the deposited code is wrong. Three claims in the article’s
-prose are, each contradicted by a table or figure in the same article,
-and the maintained rewrite therefore disagrees with the sentence and
-agrees with the float.
+Nothing in the deposited code is wrong. Five claims in the article’s
+prose are, each contradicted by a table in the same article, and the
+maintained rewrite therefore disagrees with the sentence and agrees with
+the float. All five are set out with the corrected sentence in
+`coppock_kaur_2022_errata.pdf` at the root of this repository. None of
+them changes a conclusion.
 
 **The toy example’s treated outcomes.** The text introducing the toy
 example says “the outcome for three of the treated units and one of the
@@ -254,8 +275,59 @@ end-of-conflict bounds of \[-2.9, 41.5\], a width of 44.4 points, which
 rounds to 44 and which is 45 if taken as the difference of the rounded
 endpoints, as the second sentence does. The 41 matches nothing.
 
-None of the three changes a substantive conclusion, and no ground truth
-row is marked `match_rewrite = 0` for a reason other than these.
+**How the 63 missing potential outcomes were imputed.** The empirical
+section says “for all 63 unobserved potential outcomes, we imputed 5
+with certainty, 26 probabilistically and we left 32 unimputed”. An
+imputation is made with certainty when the stated probability that the
+missing potential outcome equals 1 is exactly 0 or exactly 1. Appendix
+Table B.2 shows four such cases, Brazil, Uruguay and two Thailand
+transitions, and 27 whose probability lies strictly between; the
+deposited data agree. The 32 left unimputed and the 31 imputed in total
+are right.
+
+**The count of disbanded and discredited cases.** Step 1 names two
+democratization cases, Bolivia and the Philippines, then says in the
+next sentence that “the observed outcome $Y_i(0)$ in each of these four
+cases was 0”. Appendix Table B.2 lists two cases at that step. Appendix
+Table B.1 lists four end-of-conflict cases at the same step, which is
+where the count appears to have come from.
+
+## Two appendix cells the deposit does not support
+
+Appendix Tables B.1 and B.2 print the full case datasets, 763 cells
+between them, and the deposited case file reproduces 761.
+
+**Burundi’s imputation probability.** Table B.2 prints the imputed
+treated outcome for Burundi (1996-2005) as 1 with a probability of 0.9.
+Appendix C, which gives the reasoning case by case, states 0.8 for the
+same case, and the deposited data carry 0.8. The simulation uses 0.8, so
+the figures are unaffected; the table cell is the outlier.
+
+**Azerbaijan’s observed outcome.** Table B.2 prints an observed outcome
+of 0 for Azerbaijan (1991-1992), consistent with the untreated potential
+outcome of 0 printed beside it. The deposited `outcome` column records 1
+for that case while its `y0_obs` column records 0, so the deposit
+contradicts the switching equation for this one case. Nothing in the
+analysis reads the `outcome` column, so nothing published depends on it,
+and the table matches what the analysis used.
+
+## One probability the deposit carries as its complement
+
+The South Africa case is imputed in the main text as $Y_i(0) = 1$ “with
+a probability of .8”, and appendix C repeats the 0.8. The deposited data
+carry 0.2, and appendix Table B.2 prints 0.2 alongside an imputed value
+of 1, which is the only case in either table where a point imputation of
+1 sits beside a probability below one half. The simulation behind
+Figures 2 and 3 draws from 0.2.
+
+The maintained rewrite does not change it, because choosing between the
+two is an analytical decision rather than a translation. Its
+consequences are small and worth stating: at 0.8 the final
+democratization bounds move from \[-2, 49\] to \[-3, 48\], the width
+stays at 51 points against 51, and every conclusion in the article is
+unaffected.
+
+No other ground truth row is marked `match_rewrite = 0`.
 
 # Number-by-number comparison
 
@@ -452,19 +524,101 @@ row is marked `match_rewrite = 0` for a reason other than these.
 | appendix_a | final ATE upper bound | 42 | 42 | 42 | 1 | 1 |
 | appendix_a | final ATE bounds width from the rounded endpoints | 45 | 45 | 45 | 1 | 1 |
 | appendix_a | ATT summarised as a point effect | -10 | -10 | -10 | 1 | 1 |
+| text | toy example: units | 10 |  | 10 |  | 1 |
+| text | toy example: treated units | 7 |  | 7 |  | 1 |
+| text | toy example: untreated units | 3 |  | 3 |  | 1 |
+| text | toy example: easy imputations | 5 |  | 5 |  | 1 |
+| text | toy example: untreated outcomes for units 1, 2 and 5 | 1, 1, 0 |  | 1, 1, 0 |  | 1 |
+| text | toy example: treated outcomes for units 8 and 9 | 1, 0 |  | 1, 0 |  | 1 |
+| text | probabilistic extension: possible sets of potential outcomes | 4 |  | 4 |  | 1 |
+| text | unobserved potential outcomes | 63 |  | 63 |  | 1 |
+| text | unobserved potential outcomes imputed with certainty | 5 |  | 4 |  | 0 |
+| text | unobserved potential outcomes imputed probabilistically | 26 |  | 27 |  | 0 |
+| text | unobserved potential outcomes left unimputed | 32 |  | 32 |  | 1 |
+| text | disbanded and discredited democratization cases | 4 |  | 2 |  | 0 |
+| text | observed outcome in the disbanded and discredited cases | 0 |  | 0 |  | 1 |
+| text | South Africa: probability the imputed untreated outcome equals 1 | 0.8 |  | 0.2 |  | 0 |
+| text | disbanded cases: probability the imputed outcome equals 1 | 0.1 |  | 0.1 |  | 1 |
+| text | Nigeria: probability the imputed untreated outcome equals 1 | 0.1 |  | 0.1 |  | 1 |
+| text | experts disagreeing with our coding of treatment and outcome | 5 |  |  |  |  |
+| text | expert imputations conflicting with ours, restated in the discussion | 3 |  | 3 |  | 1 |
+| text | end-of-conflict cases, stated in the main text footnote | 54 |  | 54 |  | 1 |
+| text | unimputed cases as a share of the total |  |  | 32 of 63, 50.8% |  | 1 |
+| text | the bounds around the ATE include zero |  |  | \[-2, 49\] contains 0 |  | 1 |
+| text | the ATT bounds shrink to a point |  |  | \[-15, -15\], width 0 |  | 1 |
+| text | the ATU bounds are wider than the ATT bounds |  |  | 58 against 0 |  | 1 |
+| text | the combined bounds are narrower than our original bounds |  |  | 44 against 51 |  | 1 |
+| text | no expert assigned to a treated case declined to impute |  |  | 0 of 6 declining experts |  | 1 |
+| text | expert bounds are narrower than ours among the 20 responding cases |  |  | 30 against 50 |  | 1 |
+| text | expert bounds are wider than ours among all 63 cases |  |  | 78 against 51 |  | 1 |
+| table_b1 | cells printed in the treatment indicator column | 54 |  | 54 |  | 1 |
+| table_b1 | cells printed in the observed outcome column | 54 |  | 54 |  | 1 |
+| table_b1 | cells printed in the revealed potential outcome column | 54 |  | 54 |  | 1 |
+| table_b1 | cells printed in the imputed untreated outcome column | 54 |  | 54 |  | 1 |
+| table_b1 | cells printed in the imputed treated outcome column | 54 |  | 54 |  | 1 |
+| table_b1 | cells printed in the imputation probability column | 30 |  | 30 |  | 1 |
+| table_b1 | cells printed in the unit-level effect column | 54 |  | 54 |  | 1 |
+| table_b2 | cells printed in the treatment indicator column | 63 |  | 63 |  | 1 |
+| table_b2 | cells printed in the observed outcome column | 63 |  | 62 |  | 0 |
+| table_b2 | cells printed in the revealed potential outcome column | 63 |  | 63 |  | 1 |
+| table_b2 | cells printed in the imputed untreated outcome column | 63 |  | 63 |  | 1 |
+| table_b2 | cells printed in the imputed treated outcome column | 63 |  | 63 |  | 1 |
+| table_b2 | cells printed in the imputation probability column | 31 |  | 30 |  | 0 |
+| table_b2 | cells printed in the unit-level effect column | 63 |  | 63 |  | 1 |
 
 Ground truth: the published value against the deposited script and
 against the maintained rewrite. A blank Paper column means the quantity
 is not stated in the article or its appendix; a blank Archive column
 means no deposited script prints it.
 
-Of the 191 recorded claims, 181 can be compared against both the article
+Of the 232 recorded claims, 181 can be compared against both the article
 and a deposited script, and 177 of those match. Six further claims are
 stated in the article but computed by no deposited script: the
 probability-weighted point estimate of the bounds in the probabilistic
 extension, \[-5, 25\], and the 2.5th and 97.5th quantiles of each bound,
 \[-20, 0\] and \[10, 30\]. The rewrite computes all six from the
 enumerated scenarios in `table_4_probabilistic.R` and all six match.
+
+## Coverage
+
+The list of numbers to check is built from the article rather than from
+the pipeline, because a list built from the pipeline is silent exactly
+where the pipeline is missing something.
+`ground_truth/published_claims.csv` is every numeric token the article
+and its supporting information print, 268 of them, each classified by
+hand. 228 are quantities this pipeline can move, and each of those must
+be checked twice: once by a row in the ground truth and once by a block
+in `maintained/in_text_claims.R`, which reaches the same number by its
+own path through the same output files. The remaining 40 are scale
+endpoints, unit indices, period ranges and values copied out of other
+authors’ papers, none of which any analysis can change.
+
+| Class        | Claims | Checked by                        |
+|:-------------|-------:|:----------------------------------|
+| definitional |     22 | at the point of use               |
+| descriptive  |      9 | ground truth and in_text_claims.R |
+| pipeline     |    219 | ground truth and in_text_claims.R |
+| structural   |     14 | at the point of use               |
+| transcribed  |      4 | at the point of use               |
+
+The published claims extraction, by class.
+
+`ground_truth/build_ground_truth.R` enforces this. It sources the claims
+file rather than reading it as text, because a block that errors or
+prints nothing satisfies a textual check completely, and it counts the
+printed claims against the extraction. It also compares the two
+instruments value by value: they filter, convert and round
+independently, so a disagreement between them means one of the two is
+wrong. The run halts on any of these.
+
+## Appendix Tables B.1 and B.2
+
+Appendix B prints the full case datasets, 54 end-of-conflict cases and
+63 democratization cases, with seven columns each. The deposited archive
+has no script for either table, so until `table_b1_b2_case_dataset.R`
+was written the 763 published cells had nothing on this side to be
+compared against. All but 2 reproduce; both exceptions are described in
+the errata section above.
 
 # Maintained rewrite
 
@@ -484,13 +638,16 @@ what changes is the tidyverse around them.
 | table_3_toy_example.R | table_3_toy_example.csv, table_3_bounds.csv |
 | table_4_probabilistic.R | table_4_probabilistic.csv, table_4_summary.csv |
 | table_5_imputation_summary.R | table_5_imputation_summary.csv |
+| table_b1_b2_case_dataset.R | table_b1_b2_case_dataset.csv |
 | figure_1_toy_bounds.R | figure_1_toy_bounds.pdf/.png/.csv |
 | figures_2_a1_ate_bounds.R | figure_2_dem_ate_bounds.pdf/.png, figure_a1_eoc_ate_bounds.pdf/.png, figures_2_a1_gg_df.csv |
 | figures_3_a2_att_atu_bounds.R | figure_3_dem_att_atu_bounds.pdf/.png, figure_a2_eoc_att_atu_bounds.pdf/.png, figures_3_a2_gg_df.csv |
 | figure_4_expert_validation.R | figure_4_expert_validation.pdf/.png/.csv |
 | text_expert_agreement.R | text_expert_agreement.csv, text_expert_agreement_counts.csv |
+| text_imputation_counts.R | text_imputation_counts.csv |
 | text_summary_stats.R | text_summary_stats.csv |
 | text_seed_sensitivity.R | text_seed_sensitivity.csv |
+| in_text_claims.R | none; one printed line per published claim, checked by build_ground_truth.R |
 
 The maintained rewrite.
 
@@ -572,18 +729,18 @@ script writes to disk, three of them recorded only in a code comment in
 deposited case data.
 
 | Quantity                                               | Rewrite | Paper |
-|:-------------------------------------------------------|--------:|------:|
-| agreement                                              |       7 |     7 |
-| disagreement                                           |       3 |     3 |
-| They declined, we imputed                              |       3 |     3 |
-| They imputed, we declined                              |       7 |     7 |
-| expert responses received                              |      20 |    20 |
-| democratization cases without an expert response       |      43 |    43 |
-| cases the experts imputed                              |      14 |    14 |
-| cases we imputed                                       |      10 |    10 |
-| experts who declined to impute                         |       6 |     6 |
-| declining experts assigned to an untreated case        |       6 |     6 |
-| expert imputations differing from the observed outcome |       0 |     0 |
+|:-------------------------------------------------------|--------:|:------|
+| agreement                                              |       7 | 7     |
+| disagreement                                           |       3 | 3     |
+| They declined, we imputed                              |       3 | 3     |
+| They imputed, we declined                              |       7 | 7     |
+| expert responses received                              |      20 | 20    |
+| democratization cases without an expert response       |      43 | 43    |
+| cases the experts imputed                              |      14 | 14    |
+| cases we imputed                                       |      10 | 10    |
+| experts who declined to impute                         |       6 | 6     |
+| declining experts assigned to an untreated case        |       6 | 6     |
+| expert imputations differing from the observed outcome |       0 | 0     |
 
 The Expert Survey section, recomputed. Agreement means the two sides
 made the same imputation or both declined; the last row checks the claim
