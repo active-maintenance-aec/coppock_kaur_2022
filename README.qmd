@@ -705,7 +705,11 @@ The archive's `figure_4.R` computes the agreement coding and prints it with `tab
 # In-text quantities
 
 ```{r text_table}
-out("text_summary_stats.csv") |>
+# label is the string a figure prints, so it is read as one: parsed as a
+# number, "-22.5" beside "200" turns every whole-number label into 200.0.
+read_csv(here::here("maintained", "output", "text_summary_stats.csv"),
+         show_col_types = FALSE,
+         col_types = cols(label = col_character(), .default = col_guess())) |>
   mutate(value = sprintf("%.2f", value)) |>
   select(claim, value, label) |>
   kable(

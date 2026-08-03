@@ -959,27 +959,27 @@ comment is right: a comment is not an output, and nothing checks it.
 # In-text quantities
 
 | Quantity | Rewrite | As a figure labels it |
-|:---|:---|---:|
-| dem: bounds width before any data | 200.00 | 200.0 |
-| dem: bounds width once the world reveals half the potential outcomes | 100.00 | 100.0 |
-| dem: final ATE lower bound | -1.59 | -2.0 |
-| dem: final ATE upper bound | 49.21 | 49.0 |
-| dem: final ATE bounds width | 50.79 | 51.0 |
-| dem: ATU final bounds width | 58.18 | 58.0 |
+|:---|:---|:---|
+| dem: bounds width before any data | 200.00 | 200 |
+| dem: bounds width once the world reveals half the potential outcomes | 100.00 | 100 |
+| dem: final ATE lower bound | -1.59 | -2 |
+| dem: final ATE upper bound | 49.21 | 49 |
+| dem: final ATE bounds width | 50.79 | 51 |
+| dem: ATU final bounds width | 58.18 | 58 |
 | dem: ATT final lower bound | -22.50 | -22.5 |
 | dem: ATT final upper bound | -22.50 | -22.5 |
-| expert: our bounds width, 20 responding cases | 50.00 | 50.0 |
-| expert: expert bounds width, 20 responding cases | 30.00 | 30.0 |
-| expert: our bounds width, all 63 cases | 50.79 | 51.0 |
-| expert: expert bounds width, all 63 cases | 77.78 | 78.0 |
-| expert: combined bounds width, all 63 cases | 44.44 | 44.0 |
-| dem: cases imputed as a non-zero causal effect | 6.00 | 6.0 |
-| eoc: bounds width once the world reveals half the potential outcomes | 100.00 | 100.0 |
-| eoc: final ATE lower bound | -2.78 | -3.0 |
-| eoc: final ATE upper bound | 41.67 | 42.0 |
-| eoc: final ATE bounds width | 44.44 | 44.0 |
-| eoc: ATT final lower bound | -10.00 | -10.0 |
-| eoc: ATT final upper bound | -10.00 | -10.0 |
+| expert: our bounds width, 20 responding cases | 50.00 | 50 |
+| expert: expert bounds width, 20 responding cases | 30.00 | 30 |
+| expert: our bounds width, all 63 cases | 50.79 | 51 |
+| expert: expert bounds width, all 63 cases | 77.78 | 78 |
+| expert: combined bounds width, all 63 cases | 44.44 | 44 |
+| dem: cases imputed as a non-zero causal effect | 6.00 | 6 |
+| eoc: bounds width once the world reveals half the potential outcomes | 100.00 | 100 |
+| eoc: final ATE lower bound | -2.78 | -3 |
+| eoc: final ATE upper bound | 41.67 | 42 |
+| eoc: final ATE bounds width | 44.44 | 44 |
+| eoc: ATT final lower bound | -10.00 | -10 |
+| eoc: ATT final upper bound | -10.00 | -10 |
 
 Bounds widths and summary effects quoted in the abstract, the body and
 Appendix A, read back out of the figure output that produced them.
