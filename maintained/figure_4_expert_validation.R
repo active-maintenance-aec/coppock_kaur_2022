@@ -1,18 +1,18 @@
 # coppock_kaur_2022/maintained/figure_4_expert_validation.R
 # Output: output/figure_4_expert_validation.pdf/.png,
 #         output/figure_4_expert_validation.csv
-# Depends on: helpers.R, original/replication_archive/cases_clean.csv
+# Depends on: helpers.R, apply_appendix_c_corrections.R output
 # Description: Figure 4, the extreme value bounds implied by the expert survey.
 #              Left panel: the 20 democratization cases with expert responses.
 #              Right panel: all 63, including the bounds that defer to the experts
 #              where they answered.
+#
+#   These bounds are computed from the point imputations rather than from the
+#   probabilities, so the appendix C corrections leave every value here unchanged.
 
 source(here::here("maintained", "helpers.R"))
 
-dat <- read_csv(
-  here::here("original", "replication_archive", "cases_clean.csv"),
-  show_col_types = FALSE
-)
+dat <- read_rds(here::here("maintained", "output", "cases_corrected.rds"))
 
 democratization_df <- dat |> filter(transition_fac == "Democratization")
 

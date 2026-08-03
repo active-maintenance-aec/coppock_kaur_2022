@@ -43,7 +43,7 @@ gg_df <- sims |>
       )
     )
   ) |>
-  arrange(transition_fac, estimand, desc(description))
+  arrange(transition_fac, estimand, desc(description), .locale = "en")
 
 make_att_atu_plot <- function(df) {
   ggplot(df, aes(y = description)) +

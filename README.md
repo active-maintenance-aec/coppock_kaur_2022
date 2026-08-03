@@ -11,10 +11,16 @@
   - [The unseeded simulation](#the-unseeded-simulation)
   - [Checksums](#checksums)
 - [Errata](#errata)
+  - [Seven imputation probabilities the deposit transcribes differently
+    from appendix
+    C](#seven-imputation-probabilities-the-deposit-transcribes-differently-from-appendix-c)
+    - [What it moves](#what-it-moves)
+    - [One inconsistency this does not
+      resolve](#one-inconsistency-this-does-not-resolve)
+  - [Eight claims in the article’s
+    prose](#eight-claims-in-the-articles-prose)
   - [Two appendix cells the deposit does not
     support](#two-appendix-cells-the-deposit-does-not-support)
-  - [One probability the deposit carries as its
-    complement](#one-probability-the-deposit-carries-as-its-complement)
 - [Number-by-number comparison](#number-by-number-comparison)
   - [Coverage](#coverage)
   - [Appendix Tables B.1 and B.2](#appendix-tables-b1-and-b2)
@@ -57,9 +63,9 @@ numbers the article and its supporting information print, the ground
 truth CSV is the comparison against the deposit and against the rewrite,
 and `build_ground_truth.R` is the gate that stops the run if a published
 number is checked by neither instrument. `coppock_kaur_2022_errata.pdf`
-at the root lists the sentences in the article that its own tables
-contradict. `original/` is created by the download script and is
-deliberately absent from the repository. This file is the
+at the root lists the numbers in the article that its own tables,
+appendix and data do not support. `original/` is created by the download
+script and is deliberately absent from the repository. This file is the
 reproducibility report, also available as a PDF in `report/`.
 
 **License.** CC0 1.0 Universal, matching the terms of the deposit this
@@ -106,11 +112,10 @@ estimates the bounds by simulation, 1,000 draws for Figures 2 and A1 and
 are labelled with rounded percentage points, so most of the simulation
 noise is absorbed by the rounding, but not all of it: repeating the
 Figure 2 and A1 simulation at twenty seeds moves at least one of the 28
-rounded labels off its published value in 9 of them. A reader running
+rounded labels off its published value in 11 of them. A reader running
 the deposited script today has close to even odds of seeing a figure
 that disagrees with the article somewhere, with no error and no warning.
-The maintained rewrite fixes the seed at 12345, which reproduces all 28
-published labels of Figures 2 and A1 and all 56 of Figures 3 and A2.
+The maintained rewrite fixes the seed at 12345.
 
 Two smaller things. `table_4.R` prints its bounds as fractions where the
 paper prints percentage points, so the deposited output reads `[0, 0.3]`
@@ -123,27 +128,47 @@ produces the article’s floats.
 
 ## Does the maintained rewrite reproduce the paper?
 
-Yes. 217 of the 227 verifiable ground truth claims match the published
-values to reported precision: every cell and bound of Table 3, every
-bound of Figure 1, every row of Table 4, the democratization row of
-Table 5, all 28 labels of Figures 2 and A1, all 56 of Figures 3 and A2,
-all ten bounds of Figure 4, 761 of the 763 cells the two appendix case
-tables print, and every in-text quantity from the abstract, the Expert
-Survey section and Appendix A.
+Mostly, and the exceptions have one cause. 201 of the 227 verifiable
+ground truth claims match the published values to reported precision:
+every cell and bound of Table 3, every bound of Figure 1, every row of
+Table 4, the democratization row of Table 5, every label of Figures A1
+and A2, all ten bounds of Figure 4, 761 of the 763 cells the two
+appendix case tables print, the abstract, and every in-text quantity
+from the Expert Survey section and Appendix A. The article’s headline
+result is among them: the extreme value bounds on the ATE come to \[-2,
+49\], 51 points wide, as published.
 
-The 10 that do not match fall into three groups. Seven are the five
-sentences in the article that the article’s own tables contradict, two
-of the five stating a pair of numbers rather than one; the rewrite
-agrees with the tables in every case, and all five are set out in the
-errata section below and in `coppock_kaur_2022_errata.pdf`. Two are
-cells of appendix Table B.2, one a probability the appendix contradicts
-elsewhere and one an observed outcome the deposited data record
-differently. The last is a probability the article states twice in prose
-and the deposited data carry as its complement. The remaining 5 recorded
-quantities have no comparison to make: four are the end-of-conflict row
-of the imputation summary, which the rewrite computes and neither the
-article nor the appendix prints, and one is a survey fact the deposit
-never recorded.
+The 26 that do not match fall into three groups.
+
+17 of them follow from a single defect in the deposited data, described
+in full below: 7 imputation probabilities in `cases_clean.csv` do not
+match the probability the article’s own appendix C states for that case,
+and the rewrite uses the stated values. Four are labels of Figure 2,
+twelve are labels of Figure 3, and one is the sentence summarising the
+ATT.
+
+8 are places where the article contradicts itself. Seven of them are
+numbers in prose, spread over five sentences, two of which state a pair
+of numbers apiece; the rewrite agrees with the table or the appendix the
+sentence disagrees with in every case. The eighth is a cell of appendix
+Table B.2, an imputation probability the table prints differently from
+both appendix C and the deposited data.
+
+The last is a second cell of appendix Table B.2, an observed outcome the
+deposited data record differently.
+
+The remaining 5 recorded quantities have no comparison to make: four are
+the end-of-conflict row of the imputation summary, which the rewrite
+computes and neither the article nor the appendix prints, and one is a
+survey fact the deposit never recorded.
+
+All of it is set out with corrected sentences and corrected floats in
+`coppock_kaur_2022_errata.pdf` at the root of this repository. **No
+conclusion of the article changes.** One published quantity moves
+materially: the average treatment effect on the treated, which the
+article states as a -15 percentage point effect and which is -22.5
+points once the imputation probabilities appendix C states are the ones
+the analysis uses.
 
 # Paper overview
 
@@ -197,9 +222,10 @@ omits is `set.seed()`, so the figures are one unlabelled draw.
 
 | Rounded labels moved | Seeds |
 |---------------------:|------:|
-|                    0 |    11 |
+|                    0 |     9 |
 |                    1 |     6 |
-|                    2 |     3 |
+|                    2 |     2 |
+|                    3 |     3 |
 
 Repeating the Figure 2 and A1 simulation at twenty seeds. Of the 28
 rounded labels those two figures carry, the number that move off the
@@ -207,11 +233,45 @@ value the rewrite commits, which is also the value the published figures
 carry.
 
 The size of the disturbance is one percentage point in the rounded
-label, never more, and it never touches the substantive claims: the
-final bounds are \[-2, 49\] at every seed tested. The point is not that
-the archive gets a different answer but that it gets a slightly
-different figure each time it is run, and it offers a reader no way to
-tell whether a discrepancy is noise or a mistake.
+label, never more, and it barely touches the substantive claims: the
+final democratization bounds read \[-2, 49\] at 17 of the 20 seeds and
+\[-1, 49\] at the other 3, a difference of one point in the lower label.
+The point is not that the archive gets a different answer but that it
+gets a slightly different figure each time it is run, and it offers a
+reader no way to tell whether a discrepancy is noise or a mistake.
+
+The rounding hides one further thing, which no seed sweep can settle and
+which the exact expectation can. The bounds are linear in the imputed
+potential outcomes, so the quantity the simulation estimates has a
+closed form, and `text_expected_bounds.R` computes it for every label of
+all four figures beside the drawn value. 8 of them sit exactly halfway
+between two whole numbers, where no whole-number label is determined at
+all and the figure prints whichever side the draw fell on.
+
+| Sample | Estimand | Step | Exact expectation | Label at seed 12345 |
+|:---|:---|:---|:---|:---|
+| Democratization | ATT | Initial Values | \[-87.5, 12.5\] | \[-88, 12\] |
+| Democratization | ATT | Disbanded and Discredited Cases | \[-87.5, 12.5\] | \[-88, 12\] |
+| Democratization | ATT | Treated Cases | \[-22.5, -22.5\] | \[-22, -22\] |
+| Democratization | ATT | Non-transitional Cases | \[-22.5, -22.5\] | \[-23, -23\] |
+| Democratization | ATT | Untreated Cases | \[-22.5, -22.5\] | \[-22, -22\] |
+| Democratization | ATT | Unimputable Cases | \[-22.5, -22.5\] | \[-22, -22\] |
+| End of conflict | ATU | Disbanded and Discredited Cases | \[-27.5, 64.2\] | \[-27, 64\] |
+| End of conflict | ATU | Treated Cases | \[-27.5, 64.2\] | \[-27, 64\] |
+
+Bounds whose exact expectation falls on a whole-number rounding
+boundary. All but the democratization ATT rows from Treated Cases
+onwards are a property of the deposit as published; those appear once
+the appendix C probabilities are restored.
+
+The 4 democratization ATT rows from *Treated Cases* onwards are the
+consequential ones, and they are the only rows in the table the
+corrections create. The democratization ATT is exactly -22.5 once South
+Africa carries the probability appendix C states for it, so the label
+the article’s figure style would print is decided by the simulation
+rather than by the estimate. The rest were on a boundary in the deposit
+as published, and the labels the article prints for them are one draw of
+a coin flip.
 
 ## Checksums
 
@@ -244,12 +304,123 @@ disagreement rather than failing on it.
 
 # Errata
 
-Nothing in the deposited code is wrong. Five claims in the article’s
-prose are, each contradicted by a table in the same article, and the
-maintained rewrite therefore disagrees with the sentence and agrees with
-the float. All five are set out with the corrected sentence in
+Nothing in the deposited code is wrong. The deposited data are wrong in
+seven cells, and eight claims in the article’s prose, spread over six
+sentences, are wrong on the article’s own terms. All of it is set out
+with corrected sentences and corrected floats in
 `coppock_kaur_2022_errata.pdf` at the root of this repository. None of
-them changes a conclusion.
+it changes a conclusion.
+
+## Seven imputation probabilities the deposit transcribes differently from appendix C
+
+The imputed potential outcomes in this article are not measurements.
+They are qualitative judgments about what would have happened in each
+case, set out one by one in appendix C with the scholarship behind each
+of them, and the deposited `cases_clean.csv` is a transcription of those
+judgments. Appendix C states an imputation probability for 30 of the 31
+imputed democratization cases; the exception, Thailand (1991-1992),
+refers to the entry above it rather than stating a number of its own.
+Twenty-three of the 30 agree with the deposit exactly. 7 do not.
+
+| Case | Appendix C entry | Imputed value | Probability in the deposit | Probability in appendix C |
+|:---|:---|---:|:---|:---|
+| South Africa (1910-1994) | C.2.7 | 1 | 0.2 | 0.8 |
+| Ghana (1981-1993) | C.3.2 | 0 | 0.1 | 0.2 |
+| Uruguay (1973-1984) | C.3.6 | 1 | 1 | 0.9 |
+| Sierra Leone (1997-1998) | C.4.8 | 0 | 0.2 | 0.1 |
+| Nicaragua (1979-1990) | C.4.10 | 1 | 0.8 | 0.9 |
+| Central African Rep (1981-1993) | C.4.12 | 1 | 0.3 | 0.7 |
+| Sierra Leone (1992-1996) | C.4.13 | 1 | 0.3 | 0.7 |
+
+The imputation probabilities the deposited case file transcribes
+differently from the appendix C narrative that states them. The imputed
+value is the point imputation, which agrees with appendix C in every
+case.
+
+3 of the 7 are exact complements, and in all three the deposit
+contradicts itself: an imputed potential outcome of 1 sits beside a
+probability below one half, which says the imputation is more likely to
+be 0 than 1. The main text states the South Africa probability too, on
+page 10, and states it as 0.8. The other 4 differ from the stated
+probability by one step of 0.1 and none of them crosses one half, so
+none changes an imputed value.
+
+Appendix Table B.2 prints the deposited value in all 7 cases, so the
+published table inherits the transcription error rather than committing
+a second one. `maintained/table_b1_b2_case_dataset.R` is the one script
+in the rewrite that reads the deposit rather than the corrected file,
+precisely so that this stays checkable: the question those two tables
+answer is whether the published pages print what the deposit holds, and
+they do.
+
+**The rewrite uses the values appendix C states.**
+`maintained/apply_appendix_c_corrections.R` is a visible, named step
+that writes both the corrected case file every analysis script reads and
+`output/appendix_c_corrections.csv`, the table above, so the deposited
+value sits beside the value that replaced it. It asserts the deposited
+value in every column it touches before overwriting it, so a change to
+the deposit stops the run rather than being absorbed. The probability
+columns are cumulative, and each correction is applied to every step
+column from the step at which the case is imputed onwards.
+
+### What it moves
+
+The article’s headline result is unchanged. The extreme value bounds on
+the ATE stay at \[-2, 49\] and 51 points wide, as do the abstract’s
+three numbers, the expert survey comparison in Figure 4, Table 5, and
+every quantity in the end-of-conflict application, all seven corrections
+being democratization cases. The two intermediate steps of Figure 2 move
+by about one point in each label, and the ATU bounds of Figure 3 by
+about one and a half.
+
+The consequential movement is in the ATT. Every treated case has both
+potential outcomes filled in by the second imputation step, which is why
+the ATT bounds collapse to a point, and South Africa is one of the eight
+treated cases. Restoring its probability from 0.2 to the 0.8 that both
+the main text and appendix C state moves the ATT from -15 to -22.5
+percentage points.
+
+| Quantity | Published | Corrected |
+|:---|:---|:---|
+| Figure 2, Treated Cases | \[-16, 68\] | \[-16.8, 67.3\] |
+| Figure 2, Non-transitional Cases | \[-12, 62\] | \[-13.2, 61.4\] |
+| Figure 2, Untreated and Unimputable Cases | \[-2, 49\] | \[-1.6, 49.2\] |
+| Figure 3, ATU, Untreated and Unimputable Cases | \[0, 58\] | \[1.5, 59.6\] |
+| Figure 3, ATT, Treated Cases onwards | \[-15, -15\] | \[-22.5, -22.5\] |
+
+Every published bound the corrections move. Published values are the
+whole-number labels the figures carry; corrected values are the exact
+expectation of each bound, which the figures estimate by simulation. The
+third row is the article’s headline result and rounds to the published
+label.
+
+The article’s ATU claim is untouched. It says the ATU bounds are
+“greater than 58 points wide”, and that width is 58.2 points before the
+correction and after it, because both ATU bounds move by the same
+amount.
+
+One imputation changes class. An imputation is made with certainty when
+its probability is exactly 0 or exactly 1, and Uruguay (1973-1984) is
+carried at 1 in the deposit where appendix C entry C.3.6 states 0.9. The
+split the article states as “5 with certainty, 26 probabilistically” is
+4 and 27 in the deposit, Uruguay being the difference, and 3 and 28 once
+appendix C is followed. The number left unimputed, 32, and the 31
+imputed in total are the same either way.
+
+### One inconsistency this does not resolve
+
+South Africa - Namibia (1966-1988), an end-of-conflict case, is the
+fourth place in the deposited data where a point imputation sits on the
+wrong side of its own probability: the imputed treated outcome is 0 and
+the probability that it equals 1 is 0.8. Appendix Table B.1 prints the
+same pair, so the table and the deposit agree. Appendix C covers the
+democratization cases only and Appendix A gives no case-by-case
+narrative for the end-of-conflict sample, so there is no stated
+probability anywhere to resolve it against, and the case is left exactly
+as deposited. The three democratization cases of the same shape are
+corrected above, because for those a stated probability exists.
+
+## Eight claims in the article’s prose
 
 **The toy example’s treated outcomes.** The text introducing the toy
 example says “the outcome for three of the treated units and one of the
@@ -277,13 +448,9 @@ endpoints, as the second sentence does. The 41 matches nothing.
 
 **How the 63 missing potential outcomes were imputed.** The empirical
 section says “for all 63 unobserved potential outcomes, we imputed 5
-with certainty, 26 probabilistically and we left 32 unimputed”. An
-imputation is made with certainty when the stated probability that the
-missing potential outcome equals 1 is exactly 0 or exactly 1. Appendix
-Table B.2 shows four such cases, Brazil, Uruguay and two Thailand
-transitions, and 27 whose probability lies strictly between; the
-deposited data agree. The 32 left unimputed and the 31 imputed in total
-are right.
+with certainty, 26 probabilistically and we left 32 unimputed”. Neither
+number holds under either reading of the data, as set out above. The 32
+left unimputed and the 31 imputed in total are right.
 
 **The count of disbanded and discredited cases.** Step 1 names two
 democratization cases, Bolivia and the Philippines, then says in the
@@ -292,6 +459,10 @@ cases was 0”. Appendix Table B.2 lists two cases at that step. Appendix
 Table B.1 lists four end-of-conflict cases at the same step, which is
 where the count appears to have come from.
 
+**The ATT.** “We can summarize the ATT as a -15 percentage point effect
+on return to authoritarianism.” That is what the deposited data give; it
+is -22.5 under the appendix C probabilities.
+
 ## Two appendix cells the deposit does not support
 
 Appendix Tables B.1 and B.2 print the full case datasets, 763 cells
@@ -299,9 +470,10 @@ between them, and the deposited case file reproduces 761.
 
 **Burundi’s imputation probability.** Table B.2 prints the imputed
 treated outcome for Burundi (1996-2005) as 1 with a probability of 0.9.
-Appendix C, which gives the reasoning case by case, states 0.8 for the
-same case, and the deposited data carry 0.8. The simulation uses 0.8, so
-the figures are unaffected; the table cell is the outlier.
+Appendix C entry C.4.11 states 0.8 for the same case, and the deposited
+data carry 0.8. Deposit and appendix agree here, so there is nothing to
+correct in the data; the table cell is the outlier and the simulation is
+unaffected.
 
 **Azerbaijan’s observed outcome.** Table B.2 prints an observed outcome
 of 0 for Azerbaijan (1991-1992), consistent with the untreated potential
@@ -310,24 +482,6 @@ for that case while its `y0_obs` column records 0, so the deposit
 contradicts the switching equation for this one case. Nothing in the
 analysis reads the `outcome` column, so nothing published depends on it,
 and the table matches what the analysis used.
-
-## One probability the deposit carries as its complement
-
-The South Africa case is imputed in the main text as $Y_i(0) = 1$ “with
-a probability of .8”, and appendix C repeats the 0.8. The deposited data
-carry 0.2, and appendix Table B.2 prints 0.2 alongside an imputed value
-of 1, which is the only case in either table where a point imputation of
-1 sits beside a probability below one half. The simulation behind
-Figures 2 and 3 draws from 0.2.
-
-The maintained rewrite does not change it, because choosing between the
-two is an analytical decision rather than a translation. Its
-consequences are small and worth stating: at 0.8 the final
-democratization bounds move from \[-2, 49\] to \[-3, 48\], the width
-stays at 51 points against 51, and every conclusion in the article is
-unaffected.
-
-No other ground truth row is marked `match_rewrite = 0`.
 
 # Number-by-number comparison
 
@@ -395,10 +549,10 @@ No other ground truth row is marked `match_rewrite = 0`.
 | figure_2 | high bound, Initial Values | 75 | 75 | 75 | 1 | 1 |
 | figure_2 | low bound, Disbanded and Discredited Cases | -25 | -25 | -25 | 1 | 1 |
 | figure_2 | high bound, Disbanded and Discredited Cases | 72 | 72 | 72 | 1 | 1 |
-| figure_2 | low bound, Treated Cases | -16 | -16 | -16 | 1 | 1 |
-| figure_2 | high bound, Treated Cases | 68 | 68 | 68 | 1 | 1 |
-| figure_2 | low bound, Non-transitional Cases | -12 | -12 | -12 | 1 | 1 |
-| figure_2 | high bound, Non-transitional Cases | 62 | 62 | 62 | 1 | 1 |
+| figure_2 | low bound, Treated Cases | -16 | -16 | -17 | 1 | 0 |
+| figure_2 | high bound, Treated Cases | 68 | 68 | 67 | 1 | 0 |
+| figure_2 | low bound, Non-transitional Cases | -12 | -12 | -13 | 1 | 0 |
+| figure_2 | high bound, Non-transitional Cases | 62 | 62 | 61 | 1 | 0 |
 | figure_2 | low bound, Untreated Cases | -2 | -2 | -2 | 1 | 1 |
 | figure_2 | high bound, Untreated Cases | 49 | 49 | 49 | 1 | 1 |
 | figure_2 | low bound, Unimputable Cases | -2 | -2 | -2 | 1 | 1 |
@@ -427,24 +581,24 @@ No other ground truth row is marked `match_rewrite = 0`.
 | figure_3 | high bound, ATU, Treated Cases | 80 | 80 | 80 | 1 | 1 |
 | figure_3 | low bound, ATU, Non-transitional Cases | -12 | -12 | -12 | 1 | 1 |
 | figure_3 | high bound, ATU, Non-transitional Cases | 74 | 74 | 74 | 1 | 1 |
-| figure_3 | low bound, ATU, Untreated Cases | 0 | 0 | 0 | 1 | 1 |
-| figure_3 | high bound, ATU, Untreated Cases | 58 | 58 | 58 | 1 | 1 |
-| figure_3 | low bound, ATU, Unimputable Cases | 0 | 0 | 0 | 1 | 1 |
-| figure_3 | high bound, ATU, Unimputable Cases | 58 | 58 | 58 | 1 | 1 |
+| figure_3 | low bound, ATU, Untreated Cases | 0 | 0 | 1 | 1 | 0 |
+| figure_3 | high bound, ATU, Untreated Cases | 58 | 58 | 60 | 1 | 0 |
+| figure_3 | low bound, ATU, Unimputable Cases | 0 | 0 | 1 | 1 | 0 |
+| figure_3 | high bound, ATU, Unimputable Cases | 58 | 58 | 60 | 1 | 0 |
 | figure_3 | low bound, ATT, Before Any Data | -100 | -100 | -100 | 1 | 1 |
 | figure_3 | high bound, ATT, Before Any Data | 100 | 100 | 100 | 1 | 1 |
 | figure_3 | low bound, ATT, Initial Values | -88 | -88 | -88 | 1 | 1 |
 | figure_3 | high bound, ATT, Initial Values | 12 | 12 | 12 | 1 | 1 |
 | figure_3 | low bound, ATT, Disbanded and Discredited Cases | -88 | -88 | -88 | 1 | 1 |
 | figure_3 | high bound, ATT, Disbanded and Discredited Cases | 12 | 12 | 12 | 1 | 1 |
-| figure_3 | low bound, ATT, Treated Cases | -15 | -15 | -15 | 1 | 1 |
-| figure_3 | high bound, ATT, Treated Cases | -15 | -15 | -15 | 1 | 1 |
-| figure_3 | low bound, ATT, Non-transitional Cases | -15 | -15 | -15 | 1 | 1 |
-| figure_3 | high bound, ATT, Non-transitional Cases | -15 | -15 | -15 | 1 | 1 |
-| figure_3 | low bound, ATT, Untreated Cases | -15 | -15 | -15 | 1 | 1 |
-| figure_3 | high bound, ATT, Untreated Cases | -15 | -15 | -15 | 1 | 1 |
-| figure_3 | low bound, ATT, Unimputable Cases | -15 | -15 | -15 | 1 | 1 |
-| figure_3 | high bound, ATT, Unimputable Cases | -15 | -15 | -15 | 1 | 1 |
+| figure_3 | low bound, ATT, Treated Cases | -15 | -15 | -22 | 1 | 0 |
+| figure_3 | high bound, ATT, Treated Cases | -15 | -15 | -22 | 1 | 0 |
+| figure_3 | low bound, ATT, Non-transitional Cases | -15 | -15 | -23 | 1 | 0 |
+| figure_3 | high bound, ATT, Non-transitional Cases | -15 | -15 | -23 | 1 | 0 |
+| figure_3 | low bound, ATT, Untreated Cases | -15 | -15 | -22 | 1 | 0 |
+| figure_3 | high bound, ATT, Untreated Cases | -15 | -15 | -22 | 1 | 0 |
+| figure_3 | low bound, ATT, Unimputable Cases | -15 | -15 | -22 | 1 | 0 |
+| figure_3 | high bound, ATT, Unimputable Cases | -15 | -15 | -22 | 1 | 0 |
 | figure_a2 | low bound, ATU, Before Any Data | -100 | -100 | -100 | 1 | 1 |
 | figure_a2 | high bound, ATU, Before Any Data | 100 | 100 | 100 | 1 | 1 |
 | figure_a2 | low bound, ATU, Initial Values | -29 | -29 | -29 | 1 | 1 |
@@ -498,7 +652,7 @@ No other ground truth row is marked `match_rewrite = 0`.
 | text | toy example: bounds width before any data | 200 | 200 | 200 | 1 | 1 |
 | text | toy example: final bounds width | 10 | 10 | 10 | 1 | 1 |
 | text | ATU final bounds width | 58 | 58 | 58 | 1 | 1 |
-| text | ATT summarised as a point effect | -15 | -15 | -15 | 1 | 1 |
+| text | ATT summarised as a point effect | -15 | -15 | -22 | 1 | 0 |
 | text | cases imputed as a non-zero causal effect | 6 | 6 | 6 | 1 | 1 |
 | text | expert responses received | 20 | 20 | 20 | 1 | 1 |
 | text | democratization cases without an expert response | 43 | 43 | 43 | 1 | 1 |
@@ -532,12 +686,12 @@ No other ground truth row is marked `match_rewrite = 0`.
 | text | toy example: treated outcomes for units 8 and 9 | 1, 0 |  | 1, 0 |  | 1 |
 | text | probabilistic extension: possible sets of potential outcomes | 4 |  | 4 |  | 1 |
 | text | unobserved potential outcomes | 63 |  | 63 |  | 1 |
-| text | unobserved potential outcomes imputed with certainty | 5 |  | 4 |  | 0 |
-| text | unobserved potential outcomes imputed probabilistically | 26 |  | 27 |  | 0 |
+| text | unobserved potential outcomes imputed with certainty | 5 |  | 3 |  | 0 |
+| text | unobserved potential outcomes imputed probabilistically | 26 |  | 28 |  | 0 |
 | text | unobserved potential outcomes left unimputed | 32 |  | 32 |  | 1 |
 | text | disbanded and discredited democratization cases | 4 |  | 2 |  | 0 |
 | text | observed outcome in the disbanded and discredited cases | 0 |  | 0 |  | 1 |
-| text | South Africa: probability the imputed untreated outcome equals 1 | 0.8 |  | 0.2 |  | 0 |
+| text | South Africa: probability the imputed untreated outcome equals 1 | 0.8 |  | 0.8 |  | 1 |
 | text | disbanded cases: probability the imputed outcome equals 1 | 0.1 |  | 0.1 |  | 1 |
 | text | Nigeria: probability the imputed untreated outcome equals 1 | 0.1 |  | 0.1 |  | 1 |
 | text | experts disagreeing with our coding of treatment and outcome | 5 |  |  |  |  |
@@ -545,7 +699,7 @@ No other ground truth row is marked `match_rewrite = 0`.
 | text | end-of-conflict cases, stated in the main text footnote | 54 |  | 54 |  | 1 |
 | text | unimputed cases as a share of the total |  |  | 32 of 63, 50.8% |  | 1 |
 | text | the bounds around the ATE include zero |  |  | \[-2, 49\] contains 0 |  | 1 |
-| text | the ATT bounds shrink to a point |  |  | \[-15, -15\], width 0 |  | 1 |
+| text | the ATT bounds shrink to a point |  |  | \[-22, -22\], width 0 |  | 1 |
 | text | the ATU bounds are wider than the ATT bounds |  |  | 58 against 0 |  | 1 |
 | text | the combined bounds are narrower than our original bounds |  |  | 44 against 51 |  | 1 |
 | text | no expert assigned to a treated case declined to impute |  |  | 0 of 6 declining experts |  | 1 |
@@ -618,27 +772,37 @@ Appendix B prints the full case datasets, 54 end-of-conflict cases and
 has no script for either table, so until `table_b1_b2_case_dataset.R`
 was written the 763 published cells had nothing on this side to be
 compared against. All but 2 reproduce; both exceptions are described in
-the errata section above.
+the errata section above. That script is the one place in the rewrite
+that reads the deposit rather than the corrected case file, because the
+question it answers is whether the published pages print what the
+deposit holds. It also writes `table_b2_corrected_rows.csv`, the 7 rows
+of Table B.2 as published beside the same rows with the appendix C
+probabilities restored.
 
 # Maintained rewrite
 
-The rewrite lives in `maintained/`: a helpers file, one cleaning script,
-three table scripts, four figure scripts and three in-text scripts. It
-is a translation, not a reanalysis. `ev_bounds()`, `bounds_width()`,
+The rewrite lives in `maintained/`: a helpers file, a corrections
+script, one cleaning script, four table scripts, four figure scripts and
+five in-text scripts. It is a translation rather than a reanalysis in
+every respect but one. `ev_bounds()`, `bounds_width()`,
 `sample_bounds()` and the probabilistic-extension functions are the
 paper’s contribution and are carried over with their logic unchanged;
-what changes is the tidyverse around them.
+what changes is the tidyverse around them. The exception is
+`apply_appendix_c_corrections.R`, which restores the 7 imputation
+probabilities the deposit transcribes differently from the appendix that
+states them, and which is described in the errata section above.
 
 ## Architecture
 
 | Script | Output |
 |:---|:---|
 | helpers.R | none; packages, the QUIMPO functions and the toy example |
+| apply_appendix_c_corrections.R | cases_corrected.rds, appendix_c_corrections.csv |
 | clean_cases.R | cases_long.rds |
 | table_3_toy_example.R | table_3_toy_example.csv, table_3_bounds.csv |
 | table_4_probabilistic.R | table_4_probabilistic.csv, table_4_summary.csv |
 | table_5_imputation_summary.R | table_5_imputation_summary.csv |
-| table_b1_b2_case_dataset.R | table_b1_b2_case_dataset.csv |
+| table_b1_b2_case_dataset.R | table_b1_b2_case_dataset.csv, table_b2_corrected_rows.csv |
 | figure_1_toy_bounds.R | figure_1_toy_bounds.pdf/.png/.csv |
 | figures_2_a1_ate_bounds.R | figure_2_dem_ate_bounds.pdf/.png, figure_a1_eoc_ate_bounds.pdf/.png, figures_2_a1_gg_df.csv |
 | figures_3_a2_att_atu_bounds.R | figure_3_dem_att_atu_bounds.pdf/.png, figure_a2_eoc_att_atu_bounds.pdf/.png, figures_3_a2_gg_df.csv |
@@ -646,6 +810,7 @@ what changes is the tidyverse around them.
 | text_expert_agreement.R | text_expert_agreement.csv, text_expert_agreement_counts.csv |
 | text_imputation_counts.R | text_imputation_counts.csv |
 | text_summary_stats.R | text_summary_stats.csv |
+| text_expected_bounds.R | text_expected_bounds.csv |
 | text_seed_sensitivity.R | text_seed_sensitivity.csv |
 | in_text_claims.R | none; one printed line per published claim, checked by build_ground_truth.R |
 
@@ -760,12 +925,12 @@ comment is right: a comment is not an output, and nothing checks it.
 |:---|:---|---:|
 | dem: bounds width before any data | 200.00 | 200 |
 | dem: bounds width once the world reveals half the potential outcomes | 100.00 | 100 |
-| dem: final ATE lower bound | -2.14 | -2 |
-| dem: final ATE upper bound | 48.66 | 49 |
+| dem: final ATE lower bound | -1.65 | -2 |
+| dem: final ATE upper bound | 49.15 | 49 |
 | dem: final ATE bounds width | 50.79 | 51 |
 | dem: ATU final bounds width | 58.18 | 58 |
-| dem: ATT final lower bound | -15.05 | -15 |
-| dem: ATT final upper bound | -15.05 | -15 |
+| dem: ATT final lower bound | -22.32 | -22 |
+| dem: ATT final upper bound | -22.32 | -22 |
 | expert: our bounds width, 20 responding cases | 50.00 | 50 |
 | expert: expert bounds width, 20 responding cases | 30.00 | 30 |
 | expert: our bounds width, all 63 cases | 50.79 | 51 |
@@ -773,11 +938,11 @@ comment is right: a comment is not an output, and nothing checks it.
 | expert: combined bounds width, all 63 cases | 44.44 | 44 |
 | dem: cases imputed as a non-zero causal effect | 6.00 | 6 |
 | eoc: bounds width once the world reveals half the potential outcomes | 100.00 | 100 |
-| eoc: final ATE lower bound | -2.91 | -3 |
-| eoc: final ATE upper bound | 41.53 | 42 |
+| eoc: final ATE lower bound | -2.92 | -3 |
+| eoc: final ATE upper bound | 41.52 | 42 |
 | eoc: final ATE bounds width | 44.44 | 44 |
-| eoc: ATT final lower bound | -10.14 | -10 |
-| eoc: ATT final upper bound | -10.14 | -10 |
+| eoc: ATT final lower bound | -10.25 | -10 |
+| eoc: ATT final upper bound | -10.25 | -10 |
 
 Bounds widths and summary effects quoted in the abstract, the body and
 Appendix A, read back out of the figure output that produced them.

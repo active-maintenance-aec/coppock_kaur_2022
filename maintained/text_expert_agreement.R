@@ -1,17 +1,17 @@
 # coppock_kaur_2022/maintained/text_expert_agreement.R
 # Output: output/text_expert_agreement.csv, output/text_expert_agreement_counts.csv
-# Depends on: helpers.R, original/replication_archive/cases_clean.csv
+# Depends on: helpers.R, apply_appendix_c_corrections.R output
 # Description: The in-text quantities of the Expert Survey section: how often the
 #              experts' imputations agreed with the authors', how many cases each
 #              side imputed, and the asymmetry between treated and untreated cases
 #              among the experts who declined.
+#
+#   Agreement is defined over the point imputations, so the appendix C
+#   corrections leave every count here unchanged.
 
 source(here::here("maintained", "helpers.R"))
 
-dat <- read_csv(
-  here::here("original", "replication_archive", "cases_clean.csv"),
-  show_col_types = FALSE
-)
+dat <- read_rds(here::here("maintained", "output", "cases_corrected.rds"))
 
 # The missing potential outcome is Y0 for a treated case and Y1 for an untreated
 # one, so the comparison is between whichever side each respondent was asked for.

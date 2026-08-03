@@ -1,6 +1,6 @@
 # coppock_kaur_2022/maintained/text_imputation_counts.R
 # Output: output/text_imputation_counts.csv
-# Depends on: helpers.R, original/replication_archive/cases_clean.csv
+# Depends on: helpers.R, apply_appendix_c_corrections.R output
 # Description: The case counts the Application and Appendix A sections state in
 #              prose: how many cases each sample holds, how many are treated, how
 #              many missing potential outcomes were imputed with certainty, how
@@ -10,14 +10,13 @@
 #   The deposited archive computes none of these. An imputation is made with
 #   certainty when the stated probability that the missing potential outcome
 #   equals 1 is exactly 0 or exactly 1, probabilistically when it lies strictly
-#   between, and not at all when it is absent.
+#   between, and not at all when it is absent. The split therefore moves with the
+#   appendix C corrections: Uruguay (1973-1984) is imputed with certainty at the
+#   deposited 1.0 and probabilistically at the 0.9 appendix C states.
 
 source(here::here("maintained", "helpers.R"))
 
-dat <- read_csv(
-  here::here("original", "replication_archive", "cases_clean.csv"),
-  show_col_types = FALSE
-)
+dat <- read_rds(here::here("maintained", "output", "cases_corrected.rds"))
 
 # The missing potential outcome is Y0 for a treated case and Y1 for an untreated
 # one, so the probability that governs it is whichever of the two the case lacks.
@@ -42,7 +41,7 @@ by_step <- cases |>
   select(transition_fac, quantity, value)
 
 text_imputation_counts <- bind_rows(counts, by_step) |>
-  arrange(transition_fac, quantity)
+  arrange(transition_fac, quantity, .locale = "en")
 
 print(text_imputation_counts, n = nrow(text_imputation_counts))
 

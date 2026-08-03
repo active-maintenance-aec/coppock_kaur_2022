@@ -24,18 +24,24 @@ reference <- read_csv(here::here("maintained", "output", "figures_2_a1_gg_df.csv
 
 simulate_labels <- function(seed) {
   set.seed(seed)
-  cases_long |>
+  drawn <- cases_long |>
     group_by(step, transition_fac) |>
     reframe(sample_bounds(y0, y1, sims = 1000)) |>
     summarise(estimate = mean(value) * 100, .by = c(step, transition_fac, name)) |>
     pivot_wider(id_cols = c(step, transition_fac), names_from = name,
                 values_from = estimate) |>
     left_join(reference, by = c("step", "transition_fac")) |>
-    summarise(
-      seed = seed,
-      labels_moved = sum(round(low_est, 0) != reference_low |
-                           round(high_est, 0) != reference_high)
-    )
+    mutate(label = str_c("[", round(low_est, 0), ", ", round(high_est, 0), "]"))
+
+  tibble(
+    seed = seed,
+    labels_moved = sum(round(drawn$low_est, 0) != drawn$reference_low |
+                         round(drawn$high_est, 0) != drawn$reference_high),
+    # The headline bounds of the article, so that whether they hold across seeds
+    # is a recorded number rather than an impression left by a count.
+    final_dem_label = drawn$label[drawn$step == "s4" &
+                                    drawn$transition_fac == "Democratization"]
+  )
 }
 
 seed_sensitivity <- map(1:20, simulate_labels) |> bind_rows()
@@ -49,6 +55,7 @@ print(tibble(
             sum(seed_sensitivity$labels_moved > 0),
             2 * nrow(reference))
 ))
+print(count(seed_sensitivity, final_dem_label))
 
 write_csv(seed_sensitivity,
           here::here("maintained", "output", "text_seed_sensitivity.csv"))

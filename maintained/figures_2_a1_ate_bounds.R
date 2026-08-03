@@ -34,7 +34,7 @@ gg_df <- sims |>
     description = factor(step, levels = quimpo_step_levels, labels = quimpo_step_labels),
     description = fct_rev(description)
   ) |>
-  arrange(transition_fac, desc(description))
+  arrange(transition_fac, desc(description), .locale = "en")
 
 make_ate_plot <- function(df) {
   ggplot(df, aes(y = description)) +

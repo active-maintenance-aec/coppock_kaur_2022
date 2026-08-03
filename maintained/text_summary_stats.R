@@ -3,7 +3,7 @@
 # Depends on: helpers.R, figures_2_a1_ate_bounds.R output,
 #             figures_3_a2_att_atu_bounds.R output,
 #             figure_4_expert_validation.R output,
-#             original/replication_archive/cases_clean.csv
+#             apply_appendix_c_corrections.R output
 # Description: The bounds widths and summary effects quoted in the abstract, the
 #              body and Appendix A. Every value is read back from the figure
 #              output that produced it, so the text and the figures cannot
@@ -17,8 +17,7 @@ att_atu <- read_csv(here::here("maintained", "output", "figures_3_a2_gg_df.csv")
                     show_col_types = FALSE)
 expert <- read_csv(here::here("maintained", "output", "figure_4_expert_validation.csv"),
                    show_col_types = FALSE)
-dat <- read_csv(here::here("original", "replication_archive", "cases_clean.csv"),
-                show_col_types = FALSE)
+dat <- read_rds(here::here("maintained", "output", "cases_corrected.rds"))
 
 ate_width <- function(sample, which_step) {
   row <- ate |> filter(transition_fac == sample, step == which_step)

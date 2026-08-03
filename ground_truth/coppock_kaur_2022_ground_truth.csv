@@ -61,10 +61,10 @@ coppock_kaur_2022,figure_2,"low bound, Initial Values",-25,-25,1,"Rounded label;
 coppock_kaur_2022,figure_2,"high bound, Initial Values",75,75,1,,75,1,
 coppock_kaur_2022,figure_2,"low bound, Disbanded and Discredited Cases",-25,-25,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-25,1,
 coppock_kaur_2022,figure_2,"high bound, Disbanded and Discredited Cases",72,72,1,,72,1,
-coppock_kaur_2022,figure_2,"low bound, Treated Cases",-16,-16,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-16,1,
-coppock_kaur_2022,figure_2,"high bound, Treated Cases",68,68,1,,68,1,
-coppock_kaur_2022,figure_2,"low bound, Non-transitional Cases",-12,-12,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-12,1,
-coppock_kaur_2022,figure_2,"high bound, Non-transitional Cases",62,62,1,,62,1,
+coppock_kaur_2022,figure_2,"low bound, Treated Cases",-16,-16,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-17,0,archive
+coppock_kaur_2022,figure_2,"high bound, Treated Cases",68,68,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",67,0,archive
+coppock_kaur_2022,figure_2,"low bound, Non-transitional Cases",-12,-12,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-13,0,archive
+coppock_kaur_2022,figure_2,"high bound, Non-transitional Cases",62,62,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",61,0,archive
 coppock_kaur_2022,figure_2,"low bound, Untreated Cases",-2,-2,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-2,1,
 coppock_kaur_2022,figure_2,"high bound, Untreated Cases",49,49,1,,49,1,
 coppock_kaur_2022,figure_2,"low bound, Unimputable Cases",-2,-2,1,"Rounded label; the deposited script sets no seed, so its value is one draw",-2,1,
@@ -93,24 +93,24 @@ coppock_kaur_2022,figure_3,"low bound, ATU, Treated Cases",-16,-16,1,Rounded lab
 coppock_kaur_2022,figure_3,"high bound, ATU, Treated Cases",80,80,1,,80,1,
 coppock_kaur_2022,figure_3,"low bound, ATU, Non-transitional Cases",-12,-12,1,Rounded label; the deposited script sets no seed,-12,1,
 coppock_kaur_2022,figure_3,"high bound, ATU, Non-transitional Cases",74,74,1,,74,1,
-coppock_kaur_2022,figure_3,"low bound, ATU, Untreated Cases",0,0,1,Rounded label; the deposited script sets no seed,0,1,
-coppock_kaur_2022,figure_3,"high bound, ATU, Untreated Cases",58,58,1,,58,1,
-coppock_kaur_2022,figure_3,"low bound, ATU, Unimputable Cases",0,0,1,Rounded label; the deposited script sets no seed,0,1,
-coppock_kaur_2022,figure_3,"high bound, ATU, Unimputable Cases",58,58,1,,58,1,
+coppock_kaur_2022,figure_3,"low bound, ATU, Untreated Cases",0,0,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",1,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATU, Untreated Cases",58,58,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",60,0,archive
+coppock_kaur_2022,figure_3,"low bound, ATU, Unimputable Cases",0,0,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",1,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATU, Unimputable Cases",58,58,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",60,0,archive
 coppock_kaur_2022,figure_3,"low bound, ATT, Before Any Data",-100,-100,1,Rounded label; the deposited script sets no seed,-100,1,
 coppock_kaur_2022,figure_3,"high bound, ATT, Before Any Data",100,100,1,,100,1,
 coppock_kaur_2022,figure_3,"low bound, ATT, Initial Values",-88,-88,1,Rounded label; the deposited script sets no seed,-88,1,
 coppock_kaur_2022,figure_3,"high bound, ATT, Initial Values",12,12,1,,12,1,
 coppock_kaur_2022,figure_3,"low bound, ATT, Disbanded and Discredited Cases",-88,-88,1,Rounded label; the deposited script sets no seed,-88,1,
 coppock_kaur_2022,figure_3,"high bound, ATT, Disbanded and Discredited Cases",12,12,1,,12,1,
-coppock_kaur_2022,figure_3,"low bound, ATT, Treated Cases",-15,-15,1,Rounded label; the deposited script sets no seed,-15,1,
-coppock_kaur_2022,figure_3,"high bound, ATT, Treated Cases",-15,-15,1,,-15,1,
-coppock_kaur_2022,figure_3,"low bound, ATT, Non-transitional Cases",-15,-15,1,Rounded label; the deposited script sets no seed,-15,1,
-coppock_kaur_2022,figure_3,"high bound, ATT, Non-transitional Cases",-15,-15,1,,-15,1,
-coppock_kaur_2022,figure_3,"low bound, ATT, Untreated Cases",-15,-15,1,Rounded label; the deposited script sets no seed,-15,1,
-coppock_kaur_2022,figure_3,"high bound, ATT, Untreated Cases",-15,-15,1,,-15,1,
-coppock_kaur_2022,figure_3,"low bound, ATT, Unimputable Cases",-15,-15,1,Rounded label; the deposited script sets no seed,-15,1,
-coppock_kaur_2022,figure_3,"high bound, ATT, Unimputable Cases",-15,-15,1,,-15,1,
+coppock_kaur_2022,figure_3,"low bound, ATT, Treated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATT, Treated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
+coppock_kaur_2022,figure_3,"low bound, ATT, Non-transitional Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-23,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATT, Non-transitional Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-23,0,archive
+coppock_kaur_2022,figure_3,"low bound, ATT, Untreated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATT, Untreated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
+coppock_kaur_2022,figure_3,"low bound, ATT, Unimputable Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATT, Unimputable Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
 coppock_kaur_2022,figure_a2,"low bound, ATU, Before Any Data",-100,-100,1,Rounded label; the deposited script sets no seed,-100,1,
 coppock_kaur_2022,figure_a2,"high bound, ATU, Before Any Data",100,100,1,,100,1,
 coppock_kaur_2022,figure_a2,"low bound, ATU, Initial Values",-29,-29,1,Rounded label; the deposited script sets no seed,-29,1,
@@ -164,7 +164,7 @@ coppock_kaur_2022,text,toy example: untreated units with outcome 1,1,1,1,,1,1,
 coppock_kaur_2022,text,toy example: bounds width before any data,200,200,1,,200,1,
 coppock_kaur_2022,text,toy example: final bounds width,10,10,1,,10,1,
 coppock_kaur_2022,text,ATU final bounds width,58,58,1,The text says the ATU bounds are greater than 58 points wide,58,1,
-coppock_kaur_2022,text,ATT summarised as a point effect,-15,-15,1,,-15,1,
+coppock_kaur_2022,text,ATT summarised as a point effect,-15,-15,1,"The ATT is exactly -22.5 points once South Africa (1910-1994) carries the 0.8 appendix C states, so the whole-number label the figure prints is not determined by rounding; it reads -22 at three of the four steps and -23 at the fourth in the same run",-22,0,archive
 coppock_kaur_2022,text,cases imputed as a non-zero causal effect,6,6,1,,6,1,
 coppock_kaur_2022,text,expert responses received,20,20,1,,20,1,
 coppock_kaur_2022,text,democratization cases without an expert response,43,43,1,,43,1,
@@ -198,12 +198,12 @@ coppock_kaur_2022,text,"toy example: untreated outcomes for units 1, 2 and 5",,"
 coppock_kaur_2022,text,toy example: treated outcomes for units 8 and 9,,"1, 0",,,"1, 0",1,
 coppock_kaur_2022,text,probabilistic extension: possible sets of potential outcomes,,4,,,4,1,
 coppock_kaur_2022,text,unobserved potential outcomes,,63,,,63,1,
-coppock_kaur_2022,text,unobserved potential outcomes imputed with certainty,,5,,The article says five imputations were made with certainty; four democratization cases carry an imputation probability of exactly 0 or 1 in the deposited data and in appendix Table B.2,4,0,paper_internal
-coppock_kaur_2022,text,unobserved potential outcomes imputed probabilistically,,26,,"The article says 26; 27 democratization cases carry a probability strictly between 0 and 1. The total imputed, 31, is right in both readings",27,0,paper_internal
+coppock_kaur_2022,text,unobserved potential outcomes imputed with certainty,,5,,Brazil (1964-1985) and the two Thailand transitions are imputed at a probability of exactly 0 or 1; Uruguay (1973-1984) is a fourth in the deposit and is probabilistic at the 0.9 appendix C states,3,0,paper_internal
+coppock_kaur_2022,text,unobserved potential outcomes imputed probabilistically,,26,,Twenty-eight of the 31 democratization imputations carry a probability strictly between 0 and 1; the deposit gives 27 and the article says 26,28,0,paper_internal
 coppock_kaur_2022,text,unobserved potential outcomes left unimputed,,32,,,32,1,
 coppock_kaur_2022,text,disbanded and discredited democratization cases,,4,,"The article calls these four cases in the sentence after naming two of them, Bolivia and the Philippines; appendix Table B.2 lists two. Appendix Table B.1 lists four end-of-conflict cases at the same step",2,0,paper_internal
 coppock_kaur_2022,text,observed outcome in the disbanded and discredited cases,,0,,,0,1,
-coppock_kaur_2022,text,South Africa: probability the imputed untreated outcome equals 1,,0.8,,"The main text and appendix C both state 0.8; the deposited data and appendix Table B.2 carry 0.2, and 0.2 is what the simulation draws from",0.2,0,archive
+coppock_kaur_2022,text,South Africa: probability the imputed untreated outcome equals 1,,0.8,,The main text and appendix C entry C.2.7 both state 0.8; the deposit transcribes 0.2 and the rewrite restores the stated value,0.8,1,
 coppock_kaur_2022,text,disbanded cases: probability the imputed outcome equals 1,,0.1,,,0.1,1,
 coppock_kaur_2022,text,Nigeria: probability the imputed untreated outcome equals 1,,0.1,,,0.1,1,
 coppock_kaur_2022,text,experts disagreeing with our coding of treatment and outcome,,5,,"The deposited case file records whether an expert responded and what they imputed, but not whether they accepted our coding of treatment and outcome",,,archive
@@ -211,7 +211,7 @@ coppock_kaur_2022,text,"expert imputations conflicting with ours, restated in th
 coppock_kaur_2022,text,"end-of-conflict cases, stated in the main text footnote",,54,,"The same quantity as Appendix A's 54 cases, stated a second time in a main text footnote",54,1,
 coppock_kaur_2022,text,unimputed cases as a share of the total,,,,,"32 of 63, 50.8%",1,
 coppock_kaur_2022,text,the bounds around the ATE include zero,,,,,"[-2, 49] contains 0",1,
-coppock_kaur_2022,text,the ATT bounds shrink to a point,,,,,"[-15, -15], width 0",1,
+coppock_kaur_2022,text,the ATT bounds shrink to a point,,,,,"[-22, -22], width 0",1,
 coppock_kaur_2022,text,the ATU bounds are wider than the ATT bounds,,,,,58 against 0,1,
 coppock_kaur_2022,text,the combined bounds are narrower than our original bounds,,,,,44 against 51,1,
 coppock_kaur_2022,text,no expert assigned to a treated case declined to impute,,,,,0 of 6 declining experts,1,

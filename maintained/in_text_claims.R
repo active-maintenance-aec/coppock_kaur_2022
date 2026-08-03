@@ -43,6 +43,7 @@ figure_4 <- out("figure_4_expert_validation.csv")
 summary_stats <- out("text_summary_stats.csv")
 expert_agreement <- out("text_expert_agreement.csv")
 imputation_counts <- out("text_imputation_counts.csv")
+cases_corrected <- read_rds(here::here("maintained", "output", "cases_corrected.rds"))
 
 # The published transcription of appendix Tables B.1 and B.2. It is a reading of
 # the article, not a comparison against it, and the claims those two tables carry
@@ -100,10 +101,17 @@ ate_bound <- function(sample, which_step, side) {
   row[[str_c("estimate_", side, "_est")]]
 }
 
-case_field <- function(which_case, field) {
-  hit <- table_b1_b2[[field]][table_b1_b2$case == which_case]
-  stopifnot(length(hit) == 1)
-  hit
+# The imputation probability the analysis actually draws from, which is the
+# appendix C value wherever the deposit transcribed it differently. Read from the
+# corrected case file rather than from the Table B.1 and B.2 reconstruction, which
+# reproduces the published pages and therefore carries the deposited values.
+case_probability <- function(which_case) {
+  hit <- cases_corrected$probability[
+    str_c(cases_corrected$location, " (", cases_corrected$conflict_start, "-",
+          cases_corrected$conflict_end, ")") == which_case
+  ]
+  stopifnot(length(hit) == 1, !is.na(hit))
+  format(hit, trim = TRUE, drop0trailing = TRUE)
 }
 
 # Abstract ----
@@ -309,10 +317,10 @@ claim("text|observed_outcome_in_the_disbanded_and_discredited_cases", disbanded_
 # Yi(0) = Yi(1) = 0, with a probability of .1 that the imputed outcomes would take
 # on the value 1 instead."
 # covers: text|disbanded_cases_probability_the_imputed_outcome_equals_1
-disbanded_probabilities <- table_b1_b2 |>
-  filter(table == "B.2", step == "Disbanded and Discredited Cases") |>
-  pull(probability) |>
-  unique()
+disbanded_probabilities <- unique(c(
+  case_probability("Bolivia (1980-1982)"),
+  case_probability("Philippines (1972-1986)")
+))
 stopifnot(length(disbanded_probabilities) == 1)
 claim("text|disbanded_cases_probability_the_imputed_outcome_equals_1", disbanded_probabilities)
 
@@ -321,13 +329,13 @@ claim("text|disbanded_cases_probability_the_imputed_outcome_equals_1", disbanded
 # been very likely to resume. In other words, Yi(0) = 1 with a probability of .8."
 # covers: text|south_africa_probability_the_imputed_untreated_outcome_equals_1
 claim("text|south_africa_probability_the_imputed_untreated_outcome_equals_1",
-      case_field("South Africa (1910-1994)", "probability"))
+      case_probability("South Africa (1910-1994)"))
 
 # "That is, we impute Yi(1) = Yi(0) = 0 with a probability of .1 that the imputed
 # outcome would take on the value of 1."
 # covers: text|nigeria_probability_the_imputed_untreated_outcome_equals_1
 claim("text|nigeria_probability_the_imputed_untreated_outcome_equals_1",
-      case_field("Nigeria (1993-1999)", "probability"))
+      case_probability("Nigeria (1993-1999)"))
 
 # "Next, we turn to the eight cases treated with bona fide TTCs."
 # covers: text|treated_democratization_cases

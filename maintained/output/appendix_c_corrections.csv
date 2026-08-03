@@ -1,0 +1,8 @@
+location,conflict_start,conflict_end,appendix_c,missing_po,imputed_from_step,imputed_value,deposited_probability,appendix_c_probability
+South Africa,1910,1994,C.2.7,y0,1,1,0.2,0.8
+Ghana,1981,1993,C.3.2,y1,2,0,0.1,0.2
+Uruguay,1973,1984,C.3.6,y1,2,1,1,0.9
+Sierra Leone,1997,1998,C.4.8,y1,3,0,0.2,0.1
+Nicaragua,1979,1990,C.4.10,y1,3,1,0.8,0.9
+Central African Rep,1981,1993,C.4.12,y1,3,1,0.3,0.7
+Sierra Leone,1992,1996,C.4.13,y1,3,1,0.3,0.7

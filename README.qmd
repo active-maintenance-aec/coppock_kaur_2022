@@ -32,8 +32,11 @@ latex_only <- function(k, f) if (latex_out) f(k) else k
 
 out <- function(f) read_csv(here::here("maintained", "output", f), show_col_types = FALSE)
 
+# value_paper is a string by rule: read as a number, "0.20" and ".2" stop being
+# distinguishable from what the page prints, and "51% (32)" stops parsing at all.
 gt <- read_csv(here::here("ground_truth", "coppock_kaur_2022_ground_truth.csv"),
-               show_col_types = FALSE)
+               show_col_types = FALSE,
+               col_types = cols(value_paper = col_character(), .default = col_guess()))
 
 manifest <- read_csv(here::here("original_manifest.csv"), show_col_types = FALSE)
 ```
@@ -49,7 +52,7 @@ This repository holds the actively maintained replication code for Coppock and K
 
 **The data are not redistributed here.** The deposit is `r nrow(manifest)` files and about `r round(sum(manifest$bytes) / 1e6, 1)` MB, and lives at Harvard Dataverse, which is the only copy this repository points at. `download_original.R` fetches it and verifies every file; `original_manifest.csv` pins the file identifiers, sizes and checksums, so the exact bytes this code was written against are recorded in version control even though the bytes themselves are not.
 
-**Repository layout.** `maintained/` is the maintained rewrite: one script per published table or figure, writing to `output/`, which is committed so a reader can compare a fresh run against it without downloading anything. `ground_truth/` ties every published number to the code that produces it: `published_claims.csv` is the exhaustive list of numbers the article and its supporting information print, the ground truth CSV is the comparison against the deposit and against the rewrite, and `build_ground_truth.R` is the gate that stops the run if a published number is checked by neither instrument. `coppock_kaur_2022_errata.pdf` at the root lists the sentences in the article that its own tables contradict. `original/` is created by the download script and is deliberately absent from the repository. This file is the reproducibility report, also available as a PDF in `report/`.
+**Repository layout.** `maintained/` is the maintained rewrite: one script per published table or figure, writing to `output/`, which is committed so a reader can compare a fresh run against it without downloading anything. `ground_truth/` ties every published number to the code that produces it: `published_claims.csv` is the exhaustive list of numbers the article and its supporting information print, the ground truth CSV is the comparison against the deposit and against the rewrite, and `build_ground_truth.R` is the gate that stops the run if a published number is checked by neither instrument. `coppock_kaur_2022_errata.pdf` at the root lists the numbers in the article that its own tables, appendix and data do not support. `original/` is created by the download script and is deliberately absent from the repository. This file is the reproducibility report, also available as a PDF in `report/`.
 
 **License.** CC0 1.0 Universal, matching the terms of the deposit this repository maintains. See `LICENSE`.
 
@@ -73,6 +76,90 @@ n_rewrite_match <- sum(gt$match_rewrite == 1, na.rm = TRUE)
 n_rewrite_fail <- sum(gt$match_rewrite == 0, na.rm = TRUE)
 n_unverifiable <- sum(is.na(gt$match_rewrite))
 seeds <- out("text_seed_sensitivity.csv")
+corrections <- out("appendix_c_corrections.csv")
+expected_bounds <- out("text_expected_bounds.csv")
+summary_stats <- out("text_summary_stats.csv")
+
+summary_value <- function(which_claim) {
+  hit <- summary_stats$value[summary_stats$claim == which_claim]
+  stopifnot(length(hit) == 1)
+  hit
+}
+
+exact_bound <- function(sample, which_estimand, which_step, side) {
+  row <- expected_bounds |>
+    filter(transition_fac == sample, estimand == which_estimand, step == which_step)
+  stopifnot(nrow(row) == 1)
+  row[[str_c("expected_", side)]]
+}
+
+n_complemented <- sum(near(corrections$deposited_probability +
+                             corrections$appendix_c_probability, 1))
+n_off_by_one_step <- nrow(corrections) - n_complemented
+final_dem_label <- sprintf("[%.0f, %.0f]",
+                           exact_bound("Democratization", "ATE", "s4", "low"),
+                           exact_bound("Democratization", "ATE", "s4", "high"))
+n_final_label_holds <- sum(seeds$final_dem_label == final_dem_label)
+other_dem_labels <- str_c(setdiff(seeds$final_dem_label, final_dem_label), collapse = " and ")
+n_boundary <- sum(expected_bounds$on_rounding_boundary)
+n_boundary_att <- sum(expected_bounds$on_rounding_boundary &
+                        expected_bounds$transition_fac == "Democratization" &
+                        expected_bounds$estimand == "ATT" &
+                        expected_bounds$step %in% c("s1", "s2", "s3", "s4"))
+
+n_paper_internal_fail <- sum(gt$defect_locus == "paper_internal" & gt$match_rewrite == 0,
+                             na.rm = TRUE)
+n_appendix_c_fail <- sum(gt$defect_locus == "archive" & gt$match_rewrite == 0,
+                         na.rm = TRUE) - 1
+
+# The claims that live in a sentence rather than in a float cell or a figure
+# label, which is what the errata document corrects one sentence at a time.
+n_prose_fail <- sum(gt$match_rewrite == 0 &
+                      gt$table_figure %in% c("text", "table_4", "appendix_a"),
+                    na.rm = TRUE)
+
+ate_width_exact <- exact_bound("Democratization", "ATE", "s4", "high") -
+  exact_bound("Democratization", "ATE", "s4", "low")
+
+imputation_count <- function(quantity_label) {
+  hit <- out("text_imputation_counts.csv") |>
+    filter(transition_fac == "Democratization", quantity == quantity_label) |>
+    pull(value)
+  stopifnot(length(hit) == 1)
+  hit
+}
+n_certain <- imputation_count("imputed_with_certainty")
+n_probabilistic <- imputation_count("imputed_probabilistically")
+n_unimputed <- imputation_count("left_unimputed")
+n_treated <- imputation_count("treated")
+
+english_number <- function(x) {
+  words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
+  stopifnot(x >= 1, x <= 10, x == round(x))
+  words[x]
+}
+
+# The published side of the movement table below is read from the extraction
+# rather than typed, so this report and the errata quote the same transcription
+# of the figures. value_paper is a string by rule: read as a number, "0.20" and
+# ".2" stop being distinguishable from what the page prints.
+published_claims <- read_csv(
+  here::here("ground_truth", "published_claims.csv"),
+  show_col_types = FALSE,
+  col_types = cols(value_paper = col_character(), .default = col_character())
+)
+
+published_value <- function(id) {
+  hit <- published_claims$value_paper[published_claims$claim_id == id]
+  stopifnot(length(hit) == 1, !is.na(hit))
+  hit
+}
+
+published_bounds <- function(float, id_infix, slug) {
+  ends <- map_chr(str_c(float, "|", c("low", "high"), "_bound_", id_infix, slug),
+                  published_value)
+  str_c("[", ends[1], ", ", ends[2], "]")
+}
 
 # The two appendix case tables are recorded a column at a time: the published
 # value is the count of cells the column prints, the rewrite value the count the
@@ -88,15 +175,25 @@ Two questions, answered before the detail.
 
 Yes. All five analysis scripts and the helpers file execute without error on R 4.6.0. Every package the archive names still installs from CRAN: tidyverse, xtable, janitor and reshape2. Nothing in the archive has been removed from the language; what has accumulated is deprecation. `geom_errorbarh()` and the `<ggplot> %+% data` idiom were deprecated in ggplot2 4.0.0, the `size` aesthetic for lines in 3.4.0, and `reshape2::melt` and `dcast` are superseded by tidyr. All of them still work and all of them warn. Everything that stands between this archive and a clean run is resolvable by substitution.
 
-Running is not the same as reproducing, and one thing keeps the archive from reproducing its own figures exactly. `figures_2_3_A1_A2.R` estimates the bounds by simulation, 1,000 draws for Figures 2 and A1 and 10,000 for Figures 3 and A2, and it sets no seed. The published figures are labelled with rounded percentage points, so most of the simulation noise is absorbed by the rounding, but not all of it: repeating the Figure 2 and A1 simulation at twenty seeds moves at least one of the `r 2 * 14` rounded labels off its published value in `r sum(seeds$labels_moved > 0)` of them. A reader running the deposited script today has close to even odds of seeing a figure that disagrees with the article somewhere, with no error and no warning. The maintained rewrite fixes the seed at 12345, which reproduces all `r 2 * 14` published labels of Figures 2 and A1 and all `r 2 * 28` of Figures 3 and A2.
+Running is not the same as reproducing, and one thing keeps the archive from reproducing its own figures exactly. `figures_2_3_A1_A2.R` estimates the bounds by simulation, 1,000 draws for Figures 2 and A1 and 10,000 for Figures 3 and A2, and it sets no seed. The published figures are labelled with rounded percentage points, so most of the simulation noise is absorbed by the rounding, but not all of it: repeating the Figure 2 and A1 simulation at twenty seeds moves at least one of the `r 2 * 14` rounded labels off its published value in `r sum(seeds$labels_moved > 0)` of them. A reader running the deposited script today has close to even odds of seeing a figure that disagrees with the article somewhere, with no error and no warning. The maintained rewrite fixes the seed at 12345.
 
 Two smaller things. `table_4.R` prints its bounds as fractions where the paper prints percentage points, so the deposited output reads `[0, 0.3]` against the article's `[0, 30]`. It is a display inconsistency and not a numerical one. And the writing of every table and figure is commented out: each script builds the object and prints it, but the `xtable` and `ggsave` calls that would put it on disk are behind `#`. The archive is a set of scripts that show their work rather than a pipeline that produces the article's floats.
 
 ## Does the maintained rewrite reproduce the paper?
 
-Yes. `r n_rewrite_match` of the `r n_rewrite_verifiable` verifiable ground truth claims match the published values to reported precision: every cell and bound of Table 3, every bound of Figure 1, every row of Table 4, the democratization row of Table 5, all `r 2 * 14` labels of Figures 2 and A1, all `r 2 * 28` of Figures 3 and A2, all ten bounds of Figure 4, `r n_appendix_agree` of the `r n_appendix_printed` cells the two appendix case tables print, and every in-text quantity from the abstract, the Expert Survey section and Appendix A.
+Mostly, and the exceptions have one cause. `r n_rewrite_match` of the `r n_rewrite_verifiable` verifiable ground truth claims match the published values to reported precision: every cell and bound of Table 3, every bound of Figure 1, every row of Table 4, the democratization row of Table 5, every label of Figures A1 and A2, all ten bounds of Figure 4, `r n_appendix_agree` of the `r n_appendix_printed` cells the two appendix case tables print, the abstract, and every in-text quantity from the Expert Survey section and Appendix A. The article's headline result is among them: the extreme value bounds on the ATE come to [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "high"))`], `r sprintf("%.0f", ate_width_exact)` points wide, as published.
 
-The `r n_rewrite_fail` that do not match fall into three groups. Seven are the five sentences in the article that the article's own tables contradict, two of the five stating a pair of numbers rather than one; the rewrite agrees with the tables in every case, and all five are set out in the errata section below and in `coppock_kaur_2022_errata.pdf`. Two are cells of appendix Table B.2, one a probability the appendix contradicts elsewhere and one an observed outcome the deposited data record differently. The last is a probability the article states twice in prose and the deposited data carry as its complement. The remaining `r n_unverifiable` recorded quantities have no comparison to make: four are the end-of-conflict row of the imputation summary, which the rewrite computes and neither the article nor the appendix prints, and one is a survey fact the deposit never recorded.
+The `r n_rewrite_fail` that do not match fall into three groups.
+
+`r n_appendix_c_fail` of them follow from a single defect in the deposited data, described in full below: `r nrow(corrections)` imputation probabilities in `cases_clean.csv` do not match the probability the article's own appendix C states for that case, and the rewrite uses the stated values. Four are labels of Figure 2, twelve are labels of Figure 3, and one is the sentence summarising the ATT.
+
+`r n_paper_internal_fail` are places where the article contradicts itself. Seven of them are numbers in prose, spread over five sentences, two of which state a pair of numbers apiece; the rewrite agrees with the table or the appendix the sentence disagrees with in every case. The eighth is a cell of appendix Table B.2, an imputation probability the table prints differently from both appendix C and the deposited data.
+
+The last is a second cell of appendix Table B.2, an observed outcome the deposited data record differently.
+
+The remaining `r n_unverifiable` recorded quantities have no comparison to make: four are the end-of-conflict row of the imputation summary, which the rewrite computes and neither the article nor the appendix prints, and one is a survey fact the deposit never recorded.
+
+All of it is set out with corrected sentences and corrected floats in `coppock_kaur_2022_errata.pdf` at the root of this repository. **No conclusion of the article changes.** One published quantity moves materially: the average treatment effect on the treated, which the article states as a -15 percentage point effect and which is `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` points once the imputation probabilities appendix C states are the ones the analysis uses.
 
 # Paper overview
 
@@ -160,7 +257,29 @@ seeds |>
   latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 9))
 ```
 
-The size of the disturbance is one percentage point in the rounded label, never more, and it never touches the substantive claims: the final bounds are [-2, 49] at every seed tested. The point is not that the archive gets a different answer but that it gets a slightly different figure each time it is run, and it offers a reader no way to tell whether a discrepancy is noise or a mistake.
+The size of the disturbance is one percentage point in the rounded label, never more, and it barely touches the substantive claims: the final democratization bounds read `r final_dem_label` at `r n_final_label_holds` of the `r nrow(seeds)` seeds and `r other_dem_labels` at the other `r nrow(seeds) - n_final_label_holds`, a difference of one point in the lower label. The point is not that the archive gets a different answer but that it gets a slightly different figure each time it is run, and it offers a reader no way to tell whether a discrepancy is noise or a mistake.
+
+The rounding hides one further thing, which no seed sweep can settle and which the exact expectation can. The bounds are linear in the imputed potential outcomes, so the quantity the simulation estimates has a closed form, and `text_expected_bounds.R` computes it for every label of all four figures beside the drawn value. `r n_boundary` of them sit exactly halfway between two whole numbers, where no whole-number label is determined at all and the figure prints whichever side the draw fell on.
+
+```{r boundary_table}
+expected_bounds |>
+  filter(on_rounding_boundary) |>
+  transmute(
+    Sample = transition_fac,
+    Estimand = estimand,
+    Step = as.character(description),
+    Exact = sprintf("[%.1f, %.1f]", expected_low, expected_high),
+    Drawn = sprintf("[%.0f, %.0f]", label_low, label_high)
+  ) |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("Sample", "Estimand", "Step", "Exact expectation", "Label at seed 12345"),
+    caption = "Bounds whose exact expectation falls on a whole-number rounding boundary. All but the democratization ATT rows from Treated Cases onwards are a property of the deposit as published; those appear once the appendix C probabilities are restored."
+  ) |>
+  latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 8))
+```
+
+The `r n_boundary_att` democratization ATT rows from *Treated Cases* onwards are the consequential ones, and they are the only rows in the table the corrections create. The democratization ATT is exactly `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` once South Africa carries the probability appendix C states for it, so the label the article's figure style would print is decided by the simulation rather than by the estimate. The rest were on a boundary in the deposit as published, and the labels the article prints for them are one draw of a coin flip.
 
 ## Checksums
 
@@ -184,7 +303,84 @@ Harvard Dataverse ingests `cases_clean.csv` as tabular data and derives a `.tab`
 
 # Errata
 
-Nothing in the deposited code is wrong. Five claims in the article's prose are, each contradicted by a table in the same article, and the maintained rewrite therefore disagrees with the sentence and agrees with the float. All five are set out with the corrected sentence in `coppock_kaur_2022_errata.pdf` at the root of this repository. None of them changes a conclusion.
+Nothing in the deposited code is wrong. The deposited data are wrong in `r english_number(nrow(corrections))` cells, and `r english_number(n_prose_fail)` claims in the article's prose, spread over six sentences, are wrong on the article's own terms. All of it is set out with corrected sentences and corrected floats in `coppock_kaur_2022_errata.pdf` at the root of this repository. None of it changes a conclusion.
+
+## `r str_to_sentence(english_number(nrow(corrections)))` imputation probabilities the deposit transcribes differently from appendix C
+
+The imputed potential outcomes in this article are not measurements. They are qualitative judgments about what would have happened in each case, set out one by one in appendix C with the scholarship behind each of them, and the deposited `cases_clean.csv` is a transcription of those judgments. Appendix C states an imputation probability for 30 of the 31 imputed democratization cases; the exception, Thailand (1991-1992), refers to the entry above it rather than stating a number of its own. Twenty-three of the 30 agree with the deposit exactly. `r nrow(corrections)` do not.
+
+```{r corrections_table}
+corrections |>
+  transmute(
+    Case = str_c(location, " (", conflict_start, "-", conflict_end, ")"),
+    `Appendix C` = appendix_c,
+    Imputed = imputed_value,
+    Deposit = format(deposited_probability, trim = TRUE, drop0trailing = TRUE),
+    `Appendix C ` = format(appendix_c_probability, trim = TRUE, drop0trailing = TRUE)
+  ) |>
+  kable(
+    booktabs = TRUE,
+    col.names = c("Case", "Appendix C entry", "Imputed value",
+                  "Probability in the deposit", "Probability in appendix C"),
+    caption = "The imputation probabilities the deposited case file transcribes differently from the appendix C narrative that states them. The imputed value is the point imputation, which agrees with appendix C in every case."
+  ) |>
+  latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 8))
+```
+
+`r n_complemented` of the `r nrow(corrections)` are exact complements, and in all `r english_number(n_complemented)` the deposit contradicts itself: an imputed potential outcome of 1 sits beside a probability below one half, which says the imputation is more likely to be 0 than 1. The main text states the South Africa probability too, on page 10, and states it as 0.8. The other `r n_off_by_one_step` differ from the stated probability by one step of 0.1 and none of them crosses one half, so none changes an imputed value.
+
+Appendix Table B.2 prints the deposited value in all `r nrow(corrections)` cases, so the published table inherits the transcription error rather than committing a second one. `maintained/table_b1_b2_case_dataset.R` is the one script in the rewrite that reads the deposit rather than the corrected file, precisely so that this stays checkable: the question those two tables answer is whether the published pages print what the deposit holds, and they do.
+
+**The rewrite uses the values appendix C states.** `maintained/apply_appendix_c_corrections.R` is a visible, named step that writes both the corrected case file every analysis script reads and `output/appendix_c_corrections.csv`, the table above, so the deposited value sits beside the value that replaced it. It asserts the deposited value in every column it touches before overwriting it, so a change to the deposit stops the run rather than being absorbed. The probability columns are cumulative, and each correction is applied to every step column from the step at which the case is imputed onwards.
+
+### What it moves
+
+The article's headline result is unchanged. The extreme value bounds on the ATE stay at [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "high"))`] and `r sprintf("%.0f", ate_width_exact)` points wide, as do the abstract's three numbers, the expert survey comparison in Figure 4, Table 5, and every quantity in the end-of-conflict application, all seven corrections being democratization cases. The two intermediate steps of Figure 2 move by about one point in each label, and the ATU bounds of Figure 3 by about one and a half.
+
+The consequential movement is in the ATT. Every treated case has both potential outcomes filled in by the second imputation step, which is why the ATT bounds collapse to a point, and South Africa is one of the `r english_number(n_treated)` treated cases. Restoring its probability from 0.2 to the 0.8 that both the main text and appendix C state moves the ATT from `r published_value("figure_3|low_bound_att_unimputable_cases")` to `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` percentage points.
+
+```{r consequence_table}
+tibble(
+  Quantity = c("Figure 2, Treated Cases", "Figure 2, Non-transitional Cases",
+               "Figure 2, Untreated and Unimputable Cases",
+               "Figure 3, ATU, Untreated and Unimputable Cases",
+               "Figure 3, ATT, Treated Cases onwards"),
+  Published = c(
+    published_bounds("figure_2", "", "treated_cases"),
+    published_bounds("figure_2", "", "non_transitional_cases"),
+    published_bounds("figure_2", "", "unimputable_cases"),
+    published_bounds("figure_3", "atu_", "unimputable_cases"),
+    published_bounds("figure_3", "att_", "unimputable_cases")
+  ),
+  Corrected = c(
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATE", "s1", "low"),
+            exact_bound("Democratization", "ATE", "s1", "high")),
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATE", "s2", "low"),
+            exact_bound("Democratization", "ATE", "s2", "high")),
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATE", "s4", "low"),
+            exact_bound("Democratization", "ATE", "s4", "high")),
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATU", "s4", "low"),
+            exact_bound("Democratization", "ATU", "s4", "high")),
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATT", "s4", "low"),
+            exact_bound("Democratization", "ATT", "s4", "high"))
+  )
+) |>
+  kable(
+    booktabs = TRUE,
+    caption = "Every published bound the corrections move. Published values are the whole-number labels the figures carry; corrected values are the exact expectation of each bound, which the figures estimate by simulation. The third row is the article's headline result and rounds to the published label."
+  ) |>
+  latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 8))
+```
+
+The article's ATU claim is untouched. It says the ATU bounds are "greater than `r published_value("text|atu_final_bounds_width")` points wide", and that width is `r sprintf("%.1f", exact_bound("Democratization", "ATU", "s4", "high") - exact_bound("Democratization", "ATU", "s4", "low"))` points before the correction and after it, because both ATU bounds move by the same amount.
+
+One imputation changes class. An imputation is made with certainty when its probability is exactly 0 or exactly 1, and Uruguay (1973-1984) is carried at 1 in the deposit where appendix C entry C.3.6 states 0.9. The split the article states as "`r published_value("text|unobserved_potential_outcomes_imputed_with_certainty")` with certainty, `r published_value("text|unobserved_potential_outcomes_imputed_probabilistically")` probabilistically" is `r n_certain + 1` and `r n_probabilistic - 1` in the deposit, Uruguay being the difference, and `r n_certain` and `r n_probabilistic` once appendix C is followed. The number left unimputed, `r n_unimputed`, and the `r n_certain + n_probabilistic` imputed in total are the same either way.
+
+### One inconsistency this does not resolve
+
+South Africa - Namibia (1966-1988), an end-of-conflict case, is the fourth place in the deposited data where a point imputation sits on the wrong side of its own probability: the imputed treated outcome is 0 and the probability that it equals 1 is 0.8. Appendix Table B.1 prints the same pair, so the table and the deposit agree. Appendix C covers the democratization cases only and Appendix A gives no case-by-case narrative for the end-of-conflict sample, so there is no stated probability anywhere to resolve it against, and the case is left exactly as deposited. The three democratization cases of the same shape are corrected above, because for those a stated probability exists.
+
+## `r str_to_sentence(english_number(n_prose_fail))` claims in the article's prose
 
 **The toy example's treated outcomes.** The text introducing the toy example says "the outcome for three of the treated units and one of the untreated units is 1". Table 3 on the facing page shows units 1 through 4 treated with an observed outcome of 1, which is four, and the deposited `Y <- rep(c(1, 0, 1, 0), c(4, 3, 1, 2))` encodes four. Four is also what the bounds require: the initial bounds of [-40, 60] follow from four treated ones and would be [-50, 50] with three.
 
@@ -192,52 +388,19 @@ Nothing in the deposited code is wrong. Five claims in the article's prose are, 
 
 **Appendix A's bounds width.** Appendix A says the imputations shrink "the width of the extreme value bounds from 100 to 41 points" and then, in the next sentence, that "the bounds come to [-3, 42] (only 45 points wide)". Both cannot hold. The pipeline gives final end-of-conflict bounds of [-2.9, 41.5], a width of 44.4 points, which rounds to 44 and which is 45 if taken as the difference of the rounded endpoints, as the second sentence does. The 41 matches nothing.
 
-**How the 63 missing potential outcomes were imputed.** The empirical section says "for all 63 unobserved potential outcomes, we imputed 5 with certainty, 26 probabilistically and we left 32 unimputed". An imputation is made with certainty when the stated probability that the missing potential outcome equals 1 is exactly 0 or exactly 1. Appendix Table B.2 shows four such cases, Brazil, Uruguay and two Thailand transitions, and 27 whose probability lies strictly between; the deposited data agree. The 32 left unimputed and the 31 imputed in total are right.
+**How the 63 missing potential outcomes were imputed.** The empirical section says "for all 63 unobserved potential outcomes, we imputed 5 with certainty, 26 probabilistically and we left 32 unimputed". Neither number holds under either reading of the data, as set out above. The 32 left unimputed and the 31 imputed in total are right.
 
 **The count of disbanded and discredited cases.** Step 1 names two democratization cases, Bolivia and the Philippines, then says in the next sentence that "the observed outcome $Y_i(0)$ in each of these four cases was 0". Appendix Table B.2 lists two cases at that step. Appendix Table B.1 lists four end-of-conflict cases at the same step, which is where the count appears to have come from.
+
+**The ATT.** "We can summarize the ATT as a -15 percentage point effect on return to authoritarianism." That is what the deposited data give; it is `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` under the appendix C probabilities.
 
 ## Two appendix cells the deposit does not support
 
 Appendix Tables B.1 and B.2 print the full case datasets, `r n_appendix_printed` cells between them, and the deposited case file reproduces `r n_appendix_agree`.
 
-**Burundi's imputation probability.** Table B.2 prints the imputed treated outcome for Burundi (1996-2005) as 1 with a probability of 0.9. Appendix C, which gives the reasoning case by case, states 0.8 for the same case, and the deposited data carry 0.8. The simulation uses 0.8, so the figures are unaffected; the table cell is the outlier.
+**Burundi's imputation probability.** Table B.2 prints the imputed treated outcome for Burundi (1996-2005) as 1 with a probability of 0.9. Appendix C entry C.4.11 states 0.8 for the same case, and the deposited data carry 0.8. Deposit and appendix agree here, so there is nothing to correct in the data; the table cell is the outlier and the simulation is unaffected.
 
 **Azerbaijan's observed outcome.** Table B.2 prints an observed outcome of 0 for Azerbaijan (1991-1992), consistent with the untreated potential outcome of 0 printed beside it. The deposited `outcome` column records 1 for that case while its `y0_obs` column records 0, so the deposit contradicts the switching equation for this one case. Nothing in the analysis reads the `outcome` column, so nothing published depends on it, and the table matches what the analysis used.
-
-## One probability the deposit carries as its complement
-
-The South Africa case is imputed in the main text as $Y_i(0) = 1$ "with a probability of .8", and appendix C repeats the 0.8. The deposited data carry 0.2, and appendix Table B.2 prints 0.2 alongside an imputed value of 1, which is the only case in either table where a point imputation of 1 sits beside a probability below one half. The simulation behind Figures 2 and 3 draws from 0.2.
-
-```{r south_africa_sensitivity, include=FALSE}
-# What the published bounds would be if the probability the two prose passages
-# state were the one the simulation drew from. Computed here rather than in
-# maintained/, because substituting it is a reanalysis and not a translation.
-source(here::here("maintained", "helpers.R"))
-
-final_step <- read_rds(here::here("maintained", "output", "cases_long.rds")) |>
-  filter(transition_fac == "Democratization", step == "s4")
-
-simulate_final_bounds <- function(cases) {
-  set.seed(12345)
-  map(seq_len(1000), \(i) enframe(ev_bounds(
-    Y0 = suppressWarnings(rbinom(nrow(cases), 1, cases$y0)),
-    Y1 = suppressWarnings(rbinom(nrow(cases), 1, cases$y1))
-  ))) |>
-    bind_rows() |>
-    summarise(estimate = round(mean(value) * 100), .by = name) |>
-    pull(estimate, name = name)
-}
-
-as_deposited <- simulate_final_bounds(final_step)
-as_stated <- simulate_final_bounds(mutate(final_step, y0 = if_else(y0 == 0.2, 0.8, y0)))
-
-interval <- function(x) sprintf("[%.0f, %.0f]", x[["low_est"]], x[["high_est"]])
-width <- function(x) sprintf("%.0f", x[["high_est"]] - x[["low_est"]])
-```
-
-The maintained rewrite does not change it, because choosing between the two is an analytical decision rather than a translation. Its consequences are small and worth stating: at 0.8 the final democratization bounds move from `r interval(as_deposited)` to `r interval(as_stated)`, the width stays at `r width(as_stated)` points against `r width(as_deposited)`, and every conclusion in the article is unaffected.
-
-No other ground truth row is marked `match_rewrite = 0`.
 
 # Number-by-number comparison
 
@@ -285,11 +448,11 @@ extraction_all |>
 
 ## Appendix Tables B.1 and B.2
 
-Appendix B prints the full case datasets, 54 end-of-conflict cases and 63 democratization cases, with seven columns each. The deposited archive has no script for either table, so until `table_b1_b2_case_dataset.R` was written the `r n_appendix_printed` published cells had nothing on this side to be compared against. All but `r n_appendix_printed - n_appendix_agree` reproduce; both exceptions are described in the errata section above.
+Appendix B prints the full case datasets, 54 end-of-conflict cases and 63 democratization cases, with seven columns each. The deposited archive has no script for either table, so until `table_b1_b2_case_dataset.R` was written the `r n_appendix_printed` published cells had nothing on this side to be compared against. All but `r n_appendix_printed - n_appendix_agree` reproduce; both exceptions are described in the errata section above. That script is the one place in the rewrite that reads the deposit rather than the corrected case file, because the question it answers is whether the published pages print what the deposit holds. It also writes `table_b2_corrected_rows.csv`, the `r nrow(corrections)` rows of Table B.2 as published beside the same rows with the appendix C probabilities restored.
 
 # Maintained rewrite
 
-The rewrite lives in `maintained/`: a helpers file, one cleaning script, three table scripts, four figure scripts and three in-text scripts. It is a translation, not a reanalysis. `ev_bounds()`, `bounds_width()`, `sample_bounds()` and the probabilistic-extension functions are the paper's contribution and are carried over with their logic unchanged; what changes is the tidyverse around them.
+The rewrite lives in `maintained/`: a helpers file, a corrections script, one cleaning script, four table scripts, four figure scripts and five in-text scripts. It is a translation rather than a reanalysis in every respect but one. `ev_bounds()`, `bounds_width()`, `sample_bounds()` and the probabilistic-extension functions are the paper's contribution and are carried over with their logic unchanged; what changes is the tidyverse around them. The exception is `apply_appendix_c_corrections.R`, which restores the `r nrow(corrections)` imputation probabilities the deposit transcribes differently from the appendix that states them, and which is described in the errata section above.
 
 ## Architecture
 
@@ -297,6 +460,7 @@ The rewrite lives in `maintained/`: a helpers file, one cleaning script, three t
 tibble(
   Script = c(
     "helpers.R",
+    "apply_appendix_c_corrections.R",
     "clean_cases.R",
     "table_3_toy_example.R",
     "table_4_probabilistic.R",
@@ -309,16 +473,18 @@ tibble(
     "text_expert_agreement.R",
     "text_imputation_counts.R",
     "text_summary_stats.R",
+    "text_expected_bounds.R",
     "text_seed_sensitivity.R",
     "in_text_claims.R"
   ),
   Output = c(
     "none; packages, the QUIMPO functions and the toy example",
+    "cases_corrected.rds, appendix_c_corrections.csv",
     "cases_long.rds",
     "table_3_toy_example.csv, table_3_bounds.csv",
     "table_4_probabilistic.csv, table_4_summary.csv",
     "table_5_imputation_summary.csv",
-    "table_b1_b2_case_dataset.csv",
+    "table_b1_b2_case_dataset.csv, table_b2_corrected_rows.csv",
     "figure_1_toy_bounds.pdf/.png/.csv",
     "figure_2_dem_ate_bounds.pdf/.png, figure_a1_eoc_ate_bounds.pdf/.png, figures_2_a1_gg_df.csv",
     "figure_3_dem_att_atu_bounds.pdf/.png, figure_a2_eoc_att_atu_bounds.pdf/.png, figures_3_a2_gg_df.csv",
@@ -326,6 +492,7 @@ tibble(
     "text_expert_agreement.csv, text_expert_agreement_counts.csv",
     "text_imputation_counts.csv",
     "text_summary_stats.csv",
+    "text_expected_bounds.csv",
     "text_seed_sensitivity.csv",
     "none; one printed line per published claim, checked by build_ground_truth.R"
   )

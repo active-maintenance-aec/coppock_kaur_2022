@@ -1,0 +1,8 @@
+case,appendix_c,published_probability,corrected_probability,d,Y,observed,imputed_y0,imputed_y1,tau
+South Africa (1910-1994),C.2.7,0.2,0.8,1,0,0,1,0,-1
+Ghana (1981-1993),C.3.2,0.1,0.2,0,0,0,0,0,0
+Uruguay (1973-1984),C.3.6,1,0.9,0,0,0,0,1,1
+Sierra Leone (1997-1998),C.4.8,0.2,0.1,0,0,0,0,0,0
+Nicaragua (1979-1990),C.4.10,0.8,0.9,0,0,0,0,1,1
+Central African Rep (1981-1993),C.4.12,0.3,0.7,0,1,1,1,1,0
+Sierra Leone (1992-1996),C.4.13,0.3,0.7,0,1,1,1,1,0

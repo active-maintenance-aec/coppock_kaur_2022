@@ -1,16 +1,13 @@
 # coppock_kaur_2022/maintained/clean_cases.R
 # Output: output/cases_long.rds
-# Depends on: helpers.R, original/replication_archive/cases_clean.csv
-# Description: Reshapes the deposited case data to one row per unit and
-#              imputation step, carrying the probabilistic Y0 and Y1 imputations
-#              that the Figure 2, 3, A1 and A2 simulations draw from.
+# Depends on: helpers.R, apply_appendix_c_corrections.R output
+# Description: Reshapes the case data to one row per unit and imputation step,
+#              carrying the probabilistic Y0 and Y1 imputations that the Figure
+#              2, 3, A1 and A2 simulations draw from.
 
 source(here::here("maintained", "helpers.R"))
 
-dat <- read_csv(
-  here::here("original", "replication_archive", "cases_clean.csv"),
-  show_col_types = FALSE
-)
+dat <- read_rds(here::here("maintained", "output", "cases_corrected.rds"))
 
 cases_long <- dat |>
   select(

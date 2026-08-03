@@ -1,16 +1,16 @@
 # coppock_kaur_2022/maintained/table_5_imputation_summary.R
 # Output: output/table_5_imputation_summary.csv
-# Depends on: helpers.R, original/replication_archive/cases_clean.csv
+# Depends on: helpers.R, apply_appendix_c_corrections.R output
 # Description: Table 5, the distribution of imputed unit-level causal effects.
 #              The paper prints the democratization row; the end-of-conflict row
 #              is written out alongside it.
+#
+#   The table reads tau_i, the difference of the two point imputations. The
+#   appendix C corrections touch probabilities only, so no cell here moves.
 
 source(here::here("maintained", "helpers.R"))
 
-dat <- read_csv(
-  here::here("original", "replication_archive", "cases_clean.csv"),
-  show_col_types = FALSE
-)
+dat <- read_rds(here::here("maintained", "output", "cases_corrected.rds"))
 
 guess_levels <- c("Negative Effect", "No Effect", "Positive Effect", "Unimputed")
 

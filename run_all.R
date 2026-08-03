@@ -13,6 +13,10 @@ here::i_am("run_all.R")
 source(here::here("download_original.R"))
 
 # Data ----
+# apply_appendix_c_corrections.R restores the seven imputation probabilities the
+# deposited case file transcribes differently from the appendix C narrative that
+# states them, and writes the corrected case file every script below reads.
+source(here::here("maintained", "apply_appendix_c_corrections.R"))
 source(here::here("maintained", "clean_cases.R"))
 
 # Tables ----
@@ -35,6 +39,7 @@ source(here::here("maintained", "figure_4_expert_validation.R"))
 source(here::here("maintained", "text_expert_agreement.R"))
 source(here::here("maintained", "text_imputation_counts.R"))
 source(here::here("maintained", "text_summary_stats.R"))
+source(here::here("maintained", "text_expected_bounds.R"))
 source(here::here("maintained", "text_seed_sensitivity.R"))
 
 # Ground truth ----

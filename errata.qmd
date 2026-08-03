@@ -28,6 +28,24 @@ table_3 <- out("table_3_toy_example.csv")
 table_4 <- out("table_4_probabilistic.csv")
 summary_stats <- out("text_summary_stats.csv")
 imputation_counts <- out("text_imputation_counts.csv")
+corrections <- out("appendix_c_corrections.csv")
+table_b2_corrected <- out("table_b2_corrected_rows.csv")
+expected_bounds <- out("text_expected_bounds.csv")
+
+# The published side of every entry is transcribed from the article, never
+# computed. value_paper is a string by rule: read as a number, "0.20" and ".2"
+# stop being distinguishable from what the page prints.
+published_claims <- read_csv(
+  here::here("ground_truth", "published_claims.csv"),
+  show_col_types = FALSE,
+  col_types = cols(value_paper = col_character(), .default = col_character())
+)
+
+published_value <- function(id) {
+  hit <- published_claims$value_paper[published_claims$claim_id == id]
+  stopifnot(length(hit) == 1, !is.na(hit))
+  hit
+}
 
 summary_value <- function(which_claim) {
   hit <- summary_stats$value[summary_stats$claim == which_claim]
@@ -42,25 +60,221 @@ count_value <- function(sample, quantity_label) {
   hit
 }
 
+# The exact expected value of a plotted bound. The bounds are linear in the
+# imputed potential outcomes, so the quantity the figures estimate by simulation
+# has a closed form, and the corrected values below are that closed form rather
+# than one draw from an unseeded simulation.
+exact_bound <- function(sample, which_estimand, which_step, side) {
+  row <- expected_bounds |>
+    filter(transition_fac == sample, estimand == which_estimand, step == which_step)
+  stopifnot(nrow(row) == 1)
+  row[[str_c("expected_", side)]]
+}
+
 # Two of the corrected values replace a number the article spells out, so they are
-# spelled out too rather than printed as digits: the correction is one token.
+# spelled out too rather than printed as digits: the correction is one token. The
+# counts in the prose and the headings use it for the same reason, and because a
+# count typed into a document about miscounted numbers is the obvious place for
+# this document to go stale.
 english_number <- function(x) {
   words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
   stopifnot(x >= 1, x <= 10, x == round(x))
   words[x]
 }
 
+# A probability the article prints without a trailing zero, as its tables do.
+probability_string <- function(x) format(x, trim = TRUE, drop0trailing = TRUE)
+
 treated_ones <- sum(table_3$d == 1 & table_3$Y == 1)
 unit_6_probability <- sum(table_4$prob[table_4$unit_6 == 1])
 unit_7_probability <- sum(table_4$prob[table_4$unit_7 == 1])
 disbanded_cases <- count_value("Democratization", "cases at step: Disbanded and Discredited Cases")
+
+complemented <- corrections |>
+  filter(near(deposited_probability + appendix_c_probability, 1))
+off_by_one_step <- corrections |>
+  filter(!near(deposited_probability + appendix_c_probability, 1))
+
+att_exact <- exact_bound("Democratization", "ATT", "s4", "low")
+att_published <- published_value("figure_3|low_bound_att_unimputable_cases")
+
+# Widths are differences of two exact expectations rather than of two draws, for
+# the same reason the bounds themselves are: the simulation is one draw and the
+# expectation is the quantity it estimates.
+atu_width_exact <- exact_bound("Democratization", "ATU", "s4", "high") -
+  exact_bound("Democratization", "ATU", "s4", "low")
+ate_width_exact <- exact_bound("Democratization", "ATE", "s4", "high") -
+  exact_bound("Democratization", "ATE", "s4", "low")
+eoc_initial_width_exact <- exact_bound("End of conflict", "ATE", "obs", "high") -
+  exact_bound("End of conflict", "ATE", "obs", "low")
+eoc_final_width_exact <- exact_bound("End of conflict", "ATE", "s4", "high") -
+  exact_bound("End of conflict", "ATE", "s4", "low")
+
+# The whole-number labels the reprinted Figure 3 carries for the ATT, which are
+# one draw each of a quantity sitting exactly on a rounding boundary.
+att_drawn_labels <- expected_bounds |>
+  filter(transition_fac == "Democratization", estimand == "ATT",
+         step %in% c("s1", "s2", "s3", "s4")) |>
+  arrange(step, .locale = "en") |>
+  pull(label_low) |>
+  sprintf(fmt = "%.0f")
+
+# The published figure labels beside the corrected expectations, for the two
+# floats whose labels move. The description is the step label the figure prints.
+label_table <- function(float, which_estimand, sample, id_infix) {
+  steps <- tibble(
+    step = c("agnostic", "obs", "s0", "s1", "s2", "s3", "s4"),
+    description = c("Before Any Data", "Initial Values",
+                    "Disbanded and Discredited Cases", "Treated Cases",
+                    "Non-transitional Cases", "Untreated Cases", "Unimputable Cases"),
+    slug = c("before_any_data", "initial_values", "disbanded_and_discredited_cases",
+             "treated_cases", "non_transitional_cases", "untreated_cases",
+             "unimputable_cases")
+  )
+  steps |>
+    mutate(
+      published = str_c("[", map_chr(str_c(float, "|low_bound_", id_infix, slug), published_value),
+                        ", ", map_chr(str_c(float, "|high_bound_", id_infix, slug), published_value),
+                        "]"),
+      corrected = str_c(
+        "[", sprintf("%.1f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "low"))),
+        ", ", sprintf("%.1f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "high"))),
+        "]"
+      ),
+      moved = published != str_c("[", sprintf("%.0f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "low"))),
+                                 ", ", sprintf("%.0f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "high"))), "]"),
+      corrected = if_else(moved, str_c("\\textbf{", corrected, "}"), corrected)
+    ) |>
+    select(Step = description, Published = published, Corrected = corrected)
+}
 ```
 
-This note lists five misstated numbers in "Qualitative Imputation of Missing Potential Outcomes," published in *American Journal of Political Science* 66(3), doi [10.1111/ajps.12697](https://doi.org/10.1111/ajps.12697). **None of them changes a conclusion of the article.** Each is recorded because a reader who quoted the sentence would be quoting a number the article's own tables and data do not support. In every case below the table is the authority and the sentence is what is corrected.
+This note lists ten corrections to "Qualitative Imputation of Missing Potential Outcomes," published in *American Journal of Political Science* 66(3), doi [10.1111/ajps.12697](https://doi.org/10.1111/ajps.12697). **None of them changes a conclusion of the article.** The extreme value bounds on the average treatment effect, which are the article's headline result, are unchanged at [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "high"))`] with a width of `r sprintf("%.0f", ate_width_exact)` points, as are every number in the abstract, the expert survey comparison in Figure 4, Table 5, and every quantity in the end-of-conflict application in Appendix A. **One published quantity does move materially**: the average treatment effect on the treated, which the article summarizes as a `r att_published` percentage point effect and which is `r sprintf("%.1f", att_exact)` points once the imputation probabilities the article's own appendix C states are the ones the analysis uses.
 
-Every corrected value is computed from the deposited replication archive ([10.7910/DVN/2IVKXD](https://doi.org/10.7910/DVN/2IVKXD)) at the time this document is rendered. The code supporting each correction is at [github.com/active-maintenance-aec/coppock_kaur_2022](https://github.com/active-maintenance-aec/coppock_kaur_2022).
+The first two entries are transcription errors in the deposited case data, and the four that follow are their consequences. The imputed potential outcomes in this article are not measurements. They are qualitative judgments, set out case by case in appendix C with the reasoning behind each one, and the deposited `cases_clean.csv` is a transcription of those judgments. `r str_to_sentence(english_number(nrow(corrections)))` of its imputation probabilities do not match the probability the appendix C narrative for that case states. Correcting them restores what the article always said it was doing.
 
-## 1. The toy example's treated outcomes
+Every corrected value is computed at the time this document is rendered, from the deposited replication archive ([10.7910/DVN/2IVKXD](https://doi.org/10.7910/DVN/2IVKXD)) with those `r english_number(nrow(corrections))` probabilities restored. The code supporting each correction is at [github.com/active-maintenance-aec/coppock_kaur_2022](https://github.com/active-maintenance-aec/coppock_kaur_2022). Bold marks the values that change; unbolded numbers are recomputed rather than copied, so a reader diffing published against corrected sees every quantity verified and not only the ones at issue.
+
+## 1. `r str_to_sentence(english_number(nrow(complemented)))` imputation probabilities carried as their complements
+
+Appendix C states an imputation probability for 30 of the 31 imputed democratization cases; the exception, Thailand (1991-1992), refers to the entry above it. Twenty-three of the 30 agree with the deposited case file exactly. In `r english_number(nrow(complemented))` of the remaining `r english_number(nrow(corrections))` the deposit, and appendix Table B.2 with it, carries one minus the stated probability:
+
+```{r complemented}
+complemented |>
+  transmute(
+    Case = str_c(location, " (", conflict_start, "-", conflict_end, ")"),
+    `Appendix C` = appendix_c,
+    Imputed = imputed_value,
+    Published = probability_string(deposited_probability),
+    Corrected = str_c("\\textbf{", probability_string(appendix_c_probability), "}")
+  ) |>
+  kable(format = "latex", booktabs = TRUE, escape = FALSE, align = "llccc", linesep = "")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} The imputation probability appendix Table B.2 prints for each case, against the probability the appendix C entry named in the second column states for the same case. The Imputed column is the imputed potential outcome, which agrees with appendix C in every one of these cases and is not corrected.}
+
+In all `r english_number(nrow(complemented))` the deposit contradicts itself, because an imputed potential outcome of 1 sits beside a probability below one half. Appendix Table B.2 prints the deposited value, so the published table inherits the transcription error rather than committing a second one. Section C.2.7 reads "we imputed that $\tilde{Y}_i(0) = 1$, with a probability of 0.8" for South Africa, and the main text says the same thing on page 10: "In other words, $Y_i(0) = 1$ with a probability of .8." Sections C.4.12 and C.4.13 read "with a probability of 0.7."
+
+## 2. `r str_to_sentence(english_number(nrow(off_by_one_step)))` imputation probabilities differing by one step
+
+The remaining `r english_number(nrow(off_by_one_step))` disagreements are not complements. Each differs from the stated probability by 0.1:
+
+```{r off-by-one}
+off_by_one_step |>
+  transmute(
+    Case = str_c(location, " (", conflict_start, "-", conflict_end, ")"),
+    `Appendix C` = appendix_c,
+    Imputed = imputed_value,
+    Published = probability_string(deposited_probability),
+    Corrected = str_c("\\textbf{", probability_string(appendix_c_probability), "}")
+  ) |>
+  kable(format = "latex", booktabs = TRUE, escape = FALSE, align = "llccc", linesep = "")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} As above. None of these `r english_number(nrow(off_by_one_step))` crosses one half, so none of them puts a probability on the wrong side of the potential outcome it is attached to, and none changes an imputed value.}
+
+Uruguay is the one of the `r english_number(nrow(off_by_one_step))` that matters beyond the table: at the deposited 1 it is an imputation made with certainty, and at the 0.9 appendix C states it is a probabilistic one. That is what entry 6 below turns on.
+
+The corrected rows of appendix Table B.2, in the order the published table prints them:
+
+```{r table-b2-corrected}
+table_b2_corrected |>
+  transmute(
+    Case = case,
+    `$d_i$` = d,
+    `$Y_i$` = Y,
+    `Observed` = observed,
+    `$\\tilde{Y}_i(0)$` = imputed_y0,
+    `$\\tilde{Y}_i(1)$` = imputed_y1,
+    Probability = str_c("\\textbf{", probability_string(corrected_probability), "}"),
+    `$\\tilde{\\tau}_i$` = tau
+  ) |>
+  kable(format = "latex", booktabs = TRUE, escape = FALSE, align = "lccccccc", linesep = "")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} The `r english_number(nrow(corrections))` rows of appendix Table B.2 whose imputation probability is corrected. Every other cell in these rows is as published. The published table sorts each step block by imputed value and then by probability, so restoring the stated probabilities would also reorder two blocks; the published order is kept here so the rows can be found on the page.}
+
+## 3. The average treatment effect on the treated
+
+Published, *Imputing Missing Potential Outcomes*, Summary:
+
+> The bounds on the ATU are greater than 58 points wide, compared with the bounds on the ATT, which shrink all the way down to a point. We can summarize the ATT as a **`r att_published`** percentage point effect on return to authoritarianism.
+
+Corrected:
+
+> The bounds on the ATU are greater than 58 points wide, compared with the bounds on the ATT, which shrink all the way down to a point. We can summarize the ATT as a **`r sprintf("%.1f", att_exact)`** percentage point effect on return to authoritarianism.
+
+Every treated case has both potential outcomes filled in by the second imputation step, which is why the ATT bounds collapse to a point, and that point is the mean of the eight observed treated outcomes minus the mean of the eight imputed untreated ones. South Africa is one of the eight, so restoring its probability from 0.2 to the 0.8 appendix C states moves the ATT by `r sprintf("%.1f", abs(att_exact - as.numeric(att_published)))` points. The ATU claim in the first clause is unaffected and is left at the precision the article states it: the width is `r sprintf("%.1f", atu_width_exact)` points before the correction and after it, because both ATU bounds move by the same amount, so the published "greater than `r published_value("text|atu_final_bounds_width")`" holds exactly as written and is not restated at one decimal here.
+
+## 4. Figure 3, the bounds by treatment status
+
+The corrected Figure 3 is reprinted below. The ATT bounds move at every step from *Treated Cases* onward, and the ATU bounds move at *Untreated Cases* and *Unimputable Cases*.
+
+```{r figure-3-labels}
+bind_rows(
+  `ATU` = label_table("figure_3", "ATU", "Democratization", "atu_"),
+  `ATT` = label_table("figure_3", "ATT", "Democratization", "att_"),
+  .id = "Estimand"
+) |>
+  kable(format = "latex", booktabs = TRUE, escape = FALSE, align = "lllr", linesep = "")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Published labels are transcribed from Figure 3, which prints whole numbers. Corrected values are the exact expectation of each bound, which the figure estimates by simulation. \textbf{The corrected democratization ATT is exactly -22.5, halfway between two whole numbers, so no whole-number label is determined:} the deposited figure script sets no seed, and the simulation lands on either side of the boundary with equal probability. The published -15 is not on a boundary and is stable.}
+
+```{r figure-3, out.width="100%"}
+include_graphics("maintained/output/figure_3_dem_att_atu_bounds.pdf")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Figure 3 recomputed with the `r english_number(nrow(corrections))` appendix C probabilities restored. The ATT panel labels one draw of a quantity whose exact value is -22.5, so the four steps from \textit{Treated Cases} onward read `r str_c(att_drawn_labels, collapse = ", ")` rather than one number.}
+
+## 5. Figure 2, the bounds on the average treatment effect
+
+```{r figure-2-labels}
+label_table("figure_2", "ATE", "Democratization", "") |>
+  kable(format = "latex", booktabs = TRUE, escape = FALSE, align = "llr", linesep = "")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} As above. Two steps move and the rest do not. The final two rows are the article's headline bounds, and they are unchanged: both corrected values round to the labels the published figure prints.}
+
+```{r figure-2, out.width="100%"}
+include_graphics("maintained/output/figure_2_dem_ate_bounds.pdf")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Figure 2 recomputed with the `r english_number(nrow(corrections))` appendix C probabilities restored.}
+
+## 6. How the 63 missing potential outcomes were imputed
+
+Published, *Imputing Missing Potential Outcomes*:
+
+> For all 63 unobserved potential outcomes, we imputed **5** with certainty, **26** probabilistically and we left 32 unimputed.
+
+Corrected:
+
+> For all 63 unobserved potential outcomes, we imputed **`r sprintf("%.0f", count_value("Democratization", "imputed_with_certainty"))`** with certainty, **`r sprintf("%.0f", count_value("Democratization", "imputed_probabilistically"))`** probabilistically and we left 32 unimputed.
+
+An imputation is made with certainty when the stated probability that the missing potential outcome equals 1 is exactly 0 or exactly 1. Three cases qualify: Brazil (1964-1985) at 0 and the two Thailand transitions at 1. The deposit adds a fourth, Uruguay (1973-1984), which it carries at 1 where appendix C entry C.3.6 states 0.9. The number left unimputed, and the 31 imputed in total, are unaffected either way.
+
+## 7. The toy example's treated outcomes
 
 Published, *A Toy Example*:
 
@@ -80,7 +294,7 @@ table_3 |>
 
 \parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} The observed columns of Table 3, drawn from the deposited replication archive by \texttt{maintained/table\_3\_toy\_example.R}. Nothing in the table is corrected; it is reprinted because it is the authority the sentence disagrees with.}
 
-## 2. The probabilistic extension's stated probabilities
+## 8. The probabilistic extension's stated probabilities
 
 Published, *Probabilistic Extension*:
 
@@ -101,19 +315,7 @@ table_4 |>
 
 \parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Table 4, drawn from the deposited replication archive by \texttt{maintained/table\_4\_probabilistic.R}. No cell is corrected; the table is reprinted because its probability column is what the sentence disagrees with.}
 
-## 3. How the 63 missing potential outcomes were imputed
-
-Published, *Imputing Missing Potential Outcomes*:
-
-> For all 63 unobserved potential outcomes, we imputed **5** with certainty, **26** probabilistically and we left 32 unimputed.
-
-Corrected:
-
-> For all 63 unobserved potential outcomes, we imputed **`r sprintf("%.0f", count_value("Democratization", "imputed_with_certainty"))`** with certainty, **`r sprintf("%.0f", count_value("Democratization", "imputed_probabilistically"))`** probabilistically and we left 32 unimputed.
-
-An imputation is made with certainty when the stated probability that the missing potential outcome equals 1 is exactly 0 or exactly 1. Appendix Table B.2 shows `r sprintf("%.0f", count_value("Democratization", "imputed_with_certainty"))` such cases and `r sprintf("%.0f", count_value("Democratization", "imputed_probabilistically"))` whose probability lies strictly between, and the deposited data agree. The number left unimputed, and the 31 imputed in total, are unaffected.
-
-## 4. The end-of-conflict bounds width
+## 9. The end-of-conflict bounds width
 
 Published, Appendix A:
 
@@ -121,11 +323,11 @@ Published, Appendix A:
 
 Corrected:
 
-> The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from 100 to **`r sprintf("%.0f", summary_value("eoc: final ATE bounds width"))`** points.
+> The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from `r sprintf("%.1f", eoc_initial_width_exact)` to **`r sprintf("%.1f", eoc_final_width_exact)`** points.
 
-The next clause of the same sentence calls the resulting bounds 45 points wide, which is the difference of the rounded endpoints [-3, 42]. The unrounded width is `r sprintf("%.1f", summary_value("eoc: final ATE bounds width"))`, so `r sprintf("%.0f", summary_value("eoc: final ATE bounds width"))` and 45 are the two defensible roundings of one quantity. 41 corresponds to nothing in the analysis.
+The next clause of the same sentence calls the resulting bounds 45 points wide, which is the difference of the rounded endpoints [`r sprintf("%.0f", exact_bound("End of conflict", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("End of conflict", "ATE", "s4", "high"))`]. Rounding the width itself gives `r sprintf("%.0f", eoc_final_width_exact)` instead, so `r sprintf("%.0f", eoc_final_width_exact)` and 45 are the two whole numbers one exact quantity yields depending on where the rounding is applied, and both are defensible. 41 corresponds to nothing in the analysis. No end-of-conflict quantity is touched by the appendix C corrections, all `r english_number(nrow(corrections))` of which are democratization cases.
 
-## 5. The count of disbanded and discredited democratization cases
+## 10. The count of disbanded and discredited democratization cases
 
 Published, *Imputing Missing Potential Outcomes*, Step 1:
 
