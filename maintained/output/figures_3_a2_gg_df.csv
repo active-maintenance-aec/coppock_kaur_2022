@@ -1,57 +1,57 @@
-step,transition_fac,treatment,estimate_low_est,estimate_high_est,conf_low_low_est,conf_low_high_est,conf_high_low_est,conf_high_high_est,description,estimand
-agnostic,Democratization,0,-100,100,-100,100,-100,100,Before Any Data,"Average Treatment Effect
+step,transition_fac,treatment,estimate_low_est,estimate_high_est,conf_low_low_est,conf_high_low_est,conf_low_high_est,conf_high_high_est,description,estimand
+agnostic,Democratization,0,-100,100,-100,-100,100,100,Before Any Data,"Average Treatment Effect
 on Untreated Units (ATU)"
-obs,Democratization,0,-16.363636363636367,83.63636363636363,-16.363636363636367,83.63636363636363,-16.363636363636367,83.63636363636363,Initial Values,"Average Treatment Effect
+obs,Democratization,0,-16.363636363636363,83.63636363636363,-16.363636363636363,-16.363636363636363,83.63636363636363,83.63636363636363,Initial Values,"Average Treatment Effect
 on Untreated Units (ATU)"
-s0,Democratization,0,-16.008000000000003,80.35563636363636,-16.363636363636367,80,-14.545454545454547,81.81818181818181,Disbanded and Discredited Cases,"Average Treatment Effect
+s0,Democratization,0,-16,80.36363636363639,-16.363636363636363,-14.545454545454545,80,81.81818181818183,Disbanded and Discredited Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-s1,Democratization,0,-15.99545454545455,80.36818181818181,-16.363636363636367,80,-14.545454545454547,81.81818181818181,Treated Cases,"Average Treatment Effect
+s1,Democratization,0,-16,80.36363636363639,-16.363636363636363,-14.545454545454545,80,81.81818181818183,Treated Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-s2,Democratization,0,-11.840909090909095,73.61363636363636,-14.545454545454547,70.9090909090909,-9.090909090909095,76.36363636363636,Non-transitional Cases,"Average Treatment Effect
+s2,Democratization,0,-11.81818181818182,73.63636363636364,-14.545454545454545,-9.090909090909092,70.9090909090909,76.36363636363637,Non-transitional Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-s3,Democratization,0,1.4745454545454506,59.65636363636363,-3.6363636363636402,54.54545454545454,7.2727272727272725,65.45454545454544,Untreated Cases,"Average Treatment Effect
+s3,Democratization,0,1.4545454545454553,59.63636363636367,-3.6363636363636362,7.2727272727272725,54.54545454545454,65.45454545454545,Untreated Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-s4,Democratization,0,1.495272727272725,59.6770909090909,-3.6363636363636402,54.54545454545454,7.2727272727272725,65.45454545454545,Unimputable Cases,"Average Treatment Effect
+s4,Democratization,0,1.4545454545454553,59.63636363636367,-3.6363636363636362,7.2727272727272725,54.54545454545454,65.45454545454545,Unimputable Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-agnostic,Democratization,1,-100,100,-100,100,-100,100,Before Any Data,"Average Treatment Effect
+agnostic,Democratization,1,-100,100,-100,-100,100,100,Before Any Data,"Average Treatment Effect
 on Treated Units (ATT)"
-obs,Democratization,1,-87.5,12.5,-87.5,12.5,-87.5,12.5,Initial Values,"Average Treatment Effect
+obs,Democratization,1,-87.5,12.5,-87.5,-87.5,12.5,12.5,Initial Values,"Average Treatment Effect
 on Treated Units (ATT)"
-s0,Democratization,1,-87.5,12.5,-87.5,12.5,-87.5,12.5,Disbanded and Discredited Cases,"Average Treatment Effect
+s0,Democratization,1,-87.5,12.5,-87.5,-87.5,12.5,12.5,Disbanded and Discredited Cases,"Average Treatment Effect
 on Treated Units (ATT)"
-s1,Democratization,1,-22.376249999999995,-22.376249999999995,-50,-50,0,0,Treated Cases,"Average Treatment Effect
+s1,Democratization,1,-22.5,-22.5,-50,0,-50,0,Treated Cases,"Average Treatment Effect
 on Treated Units (ATT)"
-s2,Democratization,1,-22.509999999999998,-22.509999999999998,-50,-50,0,0,Non-transitional Cases,"Average Treatment Effect
+s2,Democratization,1,-22.5,-22.5,-50,0,-50,0,Non-transitional Cases,"Average Treatment Effect
 on Treated Units (ATT)"
-s3,Democratization,1,-22.435000000000002,-22.435000000000002,-50,-50,0,0,Untreated Cases,"Average Treatment Effect
+s3,Democratization,1,-22.5,-22.5,-50,0,-50,0,Untreated Cases,"Average Treatment Effect
 on Treated Units (ATT)"
-s4,Democratization,1,-22.316249999999997,-22.316249999999997,-50,-50,0,0,Unimputable Cases,"Average Treatment Effect
+s4,Democratization,1,-22.5,-22.5,-50,0,-50,0,Unimputable Cases,"Average Treatment Effect
 on Treated Units (ATT)"
-agnostic,End of conflict,0,-100,100,-100,100,-100,100,Before Any Data,"Average Treatment Effect
+agnostic,End of conflict,0,-100,100,-100,-100,100,100,Before Any Data,"Average Treatment Effect
 on Untreated Units (ATU)"
-obs,End of conflict,0,-29.166666666666668,70.83333333333333,-29.166666666666668,70.83333333333333,-29.166666666666668,70.83333333333333,Initial Values,"Average Treatment Effect
+obs,End of conflict,0,-29.166666666666668,70.83333333333334,-29.166666666666668,-29.166666666666668,70.83333333333334,70.83333333333334,Initial Values,"Average Treatment Effect
 on Untreated Units (ATU)"
-s0,End of conflict,0,-27.487500000000004,64.17916666666666,-29.166666666666668,62.5,-25,66.66666666666667,Disbanded and Discredited Cases,"Average Treatment Effect
+s0,End of conflict,0,-27.499999999999996,64.16666666666666,-29.166666666666668,-25,62.5,66.66666666666666,Disbanded and Discredited Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-s1,End of conflict,0,-27.47,64.19666666666667,-29.166666666666668,62.5,-25,66.66666666666667,Treated Cases,"Average Treatment Effect
+s1,End of conflict,0,-27.499999999999996,64.16666666666666,-29.166666666666668,-25,62.5,66.66666666666666,Treated Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-s2,End of conflict,0,-25.623958333333334,61.87604166666667,-29.166666666666668,58.33333333333333,-20.833333333333336,66.66666666666667,Non-transitional Cases,"Average Treatment Effect
+s2,End of conflict,0,-25.624999999999996,61.875,-29.166666666666668,-20.833333333333336,58.333333333333336,66.66666666666666,Non-transitional Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-s3,End of conflict,0,-1.933333333333337,48.06666666666666,-10.416666666666668,39.58333333333333,6.249999999999995,56.25,Untreated Cases,"Average Treatment Effect
+s3,End of conflict,0,-1.8750000000000002,48.12500000000001,-10.416666666666668,6.25,39.58333333333333,56.25,Untreated Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-s4,End of conflict,0,-1.8964583333333351,48.103541666666665,-10.416666666666668,39.58333333333333,6.249999999999995,56.25,Unimputable Cases,"Average Treatment Effect
+s4,End of conflict,0,-1.8750000000000002,48.12500000000001,-10.416666666666668,6.25,39.58333333333333,56.25,Unimputable Cases,"Average Treatment Effect
 on Untreated Units (ATU)"
-agnostic,End of conflict,1,-100,100,-100,100,-100,100,Before Any Data,"Average Treatment Effect
+agnostic,End of conflict,1,-100,100,-100,-100,100,100,Before Any Data,"Average Treatment Effect
 on Treated Units (ATT)"
-obs,End of conflict,1,-66.66666666666666,33.333333333333336,-66.66666666666666,33.333333333333336,-66.66666666666666,33.333333333333336,Initial Values,"Average Treatment Effect
+obs,End of conflict,1,-66.66666666666666,33.33333333333333,-66.66666666666666,-66.66666666666666,33.33333333333333,33.33333333333333,Initial Values,"Average Treatment Effect
 on Treated Units (ATT)"
-s0,End of conflict,1,-66.66666666666666,33.333333333333336,-66.66666666666666,33.333333333333336,-66.66666666666666,33.333333333333336,Disbanded and Discredited Cases,"Average Treatment Effect
+s0,End of conflict,1,-66.66666666666666,33.33333333333333,-66.66666666666666,-66.66666666666666,33.33333333333333,33.33333333333333,Disbanded and Discredited Cases,"Average Treatment Effect
 on Treated Units (ATT)"
-s1,End of conflict,1,-9.973333333333331,-9.973333333333331,-33.33333333333333,-33.33333333333333,16.666666666666668,16.666666666666668,Treated Cases,"Average Treatment Effect
+s1,End of conflict,1,-10.000000000000002,-10.000000000000002,-33.33333333333333,16.666666666666664,-33.33333333333333,16.666666666666664,Treated Cases,"Average Treatment Effect
 on Treated Units (ATT)"
-s2,End of conflict,1,-9.80833333333333,-9.80833333333333,-33.33333333333333,-33.33333333333333,16.666666666666668,16.666666666666668,Non-transitional Cases,"Average Treatment Effect
+s2,End of conflict,1,-10.000000000000002,-10.000000000000002,-33.33333333333333,16.666666666666664,-33.33333333333333,16.666666666666664,Non-transitional Cases,"Average Treatment Effect
 on Treated Units (ATT)"
-s3,End of conflict,1,-10.079999999999993,-10.079999999999993,-33.33333333333333,-33.33333333333333,16.666666666666668,16.666666666666668,Untreated Cases,"Average Treatment Effect
+s3,End of conflict,1,-10.000000000000002,-10.000000000000002,-33.33333333333333,16.666666666666664,-33.33333333333333,16.666666666666664,Untreated Cases,"Average Treatment Effect
 on Treated Units (ATT)"
-s4,End of conflict,1,-10.248333333333337,-10.248333333333337,-33.33333333333333,-33.33333333333333,16.666666666666668,16.666666666666668,Unimputable Cases,"Average Treatment Effect
+s4,End of conflict,1,-10.000000000000002,-10.000000000000002,-33.33333333333333,16.666666666666664,-33.33333333333333,16.666666666666664,Unimputable Cases,"Average Treatment Effect
 on Treated Units (ATT)"

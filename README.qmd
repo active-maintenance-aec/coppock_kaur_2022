@@ -62,7 +62,7 @@ This repository holds the actively maintained replication code for Coppock and K
 source("run_all.R")
 ```
 
-That fetches the deposit, verifies its `r nrow(manifest)` files, and produces every table and figure into `maintained/output/`. Required packages: tidyverse, janitor, here, and for this report knitr and kableExtra. Paths resolve through `here`, so nothing depends on the working directory. The full run takes about a minute, most of it in the twenty-seed sensitivity check at the end. A successful run overwrites `maintained/output/`, which is committed: **`git diff` on that folder is the reproduction check.** The figure PDFs always differ, because a PDF records the time it was written; the CSV and PNG output comes back byte-identical.
+That fetches the deposit, verifies its `r nrow(manifest)` files, and produces every table and figure into `maintained/output/`. Required packages: tidyverse, janitor, here, and for this report knitr and kableExtra. Paths resolve through `here`, so nothing depends on the working directory. Almost all of the run time is in the last two scripts, which simulate the bounds twenty-one times over in order to say what the deposited archive's method gives; the analysis itself is quick. A successful run overwrites `maintained/output/`, which is committed: **`git diff` on that folder is the reproduction check.** The figure PDFs always differ, because a PDF records the time it was written; the CSV and PNG output comes back byte-identical.
 
 # Summary
 
@@ -106,6 +106,21 @@ n_boundary_att <- sum(expected_bounds$on_rounding_boundary &
                         expected_bounds$transition_fac == "Democratization" &
                         expected_bounds$estimand == "ATT" &
                         expected_bounds$step %in% c("s1", "s2", "s3", "s4"))
+
+# on_rounding_boundary is a property of a row, which carries two bounds; the
+# figures label each bound separately, so the counts a reader compares against
+# the seed sweep are counts of labels.
+n_labels <- 2 * nrow(expected_bounds)
+n_boundary_labels <- sum(near(expected_bounds$expected_low %% 1, 0.5)) +
+  sum(near(expected_bounds$expected_high %% 1, 0.5))
+n_determined_labels <- n_labels - n_boundary_labels
+att_label_split <- seeds |>
+  count(dem_att_label) |>
+  arrange(desc(n))
+max_simulation_gap <- max(
+  abs(expected_bounds$simulated_low - expected_bounds$expected_low),
+  abs(expected_bounds$simulated_high - expected_bounds$expected_high)
+)
 
 n_paper_internal_fail <- sum(gt$defect_locus == "paper_internal" & gt$match_rewrite == 0,
                              na.rm = TRUE)
@@ -175,13 +190,13 @@ Two questions, answered before the detail.
 
 Yes. All five analysis scripts and the helpers file execute without error on R 4.6.0. Every package the archive names still installs from CRAN: tidyverse, xtable, janitor and reshape2. Nothing in the archive has been removed from the language; what has accumulated is deprecation. `geom_errorbarh()` and the `<ggplot> %+% data` idiom were deprecated in ggplot2 4.0.0, the `size` aesthetic for lines in 3.4.0, and `reshape2::melt` and `dcast` are superseded by tidyr. All of them still work and all of them warn. Everything that stands between this archive and a clean run is resolvable by substitution.
 
-Running is not the same as reproducing, and one thing keeps the archive from reproducing its own figures exactly. `figures_2_3_A1_A2.R` estimates the bounds by simulation, 1,000 draws for Figures 2 and A1 and 10,000 for Figures 3 and A2, and it sets no seed. The published figures are labelled with rounded percentage points, so most of the simulation noise is absorbed by the rounding, but not all of it: repeating the Figure 2 and A1 simulation at twenty seeds moves at least one of the `r 2 * 14` rounded labels off its published value in `r sum(seeds$labels_moved > 0)` of them. A reader running the deposited script today has close to even odds of seeing a figure that disagrees with the article somewhere, with no error and no warning. The maintained rewrite fixes the seed at 12345.
+Running is not the same as reproducing, and one thing keeps the archive from reproducing its own figures exactly. `figures_2_3_A1_A2.R` estimates the bounds by simulation, 1,000 draws for Figures 2 and A1 and 10,000 for Figures 3 and A2, and it sets no seed. The published figures are labelled with rounded percentage points, so most of the simulation noise is absorbed by the rounding, but not all of it: repeating that simulation at twenty seeds moves at least one of the `r n_determined_labels` labels the four figures determine off the value the bound actually takes in `r sum(seeds$labels_moved > 0)` of them. A reader running the deposited script today has better than even odds of seeing a figure that disagrees with the article somewhere, with no error and no warning. The maintained rewrite does not simulate these bounds at all, for the reason set out below.
 
 Two smaller things. `table_4.R` prints its bounds as fractions where the paper prints percentage points, so the deposited output reads `[0, 0.3]` against the article's `[0, 30]`. It is a display inconsistency and not a numerical one. And the writing of every table and figure is commented out: each script builds the object and prints it, but the `xtable` and `ggsave` calls that would put it on disk are behind `#`. The archive is a set of scripts that show their work rather than a pipeline that produces the article's floats.
 
 ## Does the maintained rewrite reproduce the paper?
 
-Mostly, and the exceptions have one cause. `r n_rewrite_match` of the `r n_rewrite_verifiable` verifiable ground truth claims match the published values to reported precision: every cell and bound of Table 3, every bound of Figure 1, every row of Table 4, the democratization row of Table 5, every label of Figures A1 and A2, all ten bounds of Figure 4, `r n_appendix_agree` of the `r n_appendix_printed` cells the two appendix case tables print, the abstract, and every in-text quantity from the Expert Survey section and Appendix A. The article's headline result is among them: the extreme value bounds on the ATE come to [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "high"))`], `r sprintf("%.0f", ate_width_exact)` points wide, as published.
+Mostly, and the exceptions have one cause. `r n_rewrite_match` of the `r n_rewrite_verifiable` verifiable ground truth claims match the published values to reported precision: every cell and bound of Table 3, every bound of Figure 1, every row of Table 4, the democratization row of Table 5, every label of Figures A1 and A2, all ten bounds of Figure 4, `r n_appendix_agree` of the `r n_appendix_printed` cells the two appendix case tables print, the abstract, and every in-text quantity from the Expert Survey section and Appendix A. The article's headline result is among them: the extreme value bounds on the ATE come to [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "high"))`], `r sprintf("%.0f", ate_width_exact)` points wide, as published. A few of those matching labels are printed here at one decimal rather than as a whole number, because the bound falls exactly halfway between two whole numbers and no whole number states it; each agrees with the published label at the precision the page prints, and the table under *The unseeded simulation* lists every one.
 
 The `r n_rewrite_fail` that do not match fall into three groups.
 
@@ -226,7 +241,7 @@ tibble(
     "size= to linewidth=",
     "Multiply the bounds by 100 to print percentage points, as the paper does",
     "recode_factor() to case_when() + factor()",
-    "melt/dcast to pivot_longer/pivot_wider; geom_errorbarh() to geom_errorbar(orientation='y'); %+% to a named plot function; do() to reframe(); set.seed(12345)",
+    "melt/dcast to pivot_longer/pivot_wider; geom_errorbarh() to geom_errorbar(orientation='y'); %+% to a named plot function; do() to reframe(); the bounds enumerated rather than simulated",
     "melt to pivot_longer with an explicit names_to; size= to linewidth="
   )
 ) |>
@@ -242,24 +257,30 @@ tibble(
     column_spec(3, width = "5cm"))
 ```
 
-## The unseeded simulation
+## The unseeded simulation, and the bounds it was estimating
 
-The probabilistic extension is what makes Figures 2, 3, A1 and A2 stochastic. Where the authors hold a probability rather than a point belief about a missing potential outcome, `sample_bounds()` draws binary potential outcomes from those probabilities and recomputes the bounds, and the reported estimate is the mean over draws. That is a design decision the paper explains and the rewrite keeps. What the archive omits is `set.seed()`, so the figures are one unlabelled draw.
+The probabilistic extension is what makes Figures 2, 3, A1 and A2 stochastic in the archive. Where the authors hold a probability rather than a point belief about a missing potential outcome, the deposit's `sample_bounds()` draws binary potential outcomes from those probabilities and recomputes the bounds, and the reported estimate is the mean over draws. What the archive omits is `set.seed()`, so its figures are one unlabelled draw.
+
+**The maintained rewrite computes these bounds exactly, where the deposit estimates them by simulation.** A bound is affine in the realised imputations: it is the count of realised ones among the imputed and observed entries, offset by the unimputed entries the bound fills with a constant, over the number of units. So the distribution the deposit samples from can be written down and enumerated instead, by convolving one Bernoulli imputation in at a time, and `bounds_distribution()` in `maintained/helpers.R` does that. The plotted estimate is the mean of that distribution and the interval its 2.5th and 97.5th quantiles.
+
+This is not a different estimator. It is the same quantity by a different route, and it is the route the paper itself takes for the toy example, whose Table 4 enumerates all four consistent worlds and takes the probability-weighted bounds rather than sampling them. What it changes is threefold. Nothing in this repository depends on a seed, so the reproduction check is a byte comparison rather than a judgment about noise. The `r 2 * nrow(expected_bounds)` bounds the four figures carry are now stated at their exact values rather than to within the simulation's error, which at the deposit's number of draws reaches `r sprintf("%.2f", max_simulation_gap)` points at one of them. And a bound that falls exactly halfway between two whole numbers becomes visible as such, instead of being settled by whichever side a draw happened to land on.
+
+`maintained/text_expected_bounds.R` keeps the comparison against the deposit's own method on the record: it runs that simulation once at a fixed seed, writes what it gives beside the exact value, and stops the build if any of the `r 2 * nrow(expected_bounds)` bounds disagree by more than five standard errors of the simulated estimate. `maintained/text_seed_sensitivity.R` runs it at twenty seeds.
 
 ```{r seed_table}
 seeds |>
   count(labels_moved, name = "seeds") |>
   kable(
     booktabs = TRUE,
-    col.names = c("Rounded labels moved", "Seeds"),
-    caption = "Repeating the Figure 2 and A1 simulation at twenty seeds. Of the 28 rounded labels those two figures carry, the number that move off the value the rewrite commits, which is also the value the published figures carry."
+    col.names = c("Labels rounded differently", "Seeds"),
+    caption = "The deposited archive's method, repeated at twenty seeds. Of the labels the four figures carry, the number the simulation rounds to a different whole number than the bound it is estimating does."
   ) |>
   latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 9))
 ```
 
-The size of the disturbance is one percentage point in the rounded label, never more, and it barely touches the substantive claims: the final democratization bounds read `r final_dem_label` at `r n_final_label_holds` of the `r nrow(seeds)` seeds and `r other_dem_labels` at the other `r nrow(seeds) - n_final_label_holds`, a difference of one point in the lower label. The point is not that the archive gets a different answer but that it gets a slightly different figure each time it is run, and it offers a reader no way to tell whether a discrepancy is noise or a mistake.
+The size of the disturbance is one percentage point in the label, never more, and it barely touches the substantive claims: the final democratization bounds read `r final_dem_label` at `r n_final_label_holds` of the `r nrow(seeds)` seeds and `r other_dem_labels` at the other `r nrow(seeds) - n_final_label_holds`, a difference of one point in the lower label. The point is not that the archive gets a different answer but that it gets a slightly different figure each time it is run, and it offers a reader no way to tell whether a discrepancy is noise or a mistake.
 
-The rounding hides one further thing, which no seed sweep can settle and which the exact expectation can. The bounds are linear in the imputed potential outcomes, so the quantity the simulation estimates has a closed form, and `text_expected_bounds.R` computes it for every label of all four figures beside the drawn value. `r n_boundary` of them sit exactly halfway between two whole numbers, where no whole-number label is determined at all and the figure prints whichever side the draw fell on.
+The table above counts only the `r n_determined_labels` labels a whole number can state. The other `r n_boundary_labels` fall exactly halfway between two of them, and for those the deposit's method prints whichever side the draw fell on. The maintained figures print such a bound at the one decimal that states it.
 
 ```{r boundary_table}
 expected_bounds |>
@@ -273,13 +294,13 @@ expected_bounds |>
   ) |>
   kable(
     booktabs = TRUE,
-    col.names = c("Sample", "Estimand", "Step", "Exact expectation", "Label at seed 12345"),
-    caption = "Bounds whose exact expectation falls on a whole-number rounding boundary. All but the democratization ATT rows from Treated Cases onwards are a property of the deposit as published; those appear once the appendix C probabilities are restored."
+    col.names = c("Sample", "Estimand", "Step", "Exact bound", "Simulated, at seed 12345"),
+    caption = "Bounds falling on a whole-number rounding boundary, with what one run of the deposit's method gives for the same quantity. All but the democratization ATT rows from Treated Cases onwards are a property of the deposit as published; those appear once the appendix C probabilities are restored."
   ) |>
   latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 8))
 ```
 
-The `r n_boundary_att` democratization ATT rows from *Treated Cases* onwards are the consequential ones, and they are the only rows in the table the corrections create. The democratization ATT is exactly `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` once South Africa carries the probability appendix C states for it, so the label the article's figure style would print is decided by the simulation rather than by the estimate. The rest were on a boundary in the deposit as published, and the labels the article prints for them are one draw of a coin flip.
+The `r n_boundary_att` democratization ATT rows from *Treated Cases* onwards are the consequential ones, and they are the only rows in the table the corrections create. The ATT is exactly `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` once South Africa carries the probability appendix C states for it, so a whole-number label for it is not decided by the estimate at all: over twenty seeds the deposit's method prints `r str_c(att_label_split$dem_att_label, " at ", att_label_split$n, collapse = " and ")`. The rest of the table was on a boundary in the deposit as published, and the labels the article prints for them are one draw of a coin flip.
 
 ## Checksums
 
@@ -367,7 +388,7 @@ tibble(
 ) |>
   kable(
     booktabs = TRUE,
-    caption = "Every published bound the corrections move. Published values are the whole-number labels the figures carry; corrected values are the exact expectation of each bound, which the figures estimate by simulation. The third row is the article's headline result and rounds to the published label."
+    caption = "Every published bound the corrections move. Published values are the whole-number labels the figures carry; corrected values are exact. The third row is the article's headline result and rounds to the published label."
   ) |>
   latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 8))
 ```
@@ -398,7 +419,7 @@ South Africa - Namibia (1966-1988), an end-of-conflict case, is the fourth place
 
 Appendix Tables B.1 and B.2 print the full case datasets, `r n_appendix_printed` cells between them, and the deposited case file reproduces `r n_appendix_agree`.
 
-**Burundi's imputation probability.** Table B.2 prints the imputed treated outcome for Burundi (1996-2005) as 1 with a probability of 0.9. Appendix C entry C.4.11 states 0.8 for the same case, and the deposited data carry 0.8. Deposit and appendix agree here, so there is nothing to correct in the data; the table cell is the outlier and the simulation is unaffected.
+**Burundi's imputation probability.** Table B.2 prints the imputed treated outcome for Burundi (1996-2005) as 1 with a probability of 0.9. Appendix C entry C.4.11 states 0.8 for the same case, and the deposited data carry 0.8. Deposit and appendix agree here, so there is nothing to correct in the data; the table cell is the outlier and no bound is affected.
 
 **Azerbaijan's observed outcome.** Table B.2 prints an observed outcome of 0 for Azerbaijan (1991-1992), consistent with the untreated potential outcome of 0 printed beside it. The deposited `outcome` column records 1 for that case while its `y0_obs` column records 0, so the deposit contradicts the switching equation for this one case. Nothing in the analysis reads the `outcome` column, so nothing published depends on it, and the table matches what the analysis used.
 
@@ -452,7 +473,7 @@ Appendix B prints the full case datasets, 54 end-of-conflict cases and 63 democr
 
 # Maintained rewrite
 
-The rewrite lives in `maintained/`: a helpers file, a corrections script, one cleaning script, four table scripts, four figure scripts and five in-text scripts. It is a translation rather than a reanalysis in every respect but one. `ev_bounds()`, `bounds_width()`, `sample_bounds()` and the probabilistic-extension functions are the paper's contribution and are carried over with their logic unchanged; what changes is the tidyverse around them. The exception is `apply_appendix_c_corrections.R`, which restores the `r nrow(corrections)` imputation probabilities the deposit transcribes differently from the appendix that states them, and which is described in the errata section above.
+The rewrite lives in `maintained/`: a helpers file, a corrections script, one cleaning script, four table scripts, four figure scripts and five in-text scripts. It is a translation rather than a reanalysis in every respect but two. `ev_bounds()`, `bounds_width()`, `sample_bounds()` and the probabilistic-extension functions are the paper's contribution and are carried over with their logic unchanged; what changes is the tidyverse around them. The first exception is `apply_appendix_c_corrections.R`, which restores the `r nrow(corrections)` imputation probabilities the deposit transcribes differently from the appendix that states them. The second is that the four bounds figures enumerate the distribution of each bound with `bounds_distribution()` rather than sampling it with `sample_bounds()`, which is the same quantity computed exactly instead of estimated. Both are described in the sections above.
 
 ## Architecture
 
@@ -512,7 +533,7 @@ Three departures from a line-by-line translation are worth naming.
 
 The toy example is defined once, in `quimpo_toy_example()` in `helpers.R`, rather than retyped in each of the three scripts that need it. In the archive, `table_3_figure_1.R` and `table_4.R` each set up the ten units and walk them through the imputation steps independently, which is the arrangement in which Table 3, Figure 1 and Table 4 can silently come to describe different examples.
 
-Figures 2 and A1 come from one script and Figures 3 and A2 from another, because in each pair the two figures are two facets of a single simulation and splitting them would mean running it twice at the same seed. The archive's `figures_2_3_A1_A2.R` puts all four in one file; the rewrite splits along the simulation boundary rather than the file boundary.
+Figures 2 and A1 come from one script and Figures 3 and A2 from another, because in each pair the two figures are two facets of one computation and splitting them would mean doing it twice. The archive's `figures_2_3_A1_A2.R` puts all four in one file; the rewrite splits along that boundary rather than the file boundary.
 
 `text_summary_stats.R` reads the bounds back out of the figure output rather than recomputing them, so the widths quoted in the abstract and the body cannot drift from the figures they summarise. Every number it prints is traceable to a committed CSV, and no published value is typed into any script in `maintained/`.
 
@@ -534,7 +555,7 @@ tibble(
     "`recode_factor()`",
     "`xtable` + `print.xtable` (commented out)",
     "`ggsave()` (commented out)",
-    "unseeded `rbinom()` simulation",
+    "unseeded `rbinom()` simulation of the bounds",
     "bounds printed as fractions in `table_4.R`"
   ),
   Replacement = c(
@@ -551,7 +572,7 @@ tibble(
     "`case_when()` + `factor()`",
     "`write_csv()` to `output/`",
     "`ggsave()` to `output/`, PDF and PNG",
-    "`set.seed(12345)`",
+    "exact enumeration of the same distribution",
     "multiplied by 100, as the paper prints them"
   )
 ) |>
@@ -686,10 +707,10 @@ The archive's `figure_4.R` computes the agreement coding and prints it with `tab
 ```{r text_table}
 out("text_summary_stats.csv") |>
   mutate(value = sprintf("%.2f", value)) |>
-  select(claim, value, rounded) |>
+  select(claim, value, label) |>
   kable(
     booktabs = TRUE,
-    col.names = c("Quantity", "Rewrite", "Rounded"),
+    col.names = c("Quantity", "Rewrite", "As a figure labels it"),
     caption = "Bounds widths and summary effects quoted in the abstract, the body and Appendix A, read back out of the figure output that produced them."
   ) |>
   latex_only(\(k) k |>

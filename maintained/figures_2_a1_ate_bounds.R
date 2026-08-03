@@ -4,31 +4,36 @@
 #         output/figures_2_a1_gg_df.csv
 # Depends on: helpers.R, clean_cases.R output
 # Description: Figures 2 and A1, the extreme value bounds on the ATE after each
-#              imputation step with 95% simulation intervals. Figure 2 is the
+#              imputation step with 95% uncertainty intervals. Figure 2 is the
 #              democratization sample, Figure A1 the end-of-conflict sample. The
-#              two figures come from one simulation, so one script writes both.
+#              two figures come from one enumeration, so one script writes both.
+#
+#   The deposited figure script estimates each bound by simulation, drawing binary
+#   potential outcomes from the imputed probabilities 1,000 times and averaging.
+#   The bounds are affine in those realisations, so the distribution the draws
+#   sample from is available exactly, and bounds_distribution() enumerates it: the
+#   point estimate below is the mean of that distribution rather than of a sample
+#   from it, and the interval its 2.5th and 97.5th quantiles. Nothing here depends
+#   on a seed. maintained/text_expected_bounds.R records what the deposit's method
+#   gives for the same quantities.
 
 source(here::here("maintained", "helpers.R"))
 
-set.seed(12345)
-
 cases_long <- read_rds(here::here("maintained", "output", "cases_long.rds"))
 
-sims <- cases_long |>
+distributions <- cases_long |>
   group_by(step, transition_fac) |>
-  reframe(sample_bounds(y0, y1, sims = 1000))
+  reframe(bounds_distribution(y0, y1))
 
-gg_df <- sims |>
+gg_df <- distributions |>
   summarise(
-    estimate = mean(value) * 100,
-    conf_low = quantile(value, 0.025) * 100,
-    conf_high = quantile(value, 0.975) * 100,
-    .by = c(step, transition_fac, name)
-  ) |>
-  pivot_wider(
-    id_cols = c(step, transition_fac),
-    names_from = name,
-    values_from = c(estimate, conf_low, conf_high)
+    estimate_low_est = sum(low_est * prob) * 100,
+    estimate_high_est = sum(high_est * prob) * 100,
+    conf_low_low_est = weighted_quantile(low_est, prob, 0.025) * 100,
+    conf_high_low_est = weighted_quantile(low_est, prob, 0.975) * 100,
+    conf_low_high_est = weighted_quantile(high_est, prob, 0.025) * 100,
+    conf_high_high_est = weighted_quantile(high_est, prob, 0.975) * 100,
+    .by = c(step, transition_fac)
   ) |>
   mutate(
     description = factor(step, levels = quimpo_step_levels, labels = quimpo_step_labels),
@@ -53,11 +58,11 @@ make_ate_plot <- function(df) {
       linewidth = 2, alpha = 0.2
     ) +
     geom_text(
-      aes(x = round(estimate_low_est, 0), label = round(estimate_low_est, 0)),
+      aes(x = estimate_low_est, label = bound_label(estimate_low_est)),
       nudge_y = 0.35, size = 3
     ) +
     geom_text(
-      aes(x = round(estimate_high_est, 0), label = round(estimate_high_est, 0)),
+      aes(x = estimate_high_est, label = bound_label(estimate_high_est)),
       nudge_y = 0.35, size = 3
     ) +
     theme_bw() +

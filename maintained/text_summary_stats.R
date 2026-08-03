@@ -7,7 +7,9 @@
 # Description: The bounds widths and summary effects quoted in the abstract, the
 #              body and Appendix A. Every value is read back from the figure
 #              output that produced it, so the text and the figures cannot
-#              disagree.
+#              disagree, and each is labelled as the figures label a bound: at
+#              whole percentage points, except where the value falls exactly
+#              halfway between two of them and no whole number states it.
 
 source(here::here("maintained", "helpers.R"))
 
@@ -87,7 +89,7 @@ text_summary <- tibble(
     att_atu_bound("End of conflict", 1, "s4", "high")
   )
 ) |>
-  mutate(rounded = round(value, 0))
+  mutate(label = bound_label(value))
 
 print(text_summary, n = nrow(text_summary))
 

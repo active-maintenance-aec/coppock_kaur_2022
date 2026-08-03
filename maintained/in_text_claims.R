@@ -121,16 +121,16 @@ case_probability <- function(which_case) {
 # shrinks the width of these bounds to 51 points."
 # covers: abstract|bounds_width_prior_to_any_analysis abstract|bounds_width_after_imputation
 claim("abstract|bounds_width_prior_to_any_analysis",
-      pp(summary_value("dem: bounds width once the world reveals half the potential outcomes")))
+      bound_label(summary_value("dem: bounds width once the world reveals half the potential outcomes")))
 claim("abstract|bounds_width_after_imputation",
-      pp(summary_value("dem: final ATE bounds width")))
+      bound_label(summary_value("dem: final ATE bounds width")))
 
 # "We further demonstrate our method by aggregating specialists' beliefs about
 # causal effects gathered through an expert survey, shrinking the width of the
 # bounds to 44 points."
 # covers: abstract|bounds_width_after_the_expert_survey
 claim("abstract|bounds_width_after_the_expert_survey",
-      pp(summary_value("expert: combined bounds width, all 63 cases")))
+      bound_label(summary_value("expert: combined bounds width, all 63 cases")))
 
 # The Procedure ----
 
@@ -138,13 +138,13 @@ claim("abstract|bounds_width_after_the_expert_survey",
 # points wide."
 # covers: text|bounds_width_before_any_data_are_collected
 claim("text|bounds_width_before_any_data_are_collected",
-      pp(summary_value("dem: bounds width before any data")))
+      bound_label(summary_value("dem: bounds width before any data")))
 
 # "After data collection, the extreme value bounds shrink from 200 points wide to
 # 100 points wide."
 # covers: text|bounds_width_once_half_the_potential_outcomes_are_revealed
 claim("text|bounds_width_once_half_the_potential_outcomes_are_revealed",
-      pp(summary_value("dem: bounds width once the world reveals half the potential outcomes")))
+      bound_label(summary_value("dem: bounds width once the world reveals half the potential outcomes")))
 
 # A Toy Example ----
 
@@ -349,9 +349,9 @@ claim("text|treated_democratization_cases", pp(count_value("Democratization", "t
 # potential outcomes are filled in. The final bounds around the ATE are [-2, 49]
 # (51 points wide)."
 # covers: text|final_ate_lower_bound text|final_ate_upper_bound text|final_ate_bounds_width
-claim("text|final_ate_lower_bound", pp(summary_value("dem: final ATE lower bound")))
-claim("text|final_ate_upper_bound", pp(summary_value("dem: final ATE upper bound")))
-claim("text|final_ate_bounds_width", pp(summary_value("dem: final ATE bounds width")))
+claim("text|final_ate_lower_bound", bound_label(summary_value("dem: final ATE lower bound")))
+claim("text|final_ate_upper_bound", bound_label(summary_value("dem: final ATE upper bound")))
+claim("text|final_ate_bounds_width", bound_label(summary_value("dem: final ATE bounds width")))
 
 # "The bounds include zero. The data and our state of knowledge are currently
 # consistent with positive, negative and zero average effects."
@@ -396,8 +396,8 @@ walk(
 figures_2_a1 |>
   pwalk(\(transition_fac, description, estimate_low_est, estimate_high_est, ...) {
     float <- if (transition_fac == "Democratization") "figure_2" else "figure_a1"
-    claim(id_for(float, "low bound, ", description), pp(estimate_low_est))
-    claim(id_for(float, "high bound, ", description), pp(estimate_high_est))
+    claim(id_for(float, "low bound, ", description), bound_label(estimate_low_est))
+    claim(id_for(float, "high bound, ", description), bound_label(estimate_high_est))
   })
 
 # Figure 3 and Figure A.2 ----
@@ -408,8 +408,10 @@ figures_3_a2 |>
   pwalk(\(transition_fac, description, estimand_short,
           estimate_low_est, estimate_high_est, ...) {
     float <- if (transition_fac == "Democratization") "figure_3" else "figure_a2"
-    claim(id_for(float, "low bound, ", estimand_short, ", ", description), pp(estimate_low_est))
-    claim(id_for(float, "high bound, ", estimand_short, ", ", description), pp(estimate_high_est))
+    claim(id_for(float, "low bound, ", estimand_short, ", ", description),
+          bound_label(estimate_low_est))
+    claim(id_for(float, "high bound, ", estimand_short, ", ", description),
+          bound_label(estimate_high_est))
   })
 
 # "There are far more untreated units than treated units, and we know far less
@@ -417,15 +419,19 @@ figures_3_a2 |>
 # the bounds on the ATT, which shrink all the way down to a point. We can
 # summarize the ATT as a -15 percentage point effect on return to authoritarianism."
 # covers: text|atu_final_bounds_width text|att_summarised_as_a_point_effect text|the_att_bounds_shrink_to_a_point text|the_atu_bounds_are_wider_than_the_att_bounds
-atu_width <- round(summary_value("dem: ATU final bounds width"))
-att_low <- round(summary_value("dem: ATT final lower bound"))
-att_high <- round(summary_value("dem: ATT final upper bound"))
-claim("text|atu_final_bounds_width", pp(atu_width))
-claim("text|att_summarised_as_a_point_effect", pp(att_low))
+#
+# The ATT is exactly -22.5 points, halfway between two whole numbers, so it is
+# printed at the one decimal that states it, as the figure prints it.
+atu_width <- summary_value("dem: ATU final bounds width")
+att_low <- summary_value("dem: ATT final lower bound")
+att_high <- summary_value("dem: ATT final upper bound")
+claim("text|atu_final_bounds_width", bound_label(atu_width))
+claim("text|att_summarised_as_a_point_effect", bound_label(att_low))
 claim("text|the_att_bounds_shrink_to_a_point",
-      str_c("[", pp(att_low), ", ", pp(att_high), "], width ", pp(att_high - att_low)))
+      str_c("[", bound_label(att_low), ", ", bound_label(att_high), "], width ",
+            bound_label(att_high - att_low)))
 claim("text|the_atu_bounds_are_wider_than_the_att_bounds",
-      str_c(pp(atu_width), " against ", pp(att_high - att_low)))
+      str_c(bound_label(atu_width), " against ", bound_label(att_high - att_low)))
 
 # Expert Survey ----
 
@@ -550,13 +556,14 @@ claim("appendix_a|treated_end_of_conflict_cases", pp(count_value("End of conflic
 eoc_low <- round(summary_value("eoc: final ATE lower bound"))
 eoc_high <- round(summary_value("eoc: final ATE upper bound"))
 claim("appendix_a|bounds_width_once_half_the_potential_outcomes_are_revealed",
-      pp(summary_value("eoc: bounds width once the world reveals half the potential outcomes")))
-claim("appendix_a|bounds_width_after_imputation", pp(summary_value("eoc: final ATE bounds width")))
-claim("appendix_a|final_ate_lower_bound", pp(eoc_low))
-claim("appendix_a|final_ate_upper_bound", pp(eoc_high))
-claim("appendix_a|final_ate_bounds_width_from_the_rounded_endpoints", pp(eoc_high - eoc_low))
+      bound_label(summary_value("eoc: bounds width once the world reveals half the potential outcomes")))
+claim("appendix_a|bounds_width_after_imputation",
+      bound_label(summary_value("eoc: final ATE bounds width")))
+claim("appendix_a|final_ate_lower_bound", bound_label(eoc_low))
+claim("appendix_a|final_ate_upper_bound", bound_label(eoc_high))
+claim("appendix_a|final_ate_bounds_width_from_the_rounded_endpoints", bound_label(eoc_high - eoc_low))
 claim("appendix_a|att_summarised_as_a_point_effect",
-      pp(summary_value("eoc: ATT final lower bound")))
+      bound_label(summary_value("eoc: ATT final lower bound")))
 
 # Appendix Tables B.1 and B.2 ----
 # The full case datasets. Each claim is the count of cells one published column

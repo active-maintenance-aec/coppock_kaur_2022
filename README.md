@@ -8,7 +8,8 @@
     paper?](#does-the-maintained-rewrite-reproduce-the-paper)
 - [Paper overview](#paper-overview)
 - [Original archive reproducibility](#original-archive-reproducibility)
-  - [The unseeded simulation](#the-unseeded-simulation)
+  - [The unseeded simulation, and the bounds it was
+    estimating](#the-unseeded-simulation-and-the-bounds-it-was-estimating)
   - [Checksums](#checksums)
 - [Errata](#errata)
   - [Seven imputation probabilities the deposit transcribes differently
@@ -82,12 +83,13 @@ That fetches the deposit, verifies its 10 files, and produces every
 table and figure into `maintained/output/`. Required packages:
 tidyverse, janitor, here, and for this report knitr and kableExtra.
 Paths resolve through `here`, so nothing depends on the working
-directory. The full run takes about a minute, most of it in the
-twenty-seed sensitivity check at the end. A successful run overwrites
-`maintained/output/`, which is committed: **`git diff` on that folder is
-the reproduction check.** The figure PDFs always differ, because a PDF
-records the time it was written; the CSV and PNG output comes back
-byte-identical.
+directory. Almost all of the run time is in the last two scripts, which
+simulate the bounds twenty-one times over in order to say what the
+deposited archive’s method gives; the analysis itself is quick. A
+successful run overwrites `maintained/output/`, which is committed:
+**`git diff` on that folder is the reproduction check.** The figure PDFs
+always differ, because a PDF records the time it was written; the CSV
+and PNG output comes back byte-identical.
 
 # Summary
 
@@ -110,12 +112,13 @@ from reproducing its own figures exactly. `figures_2_3_A1_A2.R`
 estimates the bounds by simulation, 1,000 draws for Figures 2 and A1 and
 10,000 for Figures 3 and A2, and it sets no seed. The published figures
 are labelled with rounded percentage points, so most of the simulation
-noise is absorbed by the rounding, but not all of it: repeating the
-Figure 2 and A1 simulation at twenty seeds moves at least one of the 28
-rounded labels off its published value in 11 of them. A reader running
-the deposited script today has close to even odds of seeing a figure
-that disagrees with the article somewhere, with no error and no warning.
-The maintained rewrite fixes the seed at 12345.
+noise is absorbed by the rounding, but not all of it: repeating that
+simulation at twenty seeds moves at least one of the 70 labels the four
+figures determine off the value the bound actually takes in 14 of them.
+A reader running the deposited script today has better than even odds of
+seeing a figure that disagrees with the article somewhere, with no error
+and no warning. The maintained rewrite does not simulate these bounds at
+all, for the reason set out below.
 
 Two smaller things. `table_4.R` prints its bounds as fractions where the
 paper prints percentage points, so the deposited output reads `[0, 0.3]`
@@ -136,7 +139,12 @@ and A2, all ten bounds of Figure 4, 761 of the 763 cells the two
 appendix case tables print, the abstract, and every in-text quantity
 from the Expert Survey section and Appendix A. The article’s headline
 result is among them: the extreme value bounds on the ATE come to \[-2,
-49\], 51 points wide, as published.
+49\], 51 points wide, as published. A few of those matching labels are
+printed here at one decimal rather than as a whole number, because the
+bound falls exactly halfway between two whole numbers and no whole
+number states it; each agrees with the published label at the precision
+the page prints, and the table under *The unseeded simulation* lists
+every one.
 
 The 26 that do not match fall into three groups.
 
@@ -204,51 +212,78 @@ repeats the exercise for 54 end-of-conflict cases.
 | table_3_figure_1.R | Runs; deprecation warning | size= to linewidth= |
 | table_4.R | Runs clean | Multiply the bounds by 100 to print percentage points, as the paper does |
 | table_5.R | Runs clean | recode_factor() to case_when() + factor() |
-| figures_2_3_A1_A2.R | Runs; three deprecation warnings; unseeded simulation | melt/dcast to pivot_longer/pivot_wider; geom_errorbarh() to geom_errorbar(orientation=‘y’); %+% to a named plot function; do() to reframe(); set.seed(12345) |
+| figures_2_3_A1_A2.R | Runs; three deprecation warnings; unseeded simulation | melt/dcast to pivot_longer/pivot_wider; geom_errorbarh() to geom_errorbar(orientation=‘y’); %+% to a named plot function; do() to reframe(); the bounds enumerated rather than simulated |
 | figure_4.R | Runs; deprecation warning and a melt() id-variable warning | melt to pivot_longer with an explicit names_to; size= to linewidth= |
 
 Original archive reproducibility, checked against R 4.6.0 on 1 August
 2026.
 
-## The unseeded simulation
+## The unseeded simulation, and the bounds it was estimating
 
 The probabilistic extension is what makes Figures 2, 3, A1 and A2
-stochastic. Where the authors hold a probability rather than a point
-belief about a missing potential outcome, `sample_bounds()` draws binary
-potential outcomes from those probabilities and recomputes the bounds,
-and the reported estimate is the mean over draws. That is a design
-decision the paper explains and the rewrite keeps. What the archive
-omits is `set.seed()`, so the figures are one unlabelled draw.
+stochastic in the archive. Where the authors hold a probability rather
+than a point belief about a missing potential outcome, the deposit’s
+`sample_bounds()` draws binary potential outcomes from those
+probabilities and recomputes the bounds, and the reported estimate is
+the mean over draws. What the archive omits is `set.seed()`, so its
+figures are one unlabelled draw.
 
-| Rounded labels moved | Seeds |
-|---------------------:|------:|
-|                    0 |     9 |
-|                    1 |     6 |
-|                    2 |     2 |
-|                    3 |     3 |
+**The maintained rewrite computes these bounds exactly, where the
+deposit estimates them by simulation.** A bound is affine in the
+realised imputations: it is the count of realised ones among the imputed
+and observed entries, offset by the unimputed entries the bound fills
+with a constant, over the number of units. So the distribution the
+deposit samples from can be written down and enumerated instead, by
+convolving one Bernoulli imputation in at a time, and
+`bounds_distribution()` in `maintained/helpers.R` does that. The plotted
+estimate is the mean of that distribution and the interval its 2.5th and
+97.5th quantiles.
 
-Repeating the Figure 2 and A1 simulation at twenty seeds. Of the 28
-rounded labels those two figures carry, the number that move off the
-value the rewrite commits, which is also the value the published figures
-carry.
+This is not a different estimator. It is the same quantity by a
+different route, and it is the route the paper itself takes for the toy
+example, whose Table 4 enumerates all four consistent worlds and takes
+the probability-weighted bounds rather than sampling them. What it
+changes is threefold. Nothing in this repository depends on a seed, so
+the reproduction check is a byte comparison rather than a judgment about
+noise. The 84 bounds the four figures carry are now stated at their
+exact values rather than to within the simulation’s error, which at the
+deposit’s number of draws reaches 0.33 points at one of them. And a
+bound that falls exactly halfway between two whole numbers becomes
+visible as such, instead of being settled by whichever side a draw
+happened to land on.
 
-The size of the disturbance is one percentage point in the rounded
-label, never more, and it barely touches the substantive claims: the
-final democratization bounds read \[-2, 49\] at 17 of the 20 seeds and
-\[-1, 49\] at the other 3, a difference of one point in the lower label.
-The point is not that the archive gets a different answer but that it
-gets a slightly different figure each time it is run, and it offers a
-reader no way to tell whether a discrepancy is noise or a mistake.
+`maintained/text_expected_bounds.R` keeps the comparison against the
+deposit’s own method on the record: it runs that simulation once at a
+fixed seed, writes what it gives beside the exact value, and stops the
+build if any of the 84 bounds disagree by more than five standard errors
+of the simulated estimate. `maintained/text_seed_sensitivity.R` runs it
+at twenty seeds.
 
-The rounding hides one further thing, which no seed sweep can settle and
-which the exact expectation can. The bounds are linear in the imputed
-potential outcomes, so the quantity the simulation estimates has a
-closed form, and `text_expected_bounds.R` computes it for every label of
-all four figures beside the drawn value. 8 of them sit exactly halfway
-between two whole numbers, where no whole-number label is determined at
-all and the figure prints whichever side the draw fell on.
+| Labels rounded differently | Seeds |
+|---------------------------:|------:|
+|                          0 |     6 |
+|                          1 |     8 |
+|                          2 |     3 |
+|                          3 |     3 |
 
-| Sample | Estimand | Step | Exact expectation | Label at seed 12345 |
+The deposited archive’s method, repeated at twenty seeds. Of the labels
+the four figures carry, the number the simulation rounds to a different
+whole number than the bound it is estimating does.
+
+The size of the disturbance is one percentage point in the label, never
+more, and it barely touches the substantive claims: the final
+democratization bounds read \[-2, 49\] at 17 of the 20 seeds and \[-1,
+49\] at the other 3, a difference of one point in the lower label. The
+point is not that the archive gets a different answer but that it gets a
+slightly different figure each time it is run, and it offers a reader no
+way to tell whether a discrepancy is noise or a mistake.
+
+The table above counts only the 70 labels a whole number can state. The
+other 14 fall exactly halfway between two of them, and for those the
+deposit’s method prints whichever side the draw fell on. The maintained
+figures print such a bound at the one decimal that states it.
+
+| Sample | Estimand | Step | Exact bound | Simulated, at seed 12345 |
 |:---|:---|:---|:---|:---|
 | Democratization | ATT | Initial Values | \[-87.5, 12.5\] | \[-88, 12\] |
 | Democratization | ATT | Disbanded and Discredited Cases | \[-87.5, 12.5\] | \[-88, 12\] |
@@ -257,21 +292,22 @@ all and the figure prints whichever side the draw fell on.
 | Democratization | ATT | Untreated Cases | \[-22.5, -22.5\] | \[-22, -22\] |
 | Democratization | ATT | Unimputable Cases | \[-22.5, -22.5\] | \[-22, -22\] |
 | End of conflict | ATU | Disbanded and Discredited Cases | \[-27.5, 64.2\] | \[-27, 64\] |
-| End of conflict | ATU | Treated Cases | \[-27.5, 64.2\] | \[-27, 64\] |
+| End of conflict | ATU | Treated Cases | \[-27.5, 64.2\] | \[-28, 64\] |
 
-Bounds whose exact expectation falls on a whole-number rounding
-boundary. All but the democratization ATT rows from Treated Cases
-onwards are a property of the deposit as published; those appear once
-the appendix C probabilities are restored.
+Bounds falling on a whole-number rounding boundary, with what one run of
+the deposit’s method gives for the same quantity. All but the
+democratization ATT rows from Treated Cases onwards are a property of
+the deposit as published; those appear once the appendix C probabilities
+are restored.
 
 The 4 democratization ATT rows from *Treated Cases* onwards are the
 consequential ones, and they are the only rows in the table the
-corrections create. The democratization ATT is exactly -22.5 once South
-Africa carries the probability appendix C states for it, so the label
-the article’s figure style would print is decided by the simulation
-rather than by the estimate. The rest were on a boundary in the deposit
-as published, and the labels the article prints for them are one draw of
-a coin flip.
+corrections create. The ATT is exactly -22.5 once South Africa carries
+the probability appendix C states for it, so a whole-number label for it
+is not decided by the estimate at all: over twenty seeds the deposit’s
+method prints \[-22, -22\] at 12 and \[-23, -23\] at 8. The rest of the
+table was on a boundary in the deposit as published, and the labels the
+article prints for them are one draw of a coin flip.
 
 ## Checksums
 
@@ -389,8 +425,7 @@ percentage points.
 | Figure 3, ATT, Treated Cases onwards | \[-15, -15\] | \[-22.5, -22.5\] |
 
 Every published bound the corrections move. Published values are the
-whole-number labels the figures carry; corrected values are the exact
-expectation of each bound, which the figures estimate by simulation. The
+whole-number labels the figures carry; corrected values are exact. The
 third row is the article’s headline result and rounds to the published
 label.
 
@@ -472,8 +507,8 @@ between them, and the deposited case file reproduces 761.
 treated outcome for Burundi (1996-2005) as 1 with a probability of 0.9.
 Appendix C entry C.4.11 states 0.8 for the same case, and the deposited
 data carry 0.8. Deposit and appendix agree here, so there is nothing to
-correct in the data; the table cell is the outlier and the simulation is
-unaffected.
+correct in the data; the table cell is the outlier and no bound is
+affected.
 
 **Azerbaijan’s observed outcome.** Table B.2 prints an observed outcome
 of 0 for Azerbaijan (1991-1992), consistent with the untreated potential
@@ -587,25 +622,25 @@ and the table matches what the analysis used.
 | figure_3 | high bound, ATU, Unimputable Cases | 58 | 58 | 60 | 1 | 0 |
 | figure_3 | low bound, ATT, Before Any Data | -100 | -100 | -100 | 1 | 1 |
 | figure_3 | high bound, ATT, Before Any Data | 100 | 100 | 100 | 1 | 1 |
-| figure_3 | low bound, ATT, Initial Values | -88 | -88 | -88 | 1 | 1 |
-| figure_3 | high bound, ATT, Initial Values | 12 | 12 | 12 | 1 | 1 |
-| figure_3 | low bound, ATT, Disbanded and Discredited Cases | -88 | -88 | -88 | 1 | 1 |
-| figure_3 | high bound, ATT, Disbanded and Discredited Cases | 12 | 12 | 12 | 1 | 1 |
-| figure_3 | low bound, ATT, Treated Cases | -15 | -15 | -22 | 1 | 0 |
-| figure_3 | high bound, ATT, Treated Cases | -15 | -15 | -22 | 1 | 0 |
-| figure_3 | low bound, ATT, Non-transitional Cases | -15 | -15 | -23 | 1 | 0 |
-| figure_3 | high bound, ATT, Non-transitional Cases | -15 | -15 | -23 | 1 | 0 |
-| figure_3 | low bound, ATT, Untreated Cases | -15 | -15 | -22 | 1 | 0 |
-| figure_3 | high bound, ATT, Untreated Cases | -15 | -15 | -22 | 1 | 0 |
-| figure_3 | low bound, ATT, Unimputable Cases | -15 | -15 | -22 | 1 | 0 |
-| figure_3 | high bound, ATT, Unimputable Cases | -15 | -15 | -22 | 1 | 0 |
+| figure_3 | low bound, ATT, Initial Values | -88 | -88 | -87.5 | 1 | 1 |
+| figure_3 | high bound, ATT, Initial Values | 12 | 12 | 12.5 | 1 | 1 |
+| figure_3 | low bound, ATT, Disbanded and Discredited Cases | -88 | -88 | -87.5 | 1 | 1 |
+| figure_3 | high bound, ATT, Disbanded and Discredited Cases | 12 | 12 | 12.5 | 1 | 1 |
+| figure_3 | low bound, ATT, Treated Cases | -15 | -15 | -22.5 | 1 | 0 |
+| figure_3 | high bound, ATT, Treated Cases | -15 | -15 | -22.5 | 1 | 0 |
+| figure_3 | low bound, ATT, Non-transitional Cases | -15 | -15 | -22.5 | 1 | 0 |
+| figure_3 | high bound, ATT, Non-transitional Cases | -15 | -15 | -22.5 | 1 | 0 |
+| figure_3 | low bound, ATT, Untreated Cases | -15 | -15 | -22.5 | 1 | 0 |
+| figure_3 | high bound, ATT, Untreated Cases | -15 | -15 | -22.5 | 1 | 0 |
+| figure_3 | low bound, ATT, Unimputable Cases | -15 | -15 | -22.5 | 1 | 0 |
+| figure_3 | high bound, ATT, Unimputable Cases | -15 | -15 | -22.5 | 1 | 0 |
 | figure_a2 | low bound, ATU, Before Any Data | -100 | -100 | -100 | 1 | 1 |
 | figure_a2 | high bound, ATU, Before Any Data | 100 | 100 | 100 | 1 | 1 |
 | figure_a2 | low bound, ATU, Initial Values | -29 | -29 | -29 | 1 | 1 |
 | figure_a2 | high bound, ATU, Initial Values | 71 | 71 | 71 | 1 | 1 |
-| figure_a2 | low bound, ATU, Disbanded and Discredited Cases | -27 | -27 | -27 | 1 | 1 |
+| figure_a2 | low bound, ATU, Disbanded and Discredited Cases | -27 | -27 | -27.5 | 1 | 1 |
 | figure_a2 | high bound, ATU, Disbanded and Discredited Cases | 64 | 64 | 64 | 1 | 1 |
-| figure_a2 | low bound, ATU, Treated Cases | -27 | -27 | -27 | 1 | 1 |
+| figure_a2 | low bound, ATU, Treated Cases | -27 | -27 | -27.5 | 1 | 1 |
 | figure_a2 | high bound, ATU, Treated Cases | 64 | 64 | 64 | 1 | 1 |
 | figure_a2 | low bound, ATU, Non-transitional Cases | -26 | -26 | -26 | 1 | 1 |
 | figure_a2 | high bound, ATU, Non-transitional Cases | 62 | 62 | 62 | 1 | 1 |
@@ -652,7 +687,7 @@ and the table matches what the analysis used.
 | text | toy example: bounds width before any data | 200 | 200 | 200 | 1 | 1 |
 | text | toy example: final bounds width | 10 | 10 | 10 | 1 | 1 |
 | text | ATU final bounds width | 58 | 58 | 58 | 1 | 1 |
-| text | ATT summarised as a point effect | -15 | -15 | -22 | 1 | 0 |
+| text | ATT summarised as a point effect | -15 | -15 | -22.5 | 1 | 0 |
 | text | cases imputed as a non-zero causal effect | 6 | 6 | 6 | 1 | 1 |
 | text | expert responses received | 20 | 20 | 20 | 1 | 1 |
 | text | democratization cases without an expert response | 43 | 43 | 43 | 1 | 1 |
@@ -699,7 +734,7 @@ and the table matches what the analysis used.
 | text | end-of-conflict cases, stated in the main text footnote | 54 |  | 54 |  | 1 |
 | text | unimputed cases as a share of the total |  |  | 32 of 63, 50.8% |  | 1 |
 | text | the bounds around the ATE include zero |  |  | \[-2, 49\] contains 0 |  | 1 |
-| text | the ATT bounds shrink to a point |  |  | \[-22, -22\], width 0 |  | 1 |
+| text | the ATT bounds shrink to a point |  |  | \[-22.5, -22.5\], width 0 |  | 1 |
 | text | the ATU bounds are wider than the ATT bounds |  |  | 58 against 0 |  | 1 |
 | text | the combined bounds are narrower than our original bounds |  |  | 44 against 51 |  | 1 |
 | text | no expert assigned to a treated case declined to impute |  |  | 0 of 6 declining experts |  | 1 |
@@ -784,13 +819,16 @@ probabilities restored.
 The rewrite lives in `maintained/`: a helpers file, a corrections
 script, one cleaning script, four table scripts, four figure scripts and
 five in-text scripts. It is a translation rather than a reanalysis in
-every respect but one. `ev_bounds()`, `bounds_width()`,
+every respect but two. `ev_bounds()`, `bounds_width()`,
 `sample_bounds()` and the probabilistic-extension functions are the
 paper’s contribution and are carried over with their logic unchanged;
-what changes is the tidyverse around them. The exception is
+what changes is the tidyverse around them. The first exception is
 `apply_appendix_c_corrections.R`, which restores the 7 imputation
 probabilities the deposit transcribes differently from the appendix that
-states them, and which is described in the errata section above.
+states them. The second is that the four bounds figures enumerate the
+distribution of each bound with `bounds_distribution()` rather than
+sampling it with `sample_bounds()`, which is the same quantity computed
+exactly instead of estimated. Both are described in the sections above.
 
 ## Architecture
 
@@ -826,11 +864,10 @@ which is the arrangement in which Table 3, Figure 1 and Table 4 can
 silently come to describe different examples.
 
 Figures 2 and A1 come from one script and Figures 3 and A2 from another,
-because in each pair the two figures are two facets of a single
-simulation and splitting them would mean running it twice at the same
-seed. The archive’s `figures_2_3_A1_A2.R` puts all four in one file; the
-rewrite splits along the simulation boundary rather than the file
-boundary.
+because in each pair the two figures are two facets of one computation
+and splitting them would mean doing it twice. The archive’s
+`figures_2_3_A1_A2.R` puts all four in one file; the rewrite splits
+along that boundary rather than the file boundary.
 
 `text_summary_stats.R` reads the bounds back out of the figure output
 rather than recomputing them, so the widths quoted in the abstract and
@@ -855,7 +892,7 @@ into any script in `maintained/`.
 | `recode_factor()` | `case_when()` + `factor()` |
 | `xtable` + `print.xtable` (commented out) | `write_csv()` to `output/` |
 | `ggsave()` (commented out) | `ggsave()` to `output/`, PDF and PNG |
-| unseeded `rbinom()` simulation | `set.seed(12345)` |
+| unseeded `rbinom()` simulation of the bounds | exact enumeration of the same distribution |
 | bounds printed as fractions in `table_4.R` | multiplied by 100, as the paper prints them |
 
 Deprecated patterns and their replacements in the maintained rewrite.
@@ -921,28 +958,28 @@ comment is right: a comment is not an output, and nothing checks it.
 
 # In-text quantities
 
-| Quantity | Rewrite | Rounded |
+| Quantity | Rewrite | As a figure labels it |
 |:---|:---|---:|
-| dem: bounds width before any data | 200.00 | 200 |
-| dem: bounds width once the world reveals half the potential outcomes | 100.00 | 100 |
-| dem: final ATE lower bound | -1.65 | -2 |
-| dem: final ATE upper bound | 49.15 | 49 |
-| dem: final ATE bounds width | 50.79 | 51 |
-| dem: ATU final bounds width | 58.18 | 58 |
-| dem: ATT final lower bound | -22.32 | -22 |
-| dem: ATT final upper bound | -22.32 | -22 |
-| expert: our bounds width, 20 responding cases | 50.00 | 50 |
-| expert: expert bounds width, 20 responding cases | 30.00 | 30 |
-| expert: our bounds width, all 63 cases | 50.79 | 51 |
-| expert: expert bounds width, all 63 cases | 77.78 | 78 |
-| expert: combined bounds width, all 63 cases | 44.44 | 44 |
-| dem: cases imputed as a non-zero causal effect | 6.00 | 6 |
-| eoc: bounds width once the world reveals half the potential outcomes | 100.00 | 100 |
-| eoc: final ATE lower bound | -2.92 | -3 |
-| eoc: final ATE upper bound | 41.52 | 42 |
-| eoc: final ATE bounds width | 44.44 | 44 |
-| eoc: ATT final lower bound | -10.25 | -10 |
-| eoc: ATT final upper bound | -10.25 | -10 |
+| dem: bounds width before any data | 200.00 | 200.0 |
+| dem: bounds width once the world reveals half the potential outcomes | 100.00 | 100.0 |
+| dem: final ATE lower bound | -1.59 | -2.0 |
+| dem: final ATE upper bound | 49.21 | 49.0 |
+| dem: final ATE bounds width | 50.79 | 51.0 |
+| dem: ATU final bounds width | 58.18 | 58.0 |
+| dem: ATT final lower bound | -22.50 | -22.5 |
+| dem: ATT final upper bound | -22.50 | -22.5 |
+| expert: our bounds width, 20 responding cases | 50.00 | 50.0 |
+| expert: expert bounds width, 20 responding cases | 30.00 | 30.0 |
+| expert: our bounds width, all 63 cases | 50.79 | 51.0 |
+| expert: expert bounds width, all 63 cases | 77.78 | 78.0 |
+| expert: combined bounds width, all 63 cases | 44.44 | 44.0 |
+| dem: cases imputed as a non-zero causal effect | 6.00 | 6.0 |
+| eoc: bounds width once the world reveals half the potential outcomes | 100.00 | 100.0 |
+| eoc: final ATE lower bound | -2.78 | -3.0 |
+| eoc: final ATE upper bound | 41.67 | 42.0 |
+| eoc: final ATE bounds width | 44.44 | 44.0 |
+| eoc: ATT final lower bound | -10.00 | -10.0 |
+| eoc: ATT final upper bound | -10.00 | -10.0 |
 
 Bounds widths and summary effects quoted in the abstract, the body and
 Appendix A, read back out of the figure output that produced them.

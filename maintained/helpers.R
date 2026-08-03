@@ -32,7 +32,11 @@ bounds_width <- function(Y0, Y1, min = 0, max = 1) {
 
 # Simulate the sampling distribution of the bounds under probabilistic
 # imputations: each draw realises binary potential outcomes from the imputed
-# probabilities and recomputes the bounds. Returns a long tibble.
+# probabilities and recomputes the bounds. Returns a long tibble. This is the
+# deposited archive's method. The figures no longer use it, because the same
+# distribution is available exactly through bounds_distribution() below; it is
+# kept because what a simulation of these bounds gives is itself something the
+# report needs to be able to state.
 sample_bounds <- function(Y0, Y1, sims) {
   map(
     seq_len(sims),
@@ -42,6 +46,53 @@ sample_bounds <- function(Y0, Y1, sims) {
     ))
   ) |>
     bind_rows(.id = "sim")
+}
+
+# The distribution of the number of ones among independent Bernoulli draws with
+# different probabilities, built by convolving one draw in at a time. A
+# probability of exactly 0 or 1 is a draw like any other and simply shifts the
+# distribution, so imputed and observed entries go in together.
+poisson_binomial <- function(probs) {
+  reduce(probs, \(pmf, p) c(pmf * (1 - p), 0) + c(0, pmf * p), .init = 1)
+}
+
+# The exact distribution of the extreme value bounds under probabilistic
+# imputations, which is the distribution sample_bounds() draws from. Each bound
+# is the count of realised ones among the imputed and observed entries, offset by
+# the unimputed entries that the bound fills with a constant, and divided by the
+# number of units. It is therefore affine in the realisations, so the whole
+# distribution is a convolution and does not have to be sampled: the mean of the
+# draws estimates a quantity available in closed form, and the quantiles of the
+# draws estimate quantiles that can be read off the enumeration. Both bounds move
+# together, differing only by the constant each fills its unimputed entries with,
+# so one enumeration carries both. Returns each attainable pair of bounds with
+# the probability of it, in the shape table_4_probabilistic.R enumerates the toy
+# example's four scenarios.
+bounds_distribution <- function(Y0, Y1) {
+  units <- length(Y0)
+  ones_Y0 <- poisson_binomial(Y0[!is.na(Y0)])
+  ones_Y1 <- poisson_binomial(Y1[!is.na(Y1)])
+  expand_grid(
+    realised_Y1 = seq_along(ones_Y1) - 1,
+    realised_Y0 = seq_along(ones_Y0) - 1
+  ) |>
+    mutate(
+      prob = ones_Y1[realised_Y1 + 1] * ones_Y0[realised_Y0 + 1],
+      low_est = (realised_Y1 - realised_Y0 - sum(is.na(Y0))) / units,
+      high_est = (realised_Y1 + sum(is.na(Y1)) - realised_Y0) / units
+    ) |>
+    summarise(prob = sum(prob), .by = c(low_est, high_est))
+}
+
+# The label a figure prints for a bound. The published figures label whole
+# percentage points, and a value sitting exactly halfway between two of them has
+# no whole-number label at all: which one appeared would be decided by the
+# tie-breaking rule rather than by the quantity. Such a value is printed at the
+# one decimal that states it. A value rounding to zero from below prints as -0,
+# which no page ever shows.
+bound_label <- function(x) {
+  printed <- sprintf(if_else(near(x %% 1, 0.5), "%.1f", "%.0f"), x)
+  if_else(str_detect(printed, "^-0(\\.0+)?$"), str_remove(printed, "^-"), printed)
 }
 
 # Probabilistic extension ----

@@ -99,25 +99,25 @@ coppock_kaur_2022,figure_3,"low bound, ATU, Unimputable Cases",0,0,1,"The publis
 coppock_kaur_2022,figure_3,"high bound, ATU, Unimputable Cases",58,58,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",60,0,archive
 coppock_kaur_2022,figure_3,"low bound, ATT, Before Any Data",-100,-100,1,Rounded label; the deposited script sets no seed,-100,1,
 coppock_kaur_2022,figure_3,"high bound, ATT, Before Any Data",100,100,1,,100,1,
-coppock_kaur_2022,figure_3,"low bound, ATT, Initial Values",-88,-88,1,Rounded label; the deposited script sets no seed,-88,1,
-coppock_kaur_2022,figure_3,"high bound, ATT, Initial Values",12,12,1,,12,1,
-coppock_kaur_2022,figure_3,"low bound, ATT, Disbanded and Discredited Cases",-88,-88,1,Rounded label; the deposited script sets no seed,-88,1,
-coppock_kaur_2022,figure_3,"high bound, ATT, Disbanded and Discredited Cases",12,12,1,,12,1,
-coppock_kaur_2022,figure_3,"low bound, ATT, Treated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
-coppock_kaur_2022,figure_3,"high bound, ATT, Treated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
-coppock_kaur_2022,figure_3,"low bound, ATT, Non-transitional Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-23,0,archive
-coppock_kaur_2022,figure_3,"high bound, ATT, Non-transitional Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-23,0,archive
-coppock_kaur_2022,figure_3,"low bound, ATT, Untreated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
-coppock_kaur_2022,figure_3,"high bound, ATT, Untreated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
-coppock_kaur_2022,figure_3,"low bound, ATT, Unimputable Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
-coppock_kaur_2022,figure_3,"high bound, ATT, Unimputable Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite draws from the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases",-22,0,archive
+coppock_kaur_2022,figure_3,"low bound, ATT, Initial Values",-88,-88,1,"The exact bound is -87.5, halfway between two whole numbers, so no whole-number label is determined; the published label is one of the two it lies between and is not contradicted at the precision the figure prints",-87.5,1,
+coppock_kaur_2022,figure_3,"high bound, ATT, Initial Values",12,12,1,"The exact bound is 12.5, halfway between two whole numbers, so no whole-number label is determined; the published label is one of the two it lies between and is not contradicted at the precision the figure prints",12.5,1,
+coppock_kaur_2022,figure_3,"low bound, ATT, Disbanded and Discredited Cases",-88,-88,1,"The exact bound is -87.5, halfway between two whole numbers, so no whole-number label is determined; the published label is one of the two it lies between and is not contradicted at the precision the figure prints",-87.5,1,
+coppock_kaur_2022,figure_3,"high bound, ATT, Disbanded and Discredited Cases",12,12,1,"The exact bound is 12.5, halfway between two whole numbers, so no whole-number label is determined; the published label is one of the two it lies between and is not contradicted at the precision the figure prints",12.5,1,
+coppock_kaur_2022,figure_3,"low bound, ATT, Treated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite uses the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases. The bound is exactly -22.5, enumerated rather than simulated, and no whole number states it",-22.5,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATT, Treated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite uses the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases. The bound is exactly -22.5, enumerated rather than simulated, and no whole number states it",-22.5,0,archive
+coppock_kaur_2022,figure_3,"low bound, ATT, Non-transitional Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite uses the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases. The bound is exactly -22.5, enumerated rather than simulated, and no whole number states it",-22.5,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATT, Non-transitional Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite uses the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases. The bound is exactly -22.5, enumerated rather than simulated, and no whole number states it",-22.5,0,archive
+coppock_kaur_2022,figure_3,"low bound, ATT, Untreated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite uses the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases. The bound is exactly -22.5, enumerated rather than simulated, and no whole number states it",-22.5,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATT, Untreated Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite uses the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases. The bound is exactly -22.5, enumerated rather than simulated, and no whole number states it",-22.5,0,archive
+coppock_kaur_2022,figure_3,"low bound, ATT, Unimputable Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite uses the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases. The bound is exactly -22.5, enumerated rather than simulated, and no whole number states it",-22.5,0,archive
+coppock_kaur_2022,figure_3,"high bound, ATT, Unimputable Cases",-15,-15,1,"The published label is what the deposited data give; the rewrite uses the imputation probabilities appendix C states, which the deposit transcribes differently for seven cases. The bound is exactly -22.5, enumerated rather than simulated, and no whole number states it",-22.5,0,archive
 coppock_kaur_2022,figure_a2,"low bound, ATU, Before Any Data",-100,-100,1,Rounded label; the deposited script sets no seed,-100,1,
 coppock_kaur_2022,figure_a2,"high bound, ATU, Before Any Data",100,100,1,,100,1,
 coppock_kaur_2022,figure_a2,"low bound, ATU, Initial Values",-29,-29,1,Rounded label; the deposited script sets no seed,-29,1,
 coppock_kaur_2022,figure_a2,"high bound, ATU, Initial Values",71,71,1,,71,1,
-coppock_kaur_2022,figure_a2,"low bound, ATU, Disbanded and Discredited Cases",-27,-27,1,Rounded label; the deposited script sets no seed,-27,1,
+coppock_kaur_2022,figure_a2,"low bound, ATU, Disbanded and Discredited Cases",-27,-27,1,"The exact bound is -27.5, halfway between two whole numbers, so no whole-number label is determined; the published label is one of the two it lies between and is not contradicted at the precision the figure prints",-27.5,1,
 coppock_kaur_2022,figure_a2,"high bound, ATU, Disbanded and Discredited Cases",64,64,1,,64,1,
-coppock_kaur_2022,figure_a2,"low bound, ATU, Treated Cases",-27,-27,1,Rounded label; the deposited script sets no seed,-27,1,
+coppock_kaur_2022,figure_a2,"low bound, ATU, Treated Cases",-27,-27,1,"The exact bound is -27.5, halfway between two whole numbers, so no whole-number label is determined; the published label is one of the two it lies between and is not contradicted at the precision the figure prints",-27.5,1,
 coppock_kaur_2022,figure_a2,"high bound, ATU, Treated Cases",64,64,1,,64,1,
 coppock_kaur_2022,figure_a2,"low bound, ATU, Non-transitional Cases",-26,-26,1,Rounded label; the deposited script sets no seed,-26,1,
 coppock_kaur_2022,figure_a2,"high bound, ATU, Non-transitional Cases",62,62,1,,62,1,
@@ -164,7 +164,7 @@ coppock_kaur_2022,text,toy example: untreated units with outcome 1,1,1,1,,1,1,
 coppock_kaur_2022,text,toy example: bounds width before any data,200,200,1,,200,1,
 coppock_kaur_2022,text,toy example: final bounds width,10,10,1,,10,1,
 coppock_kaur_2022,text,ATU final bounds width,58,58,1,The text says the ATU bounds are greater than 58 points wide,58,1,
-coppock_kaur_2022,text,ATT summarised as a point effect,-15,-15,1,"The ATT is exactly -22.5 points once South Africa (1910-1994) carries the 0.8 appendix C states, so the whole-number label the figure prints is not determined by rounding; it reads -22 at three of the four steps and -23 at the fourth in the same run",-22,0,archive
+coppock_kaur_2022,text,ATT summarised as a point effect,-15,-15,1,"The ATT is exactly -22.5 points once South Africa (1910-1994) carries the 0.8 appendix C states, which is 7.5 points from the published -15. It sits halfway between two whole numbers, so the figure prints it at the one decimal that states it",-22.5,0,archive
 coppock_kaur_2022,text,cases imputed as a non-zero causal effect,6,6,1,,6,1,
 coppock_kaur_2022,text,expert responses received,20,20,1,,20,1,
 coppock_kaur_2022,text,democratization cases without an expert response,43,43,1,,43,1,
@@ -211,7 +211,7 @@ coppock_kaur_2022,text,"expert imputations conflicting with ours, restated in th
 coppock_kaur_2022,text,"end-of-conflict cases, stated in the main text footnote",,54,,"The same quantity as Appendix A's 54 cases, stated a second time in a main text footnote",54,1,
 coppock_kaur_2022,text,unimputed cases as a share of the total,,,,,"32 of 63, 50.8%",1,
 coppock_kaur_2022,text,the bounds around the ATE include zero,,,,,"[-2, 49] contains 0",1,
-coppock_kaur_2022,text,the ATT bounds shrink to a point,,,,,"[-22, -22], width 0",1,
+coppock_kaur_2022,text,the ATT bounds shrink to a point,,,,,"[-22.5, -22.5], width 0",1,
 coppock_kaur_2022,text,the ATU bounds are wider than the ATT bounds,,,,,58 against 0,1,
 coppock_kaur_2022,text,the combined bounds are narrower than our original bounds,,,,,44 against 51,1,
 coppock_kaur_2022,text,no expert assigned to a treated case declined to impute,,,,,0 of 6 declining experts,1,

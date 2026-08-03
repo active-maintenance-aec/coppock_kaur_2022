@@ -60,10 +60,11 @@ count_value <- function(sample, quantity_label) {
   hit
 }
 
-# The exact expected value of a plotted bound. The bounds are linear in the
-# imputed potential outcomes, so the quantity the figures estimate by simulation
-# has a closed form, and the corrected values below are that closed form rather
-# than one draw from an unseeded simulation.
+# A plotted bound, at its exact value. The bounds are affine in the imputed
+# potential outcomes, so the distribution the deposited script samples from is
+# available in closed form, and the maintained figures enumerate it rather than
+# drawing from it. Every corrected bound below is therefore an exact value and
+# not one draw of an unseeded simulation.
 exact_bound <- function(sample, which_estimand, which_step, side) {
   row <- expected_bounds |>
     filter(transition_fac == sample, estimand == which_estimand, step == which_step)
@@ -89,6 +90,7 @@ treated_ones <- sum(table_3$d == 1 & table_3$Y == 1)
 unit_6_probability <- sum(table_4$prob[table_4$unit_6 == 1])
 unit_7_probability <- sum(table_4$prob[table_4$unit_7 == 1])
 disbanded_cases <- count_value("Democratization", "cases at step: Disbanded and Discredited Cases")
+treated_cases <- count_value("Democratization", "treated")
 
 complemented <- corrections |>
   filter(near(deposited_probability + appendix_c_probability, 1))
@@ -98,9 +100,8 @@ off_by_one_step <- corrections |>
 att_exact <- exact_bound("Democratization", "ATT", "s4", "low")
 att_published <- published_value("figure_3|low_bound_att_unimputable_cases")
 
-# Widths are differences of two exact expectations rather than of two draws, for
-# the same reason the bounds themselves are: the simulation is one draw and the
-# expectation is the quantity it estimates.
+# Widths are differences of two exact bounds rather than of two draws, for the
+# same reason the bounds themselves are.
 atu_width_exact <- exact_bound("Democratization", "ATU", "s4", "high") -
   exact_bound("Democratization", "ATU", "s4", "low")
 ate_width_exact <- exact_bound("Democratization", "ATE", "s4", "high") -
@@ -110,14 +111,14 @@ eoc_initial_width_exact <- exact_bound("End of conflict", "ATE", "obs", "high") 
 eoc_final_width_exact <- exact_bound("End of conflict", "ATE", "s4", "high") -
   exact_bound("End of conflict", "ATE", "s4", "low")
 
-# The whole-number labels the reprinted Figure 3 carries for the ATT, which are
-# one draw each of a quantity sitting exactly on a rounding boundary.
-att_drawn_labels <- expected_bounds |>
-  filter(transition_fac == "Democratization", estimand == "ATT",
-         step %in% c("s1", "s2", "s3", "s4")) |>
-  arrange(step, .locale = "en") |>
-  pull(label_low) |>
-  sprintf(fmt = "%.0f")
+# What the deposited script's method gives for the same four bounds, which is a
+# different pair of whole numbers depending on the seed it is run at. The
+# democratization ATT sits exactly on a rounding boundary, so the two whole
+# numbers either side of it come up about equally often.
+att_drawn_labels <- read_csv(here::here("maintained", "output", "text_seed_sensitivity.csv"),
+                             show_col_types = FALSE) |>
+  count(dem_att_label) |>
+  arrange(desc(n))
 
 # The published figure labels beside the corrected expectations, for the two
 # floats whose labels move. The description is the step label the figure prints.
@@ -153,7 +154,7 @@ This note lists ten corrections to "Qualitative Imputation of Missing Potential 
 
 The first two entries are transcription errors in the deposited case data, and the four that follow are their consequences. The imputed potential outcomes in this article are not measurements. They are qualitative judgments, set out case by case in appendix C with the reasoning behind each one, and the deposited `cases_clean.csv` is a transcription of those judgments. `r str_to_sentence(english_number(nrow(corrections)))` of its imputation probabilities do not match the probability the appendix C narrative for that case states. Correcting them restores what the article always said it was doing.
 
-Every corrected value is computed at the time this document is rendered, from the deposited replication archive ([10.7910/DVN/2IVKXD](https://doi.org/10.7910/DVN/2IVKXD)) with those `r english_number(nrow(corrections))` probabilities restored. The code supporting each correction is at [github.com/active-maintenance-aec/coppock_kaur_2022](https://github.com/active-maintenance-aec/coppock_kaur_2022). Bold marks the values that change; unbolded numbers are recomputed rather than copied, so a reader diffing published against corrected sees every quantity verified and not only the ones at issue.
+Every corrected value is computed at the time this document is rendered, from the deposited replication archive ([10.7910/DVN/2IVKXD](https://doi.org/10.7910/DVN/2IVKXD)) with those `r english_number(nrow(corrections))` probabilities restored. The bounds are computed exactly, where the deposited script estimates them by simulation. It is the same quantity by a different route rather than a different estimator: a bound is affine in the imputed potential outcomes, so the distribution the deposit draws from can be written down and averaged, and the two agree to within the error of the simulation. What computing it exactly changes is that a bound falling exactly halfway between two whole numbers is visible as such, rather than being settled by whichever side an unseeded draw happened to land on. The code supporting each correction is at [github.com/active-maintenance-aec/coppock_kaur_2022](https://github.com/active-maintenance-aec/coppock_kaur_2022). Bold marks the values that change; unbolded numbers are recomputed rather than copied, so a reader diffing published against corrected sees every quantity verified and not only the ones at issue.
 
 ## 1. `r str_to_sentence(english_number(nrow(complemented)))` imputation probabilities carried as their complements
 
@@ -224,7 +225,7 @@ Corrected:
 
 > The bounds on the ATU are greater than 58 points wide, compared with the bounds on the ATT, which shrink all the way down to a point. We can summarize the ATT as a **`r sprintf("%.1f", att_exact)`** percentage point effect on return to authoritarianism.
 
-Every treated case has both potential outcomes filled in by the second imputation step, which is why the ATT bounds collapse to a point, and that point is the mean of the eight observed treated outcomes minus the mean of the eight imputed untreated ones. South Africa is one of the eight, so restoring its probability from 0.2 to the 0.8 appendix C states moves the ATT by `r sprintf("%.1f", abs(att_exact - as.numeric(att_published)))` points. The ATU claim in the first clause is unaffected and is left at the precision the article states it: the width is `r sprintf("%.1f", atu_width_exact)` points before the correction and after it, because both ATU bounds move by the same amount, so the published "greater than `r published_value("text|atu_final_bounds_width")`" holds exactly as written and is not restated at one decimal here.
+Every treated case has both potential outcomes filled in by the second imputation step, which is why the ATT bounds collapse to a point, and that point is the mean of the eight observed treated outcomes minus the mean of the eight imputed untreated ones. South Africa is one of the eight, so restoring its probability from 0.2 to the 0.8 appendix C states moves the ATT by `r sprintf("%.1f", abs(att_exact - as.numeric(att_published)))` points. The `r sprintf("%.1f", att_exact)` is exact and not a draw: with both potential outcomes of all `r english_number(treated_cases)` treated cases imputed, the bound is a fixed function of the imputation probabilities, and this is its value. It falls exactly halfway between two whole numbers, so a whole-number restatement of the sentence would not be determined, which is a further reason to correct it at one decimal as this document corrects every percentage-point quantity. The ATU claim in the first clause is unaffected and is left at the precision the article states it: the width is `r sprintf("%.1f", atu_width_exact)` points before the correction and after it, because both ATU bounds move by the same amount, so the published "greater than `r published_value("text|atu_final_bounds_width")`" holds exactly as written and is not restated at one decimal here.
 
 ## 4. Figure 3, the bounds by treatment status
 
@@ -239,13 +240,13 @@ bind_rows(
   kable(format = "latex", booktabs = TRUE, escape = FALSE, align = "lllr", linesep = "")
 ```
 
-\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Published labels are transcribed from Figure 3, which prints whole numbers. Corrected values are the exact expectation of each bound, which the figure estimates by simulation. \textbf{The corrected democratization ATT is exactly -22.5, halfway between two whole numbers, so no whole-number label is determined:} the deposited figure script sets no seed, and the simulation lands on either side of the boundary with equal probability. The published -15 is not on a boundary and is stable.}
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Published labels are transcribed from Figure 3, which prints whole numbers. Corrected values are exact. \textbf{The corrected democratization ATT is exactly -22.5, halfway between two whole numbers, so no whole-number label is determined:} the deposited figure script estimates this bound by simulation and sets no seed, and the draw lands either side of the boundary with about equal probability. Repeating that simulation at twenty seeds gives `r str_c(att_drawn_labels$dem_att_label, " at ", att_drawn_labels$n, collapse = " and ")`. The published -15 is not on a boundary and is stable.}
 
 ```{r figure-3, out.width="100%"}
 include_graphics("maintained/output/figure_3_dem_att_atu_bounds.pdf")
 ```
 
-\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Figure 3 recomputed with the `r english_number(nrow(corrections))` appendix C probabilities restored. The ATT panel labels one draw of a quantity whose exact value is -22.5, so the four steps from \textit{Treated Cases} onward read `r str_c(att_drawn_labels, collapse = ", ")` rather than one number.}
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Figure 3 recomputed with the `r english_number(nrow(corrections))` appendix C probabilities restored, and with the bounds computed exactly rather than simulated, so the labels are the same on every run. The ATT labels from \textit{Initial Values} onward carry a decimal, because at every one of those steps the bound falls exactly halfway between two whole numbers and no whole number states it.}
 
 ## 5. Figure 2, the bounds on the average treatment effect
 

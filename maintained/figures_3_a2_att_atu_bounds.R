@@ -4,32 +4,37 @@
 #         output/figures_3_a2_gg_df.csv
 # Depends on: helpers.R, clean_cases.R output
 # Description: Figures 3 and A2, the extreme value bounds on the ATT and the ATU
-#              after each imputation step with 95% simulation intervals. Figure 3
+#              after each imputation step with 95% uncertainty intervals. Figure 3
 #              is the democratization sample, Figure A2 the end-of-conflict
-#              sample. The two figures come from one simulation, so one script
+#              sample. The two figures come from one enumeration, so one script
 #              writes both.
+#
+#   As in figures_2_a1_ate_bounds.R, the bounds are enumerated exactly rather than
+#   simulated: the deposited script averages 10,000 draws of a quantity whose
+#   distribution bounds_distribution() gives in closed form. It matters most here.
+#   Every treated case has both potential outcomes filled in by the second step,
+#   so the democratization ATT bounds collapse to a point, and that point is
+#   exactly -22.5 percentage points, which sits halfway between two whole numbers.
+#   A simulation of it lands on either side with equal probability, which is why
+#   the deposited figure's ATT label is not determined by the estimate.
 
 source(here::here("maintained", "helpers.R"))
 
-set.seed(12345)
-
 cases_long <- read_rds(here::here("maintained", "output", "cases_long.rds"))
 
-sims <- cases_long |>
+distributions <- cases_long |>
   group_by(step, transition_fac, treatment) |>
-  reframe(sample_bounds(y0, y1, sims = 10000))
+  reframe(bounds_distribution(y0, y1))
 
-gg_df <- sims |>
+gg_df <- distributions |>
   summarise(
-    estimate = mean(value) * 100,
-    conf_low = quantile(value, 0.025) * 100,
-    conf_high = quantile(value, 0.975) * 100,
-    .by = c(step, transition_fac, treatment, name)
-  ) |>
-  pivot_wider(
-    id_cols = c(step, transition_fac, treatment),
-    names_from = name,
-    values_from = c(estimate, conf_low, conf_high)
+    estimate_low_est = sum(low_est * prob) * 100,
+    estimate_high_est = sum(high_est * prob) * 100,
+    conf_low_low_est = weighted_quantile(low_est, prob, 0.025) * 100,
+    conf_high_low_est = weighted_quantile(low_est, prob, 0.975) * 100,
+    conf_low_high_est = weighted_quantile(high_est, prob, 0.025) * 100,
+    conf_high_high_est = weighted_quantile(high_est, prob, 0.975) * 100,
+    .by = c(step, transition_fac, treatment)
   ) |>
   mutate(
     description = factor(step, levels = quimpo_step_levels, labels = quimpo_step_labels),
@@ -62,11 +67,11 @@ make_att_atu_plot <- function(df) {
       linewidth = 2, alpha = 0.2
     ) +
     geom_text(
-      aes(x = round(estimate_low_est, 0), label = round(estimate_low_est, 0)),
+      aes(x = estimate_low_est, label = bound_label(estimate_low_est)),
       nudge_y = 0.35, size = 3
     ) +
     geom_text(
-      aes(x = round(estimate_high_est, 0), label = round(estimate_high_est, 0)),
+      aes(x = estimate_high_est, label = bound_label(estimate_high_est)),
       nudge_y = 0.35, size = 3
     ) +
     coord_cartesian(xlim = c(-105, 105)) +
