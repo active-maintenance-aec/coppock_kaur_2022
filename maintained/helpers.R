@@ -7,6 +7,8 @@ library(here)
 library(tidyverse)
 library(janitor)
 
+here::i_am("maintained/helpers.R")
+
 # Extreme value bounds ----
 # Given Y0 and Y1 vectors, possibly with NAs for unimputed potential outcomes,
 # fill the missing entries with the best and worst cases and return the implied
@@ -191,4 +193,19 @@ quimpo_toy_example <- function() {
     Y0 = list(rep(NA_real_, 10), Y0_step1, Y0_step2, Y0_step3, Y0_step4),
     Y1 = list(rep(NA_real_, 10), Y1_step1, Y1_step2, Y1_step3, Y1_step4)
   )
+}
+
+# Blank a figure PDF's embedded timestamps ----
+# R's pdf() device stamps /CreationDate and /ModDate with the wall clock, so an
+# otherwise deterministic pipeline writes a different file on every run. The epoch
+# string is the same width as what it replaces, which keeps the cross-reference byte
+# offsets valid, and a file with no timestamp is left alone.
+blank_pdf_timestamps <- function(path) {
+  epoch <- charToRaw("D:19700101000000")
+  raw_pdf <- readBin(path, "raw", file.size(path))
+  hits <- grepRaw("D:[0-9]{14}", raw_pdf, all = TRUE)
+  if (length(hits) == 0) return(invisible(path))
+  for (h in hits) raw_pdf[h:(h + length(epoch) - 1L)] <- epoch
+  writeBin(raw_pdf, path)
+  invisible(path)
 }
