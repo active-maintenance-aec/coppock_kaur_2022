@@ -12,14 +12,14 @@
     estimating](#the-unseeded-simulation-and-the-bounds-it-was-estimating)
   - [Checksums](#checksums)
 - [Errata](#errata)
-  - [Seven imputation probabilities the deposit transcribes differently
-    from appendix
-    C](#seven-imputation-probabilities-the-deposit-transcribes-differently-from-appendix-c)
+  - [Entries 1 and 2: seven imputation probabilities the deposit
+    transcribes differently from appendix
+    C](#entries-1-and-2-seven-imputation-probabilities-the-deposit-transcribes-differently-from-appendix-c)
     - [What it moves](#what-it-moves)
     - [One inconsistency this does not
       resolve](#one-inconsistency-this-does-not-resolve)
-  - [Eight claims in the article’s
-    prose](#eight-claims-in-the-articles-prose)
+  - [Entries 3 and 6 through 10: eight claims in the article’s
+    prose](#entries-3-and-6-through-10-eight-claims-in-the-articles-prose)
   - [Two appendix cells the deposit does not
     support](#two-appendix-cells-the-deposit-does-not-support)
 - [Number-by-number comparison](#number-by-number-comparison)
@@ -343,11 +343,11 @@ disagreement rather than failing on it.
 Nothing in the deposited code is wrong. The deposited data are wrong in
 seven cells, and eight claims in the article’s prose, spread over six
 sentences, are wrong on the article’s own terms. All of it is set out
-with corrected sentences and corrected floats in
+with corrected sentences and corrected floats as ten numbered entries in
 `coppock_kaur_2022_errata.pdf` at the root of this repository. None of
-it changes a conclusion.
+it changes a conclusion. The sections below carry the note’s numbering.
 
-## Seven imputation probabilities the deposit transcribes differently from appendix C
+## Entries 1 and 2: seven imputation probabilities the deposit transcribes differently from appendix C
 
 The imputed potential outcomes in this article are not measurements.
 They are qualitative judgments about what would have happened in each
@@ -455,48 +455,49 @@ probability anywhere to resolve it against, and the case is left exactly
 as deposited. The three democratization cases of the same shape are
 corrected above, because for those a stated probability exists.
 
-## Eight claims in the article’s prose
+## Entries 3 and 6 through 10: eight claims in the article’s prose
 
-**The toy example’s treated outcomes.** The text introducing the toy
-example says “the outcome for three of the treated units and one of the
-untreated units is 1”. Table 3 on the facing page shows units 1 through
-4 treated with an observed outcome of 1, which is four, and the
+**Entry 7, the toy example’s treated outcomes.** The text introducing
+the toy example says “the outcome for three of the treated units and one
+of the untreated units is 1”. Table 3 on the facing page shows units 1
+through 4 treated with an observed outcome of 1, which is four, and the
 deposited `Y <- rep(c(1, 0, 1, 0), c(4, 3, 1, 2))` encodes four. Four is
 also what the bounds require: the initial bounds of \[-40, 60\] follow
 from four treated ones and would be \[-50, 50\] with three.
 
-**The probabilistic extension’s probabilities.** The text says that
-instead of imputing 0 for units 6 and 7, “we think the probabilities of
-being a ‘1’ for units 6 and 7 are .3 and .4”. Table 4 gives the four
-scenario probabilities as 0.56, 0.14, 0.24 and 0.06, which is the
-product distribution of 0.2 and 0.3, not of 0.3 and 0.4, which would
-give 0.42, 0.18, 0.28 and 0.12. The deposited `table_4.R` uses 0.2 and
-0.3 and reproduces Table 4 exactly, as does the rewrite.
+**Entry 8, the probabilistic extension’s probabilities.** The text says
+that instead of imputing 0 for units 6 and 7, “we think the
+probabilities of being a ‘1’ for units 6 and 7 are .3 and .4”. Table 4
+gives the four scenario probabilities as 0.56, 0.14, 0.24 and 0.06,
+which is the product distribution of 0.2 and 0.3, not of 0.3 and 0.4,
+which would give 0.42, 0.18, 0.28 and 0.12. The deposited `table_4.R`
+uses 0.2 and 0.3 and reproduces Table 4 exactly, as does the rewrite.
 
-**Appendix A’s bounds width.** Appendix A says the imputations shrink
-“the width of the extreme value bounds from 100 to 41 points” and then,
-in the next sentence, that “the bounds come to \[-3, 42\] (only 45
+**Entry 9, Appendix A’s bounds width.** Appendix A says the imputations
+shrink “the width of the extreme value bounds from 100 to 41 points” and
+then, in the next sentence, that “the bounds come to \[-3, 42\] (only 45
 points wide)”. Both cannot hold. The pipeline gives final
 end-of-conflict bounds of \[-2.9, 41.5\], a width of 44.4 points, which
 rounds to 44 and which is 45 if taken as the difference of the rounded
 endpoints, as the second sentence does. The 41 matches nothing.
 
-**How the 63 missing potential outcomes were imputed.** The empirical
-section says “for all 63 unobserved potential outcomes, we imputed 5
-with certainty, 26 probabilistically and we left 32 unimputed”. Neither
-number holds under either reading of the data, as set out above. The 32
-left unimputed and the 31 imputed in total are right.
+**Entry 6, how the 63 missing potential outcomes were imputed.** The
+empirical section says “for all 63 unobserved potential outcomes, we
+imputed 5 with certainty, 26 probabilistically and we left 32
+unimputed”. Neither number holds under either reading of the data, as
+set out above. The 32 left unimputed and the 31 imputed in total are
+right.
 
-**The count of disbanded and discredited cases.** Step 1 names two
-democratization cases, Bolivia and the Philippines, then says in the
+**Entry 10, the count of disbanded and discredited cases.** Step 1 names
+two democratization cases, Bolivia and the Philippines, then says in the
 next sentence that “the observed outcome $Y_i(0)$ in each of these four
 cases was 0”. Appendix Table B.2 lists two cases at that step. Appendix
 Table B.1 lists four end-of-conflict cases at the same step, which is
 where the count appears to have come from.
 
-**The ATT.** “We can summarize the ATT as a -15 percentage point effect
-on return to authoritarianism.” That is what the deposited data give; it
-is -22.5 under the appendix C probabilities.
+**Entry 3, the ATT.** “We can summarize the ATT as a -15 percentage
+point effect on return to authoritarianism.” That is what the deposited
+data give; it is -22.5 under the appendix C probabilities.
 
 ## Two appendix cells the deposit does not support
 
