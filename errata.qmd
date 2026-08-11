@@ -32,6 +32,27 @@ corrections <- out("appendix_c_corrections.csv")
 table_b2_corrected <- out("table_b2_corrected_rows.csv")
 expected_bounds <- out("text_expected_bounds.csv")
 
+# The two appendix Table B.2 cells that disagree with the case file behind them. Both sides
+# are read rather than typed: the published side from the transcription of the appendix, the
+# corrected side from the deposited case file the rest of the table reproduces exactly.
+appendix_published <- read_csv(
+  here::here("ground_truth", "published_appendix_values.csv"), show_col_types = FALSE)
+
+appendix_pair <- appendix_published |>
+  inner_join(out("table_b1_b2_case_dataset.csv"), by = c("table", "case"),
+             suffix = c("_published", "_rewrite"))
+
+# fixed(), because a case label carries its years in parentheses and str_starts reads its
+# pattern as a regex: "Burundi (1996" is an unterminated group.
+azerbaijan <- appendix_pair |> filter(str_starts(case, fixed("Azerbaijan")), table == "B.2")
+burundi <- appendix_pair |> filter(str_starts(case, fixed("Burundi (1996")), table == "B.2")
+stopifnot(nrow(azerbaijan) == 1, nrow(burundi) == 1,
+          azerbaijan$Y_published != azerbaijan$Y_rewrite,
+          burundi$probability_published != burundi$probability_rewrite)
+
+fmt0 <- function(x) sprintf("%.0f", x)
+fmt1 <- function(x) sprintf("%.1f", x)
+
 # The published side of every entry is transcribed from the article, never
 # computed. value_paper is a string by rule: read as a number, "0.20" and ".2"
 # stop being distinguishable from what the page prints.
@@ -78,8 +99,10 @@ exact_bound <- function(sample, which_estimand, which_step, side) {
 # count typed into a document about miscounted numbers is the obvious place for
 # this document to go stale.
 english_number <- function(x) {
-  words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
-  stopifnot(x >= 1, x <= 10, x == round(x))
+  words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+             "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
+             "eighteen", "nineteen", "twenty")
+  stopifnot(x >= 1, x <= length(words), x == round(x))
   words[x]
 }
 
@@ -319,7 +342,30 @@ entries <- tribble(
     "Philippines, and appendix Table B.2 lists {english_number(disbanded_cases)} at this ",
     "step. Appendix Table B.1 lists four end-of-conflict cases at the same step, which is ",
     "where the count appears to have come from."),
-  "text|disbanded_and_discredited_democratization_cases"
+  "text|disbanded_and_discredited_democratization_cases",
+
+  11, "float", "pipeline", "brief",
+  "Two cells of appendix Table B.2 disagree with the case file behind it",
+  "published, appendix Table B.2",
+  str_glue(
+    "[[Azerbaijan (1991-1992) at an observed outcome of ",
+    "{fmt0(azerbaijan$Y_published)}, and Burundi (1996-2005) at an imputation ",
+    "probability of {fmt1(burundi$probability_published)}]]"),
+  str_glue(
+    "[[an observed outcome of {fmt0(azerbaijan$Y_rewrite)} and an imputation ",
+    "probability of {fmt1(burundi$probability_rewrite)}]]"),
+  str_glue(
+    "Azerbaijan's observed outcome is printed as ",
+    "{fmt0(azerbaijan$Y_published)}, which is the value of its revealed untreated ",
+    "potential outcome in the row beside it; the deposited case file records ",
+    "{fmt0(azerbaijan$Y_rewrite)}, and no quantity in the paper reads the cell. Burundi's ",
+    "probability is printed as {fmt1(burundi$probability_published)} where appendix C and ",
+    "the deposited file both carry {fmt1(burundi$probability_rewrite)}. Neither is the ",
+    "transcription the first two entries describe, where the table faithfully prints a ",
+    "deposited value that contradicts appendix C: here the table disagrees with the ",
+    "deposit as well. Every other cell of both appendix tables reproduces."),
+  str_c("table_b2|cells_printed_in_the_observed_outcome_column;",
+        "table_b2|cells_printed_in_the_imputation_probability_column")
 ) |>
   mutate(across(c(title, published, corrected, note, claim_ids), as.character))
 
@@ -503,6 +549,10 @@ emit(9)
 
 ```{r entry-10, results="asis"}
 emit(10)
+```
+
+```{r entry-11, results="asis"}
+emit(11)
 ```
 
 ```{r emit-spine}
