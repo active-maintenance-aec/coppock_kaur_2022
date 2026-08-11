@@ -52,10 +52,15 @@ slug <- function(x) {
 }
 
 ground_truth <- ground_truth |>
-  mutate(claim_id = str_c(slug(table_figure), "|", slug(claim)))
+  mutate(claim_id = str_c(slug(table_figure), "|", slug(claim)), .after = paper_id)
 
 stopifnot(!any(duplicated(ground_truth$claim_id)),
           !any(duplicated(published_claims$claim_id)))
+
+# The identifier was derived here and thrown away, so nothing outside this file could
+# name a row. It is written back into the table below, which is what lets an errata
+# entry cite the rows it corrects. Deriving it rather than typing it keeps it in step
+# with the two columns it is built from.
 
 # Gate: the extraction and the ground truth describe the same claims ----
 must_be_checked <- published_claims |> filter(claim_type %in% c("pipeline", "descriptive"))
@@ -158,12 +163,32 @@ if (nrow(locus) > 0) {
   stop(nrow(locus), " ground truth rows carry a verdict and a locus that do not go together")
 }
 
+# Errata spine gate ----
+# Every claim id an errata entry names has to exist here. A missing one is a typo or a
+# claim that has since been renamed, and a published correction pointing at a row that
+# is not in the table is a dangling reference the build should refuse to carry.
+errata_path <- here::here("errata_entries.csv")
+if (file.exists(errata_path)) {
+  errata_spine <- read_csv(errata_path, show_col_types = FALSE)
+  cited_claim_ids <- as.character(errata_spine$claim_ids) |>
+    str_split(";") |>
+    unlist() |>
+    str_trim()
+  cited_claim_ids <- cited_claim_ids[!is.na(cited_claim_ids) & cited_claim_ids != ""]
+  if (length(setdiff(cited_claim_ids, ground_truth$claim_id)) > 0) {
+    print(setdiff(cited_claim_ids, ground_truth$claim_id))
+  }
+  stopifnot(length(setdiff(cited_claim_ids, ground_truth$claim_id)) == 0)
+}
+
 coverage <- published_claims |>
   mutate(
     in_ground_truth = claim_id %in% ground_truth$claim_id,
     in_claims_script = claim_id %in% in_text_claims$claim_id
   )
 
+write_csv(ground_truth,
+          here::here("ground_truth", str_c(paper_id, "_ground_truth.csv")), na = "")
 write_csv(coverage, here::here("ground_truth", "claims_coverage.csv"), na = "")
 
 print(count(coverage, claim_type, in_ground_truth, in_claims_script))

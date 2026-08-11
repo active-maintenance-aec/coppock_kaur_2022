@@ -163,8 +163,15 @@ label_table <- function(float, which_estimand, sample, id_infix) {
 #
 # Numbering is the published note's and is APPEND-ONLY: an entry can already have been
 # cited, so a later finding is added at the end and never interleaved.
+#
+# claim_ids names the ground-truth rows an entry corrects, semicolon-separated, so that
+# "is this finding published?" is a query rather than a judgment. Entries 1 and 2 carry
+# none: they are the transcription errors that CAUSE the four below them, and the ground
+# truth summarises appendix Table B.2 one column at a time rather than one cell at a time,
+# so no row states an individual imputation probability. Every id here is checked against
+# the ground truth by build_ground_truth.R.
 entries <- tribble(
-  ~entry, ~class, ~source, ~form, ~title, ~location, ~published, ~corrected, ~note,
+  ~entry, ~class, ~source, ~form, ~title, ~location, ~published, ~corrected, ~note, ~claim_ids,
 
   1, "quantity", "pipeline", "brief",
   str_glue("{str_to_sentence(english_number(nrow(complemented)))} imputation probabilities carried as their complements"),
@@ -179,6 +186,7 @@ entries <- tribble(
     "$\\tilde{{Y}}_i(0) = 1$, with a probability of 0.8\" for South Africa, and the main text ",
     "says the same thing on page 10: \"In other words, $Y_i(0) = 1$ with a probability of ",
     ".8.\" Sections C.4.12 and C.4.13 read \"with a probability of 0.7.\""),
+  "",
 
   2, "quantity", "pipeline", "brief",
   str_glue("{str_to_sentence(english_number(nrow(off_by_one_step)))} imputation probabilities differing by one step"),
@@ -189,6 +197,7 @@ entries <- tribble(
     "Uruguay is the one of the {english_number(nrow(off_by_one_step))} that matters beyond ",
     "the table: at the deposited 1 it is an imputation made with certainty, and at the 0.9 ",
     "appendix C states it is a probabilistic one. That is what entry 6 below turns on."),
+  "",
 
   3, "quantity", "pipeline", "full",
   "The average treatment effect on the treated",
@@ -213,6 +222,7 @@ entries <- tribble(
     "both ATU bounds move by the same amount, so the published \"greater than ",
     "{published_value('text|atu_final_bounds_width')}\" holds exactly as written and is not ",
     "restated at one decimal here."),
+  "text|att_summarised_as_a_point_effect",
 
   4, "float", "pipeline", "brief",
   "Figure 3, the bounds by treatment status",
@@ -220,6 +230,16 @@ entries <- tribble(
   "[[Figure 3's ATT bounds from *Treated Cases* onward, and its ATU bounds at *Untreated Cases* and *Unimputable Cases*]]",
   "[[the same bounds with the appendix C probabilities restored]]",
   "",
+  str_c(
+    "figure_3|low_bound_att_treated_cases;figure_3|high_bound_att_treated_cases;",
+    "figure_3|low_bound_att_non_transitional_cases;",
+    "figure_3|high_bound_att_non_transitional_cases;",
+    "figure_3|low_bound_att_untreated_cases;figure_3|high_bound_att_untreated_cases;",
+    "figure_3|low_bound_att_unimputable_cases;",
+    "figure_3|high_bound_att_unimputable_cases;",
+    "figure_3|low_bound_atu_untreated_cases;figure_3|high_bound_atu_untreated_cases;",
+    "figure_3|low_bound_atu_unimputable_cases;",
+    "figure_3|high_bound_atu_unimputable_cases"),
 
   5, "float", "pipeline", "brief",
   "Figure 2, the bounds on the average treatment effect",
@@ -227,6 +247,10 @@ entries <- tribble(
   "[[two of Figure 2's seven step labels]]",
   "[[the same bounds with the appendix C probabilities restored]]",
   "",
+  str_c(
+    "figure_2|low_bound_treated_cases;figure_2|high_bound_treated_cases;",
+    "figure_2|low_bound_non_transitional_cases;",
+    "figure_2|high_bound_non_transitional_cases"),
 
   6, "quantity", "pipeline", "full",
   "How the 63 missing potential outcomes were imputed",
@@ -239,6 +263,8 @@ entries <- tribble(
     "(1964-1985) at 0 and the two Thailand transitions at 1. The deposit adds a fourth,",
     "Uruguay (1973-1984), which it carries at 1 where appendix C entry C.3.6 states 0.9. The",
     "number left unimputed, and the 31 imputed in total, are unaffected either way."),
+  str_c("text|unobserved_potential_outcomes_imputed_with_certainty;",
+        "text|unobserved_potential_outcomes_imputed_probabilistically"),
 
   7, "quantity", "pipeline", "full",
   "The toy example's treated outcomes",
@@ -250,6 +276,7 @@ entries <- tribble(
     "observed outcome of 1, and the deposited code that builds the example encodes ",
     "{english_number(treated_ones)}. Four is also what the [-40, 60] initial bounds two ",
     "sentences later require; three would give [-50, 50]."),
+  "text|toy_example_treated_units_with_outcome_1",
 
   8, "quantity", "pipeline", "full",
   "The probabilistic extension's stated probabilities",
@@ -261,6 +288,8 @@ entries <- tribble(
     "{sprintf('%.1f', unit_6_probability)} and {sprintf('%.1f', unit_7_probability)}, and ",
     "the deposited code uses those two values. At 0.3 and 0.4 the four probabilities would ",
     "read 0.42, 0.18, 0.28 and 0.12 rather than the published 0.56, 0.14, 0.24 and 0.06."),
+  str_c("table_4|probability_that_unit_6_has_y0_1;",
+        "table_4|probability_that_unit_7_has_y0_1"),
 
   9, "quantity", "pipeline", "full",
   "The end-of-conflict bounds width",
@@ -278,6 +307,7 @@ entries <- tribble(
     "corresponds to nothing in the analysis. No end-of-conflict quantity is touched by the ",
     "appendix C corrections, all {english_number(nrow(corrections))} of which are ",
     "democratization cases."),
+  "appendix_a|bounds_width_after_imputation",
 
   10, "quantity", "pipeline", "full",
   "The count of disbanded and discredited democratization cases",
@@ -288,9 +318,10 @@ entries <- tribble(
     "The sentence before it names {english_number(disbanded_cases)} cases, Bolivia and the ",
     "Philippines, and appendix Table B.2 lists {english_number(disbanded_cases)} at this ",
     "step. Appendix Table B.1 lists four end-of-conflict cases at the same step, which is ",
-    "where the count appears to have come from.")
+    "where the count appears to have come from."),
+  "text|disbanded_and_discredited_democratization_cases"
 ) |>
-  mutate(across(c(title, published, corrected, note), as.character))
+  mutate(across(c(title, published, corrected, note, claim_ids), as.character))
 
 stopifnot(nrow(entries) == max(entries$entry), !anyDuplicated(entries$entry))
 
