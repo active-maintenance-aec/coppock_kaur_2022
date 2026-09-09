@@ -343,9 +343,10 @@ disagreement rather than failing on it.
 Nothing in the deposited code is wrong. The deposited data are wrong in
 seven cells, and eight claims in the article’s prose, spread over six
 sentences, are wrong on the article’s own terms. All of it is set out
-with corrected sentences and corrected floats as ten numbered entries in
-`coppock_kaur_2022_errata.pdf` at the root of this repository. None of
-it changes a conclusion. The sections below carry the note’s numbering.
+with corrected sentences and corrected floats as eighteen numbered
+entries in `coppock_kaur_2022_errata.pdf` at the root of this
+repository. None of it changes a conclusion. The sections below carry
+the note’s numbering.
 
 ## Entries 1 and 2: seven imputation probabilities the deposit transcribes differently from appendix C
 

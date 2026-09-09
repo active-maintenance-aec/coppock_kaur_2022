@@ -155,8 +155,10 @@ n_unimputed <- imputation_count("left_unimputed")
 n_treated <- imputation_count("treated")
 
 english_number <- function(x) {
-  words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
-  stopifnot(x >= 1, x <= 10, x == round(x))
+  words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+             "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
+             "eighteen", "nineteen", "twenty")
+  stopifnot(x >= 1, x <= length(words), x == round(x))
   words[x]
 }
 

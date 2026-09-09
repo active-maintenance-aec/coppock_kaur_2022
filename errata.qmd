@@ -317,8 +317,13 @@ entries <- tribble(
   9, "quantity", "pipeline", "full",
   "The end-of-conflict bounds width",
   "published, Appendix A",
-  "The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from 100 to [[41]] points.",
-  str_glue("The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from {sprintf('%.1f', eoc_initial_width_exact)} to [[{sprintf('%.1f', eoc_final_width_exact)}]] points."),
+  # Both numbers are marked, not just the one that moves. The initial width is
+  # restated at one decimal like every other percentage-point quantity here, and
+  # an unmarked restatement would put a word on the remastered page that differs
+  # from the published one with no correction mark against it, which is what the
+  # edition's title page promises never happens.
+  "The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from [[100]] to [[41]] points.",
+  str_glue("The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from [[{sprintf('%.1f', eoc_initial_width_exact)}]] to [[{sprintf('%.1f', eoc_final_width_exact)}]] points."),
   str_glue(
     "The next clause of the same sentence calls the resulting bounds 45 points wide, which ",
     "is the difference of the rounded endpoints ",
@@ -365,7 +370,78 @@ entries <- tribble(
     "deposited value that contradicts appendix C: here the table disagrees with the ",
     "deposit as well. Every other cell of both appendix tables reproduces."),
   str_c("table_b2|cells_printed_in_the_observed_outcome_column;",
-        "table_b2|cells_printed_in_the_imputation_probability_column")
+        "table_b2|cells_printed_in_the_imputation_probability_column"),
+
+  # Entries 12 to 18 come from preparing the remastered edition, which reads every word of
+  # the article and its appendix against the published PDFs and is a finer sieve than any
+  # pass the maintenance programme has run. None of them touches a result. They are
+  # appended and never interleaved, because entries 1 to 11 are published already and can
+  # have been cited.
+  #
+  # Two are in a float's note, which is the one part of the article no automatic check
+  # reaches: the remaster's token gate drops a float's interior by rectangle on both sides,
+  # and check_floats.py verifies cells rather than prose.
+  12, "note", "reading", "brief",
+  "A misspelling in the note to Table 5",
+  "published, the note to Table 5, p. 691",
+  "our 63 cases falling into each of four imputation [[catagories]]",
+  "our 63 cases falling into each of four imputation [[categories]]",
+  "The word is spelled correctly everywhere else in the article and the appendix.",
+  "",
+
+  13, "note", "reading", "brief",
+  "A misspelling in the note to Figure 2",
+  "published, the note to Figure 2, p. 690",
+  "so we use the [[probabalistic]] extension",
+  "so we use the [[probabilistic]] extension",
+  str_c("The section the figure illustrates is headed *Probabilistic Extension* and spells the ",
+        "word correctly throughout; the note under the figure is the only place it does not."),
+  "",
+
+  14, "typography", "reading", "brief",
+  "A missing space in the appendix's author note",
+  "published appendix, the starred author note, appendix p. 1",
+  "Yale [[University.Dipin]] Kaur",
+  "Yale [[University. Dipin]] Kaur",
+  "The note runs the first author's institution into the second author's name.",
+  "",
+
+  15, "typography", "reading", "brief",
+  "A list that ends without a full stop",
+  "published appendix, section C.5, appendix p. 19",
+  "Niger (1974-1991), Zambia [[(1967-1991)]]",
+  "Niger (1974-1991), Zambia [[(1967-1991).]]",
+  "The paragraph listing the cases left unimputed ends with the last of them and no full stop.",
+  "",
+
+  16, "reference", "reading", "brief",
+  "An author list that begins with \"et al\"",
+  "published, the reference list, p. 695",
+  "[[et al Mombauer, Annika.]] 2013.",
+  "[[Mombauer, Annika.]] 2013.",
+  str_c("The entry is alphabetized under M, so the \"et al\" is not the publisher reading a ",
+        "coauthor into the citation: the article Mombauer wrote has none."),
+  "",
+
+  17, "reference", "reference_audit", "brief",
+  "A page range whose last page belongs to another article",
+  "published, the reference list, p. 695",
+  "48(2): 231–[[417]].",
+  "48(2): 231–[[40]].",
+  str_c("Mombauer's article runs from 231 to 240 (doi ",
+        "[10.1177/0022009412472712](https://doi.org/10.1177/0022009412472712))."),
+  "",
+
+  18, "reference", "reading", "brief",
+  "A multiplication sign printed as an italic X",
+  "published, the reference list, p. 695",
+  "Causal Effects from [[2X 2]] Tables",
+  "Causal Effects from [[2 $\\times$ 2]] Tables",
+  str_c("Keele and Quinn's title is \"Bayesian sensitivity analysis for causal effects from ",
+        "$2 \\times 2$ tables ...\" (doi ",
+        "[10.1214/17-AOAS1048](https://doi.org/10.1214/17-AOAS1048)). The published page sets ",
+        "the multiplication sign as a math italic X with no space around it."),
+  ""
 ) |>
   mutate(across(c(title, published, corrected, note, claim_ids), as.character))
 
@@ -394,6 +470,8 @@ emit <- function(n) {
 ```
 
 This note lists `r english_number(nrow(entries))` corrections to "Qualitative Imputation of Missing Potential Outcomes," published in *American Journal of Political Science* 66(3), doi [10.1111/ajps.12697](https://doi.org/10.1111/ajps.12697). **None of them changes a conclusion of the article.** The extreme value bounds on the average treatment effect, which are the article's headline result, are unchanged at [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "high"))`] with a width of `r sprintf("%.0f", ate_width_exact)` points, as are every number in the abstract, the expert survey comparison in Figure 4, Table 5, and every quantity in the end-of-conflict application in Appendix A. **One published quantity does move materially**: the average treatment effect on the treated, which the article summarizes as a `r att_published` percentage point effect and which is `r sprintf("%.1f", att_exact)` points once the imputation probabilities the article's own appendix C states are the ones the analysis uses.
+
+The last seven entries are of a different kind from the eleven before them. They are misspellings, a missing space, a missing full stop and three defects in the reference list, and they are here because a corrected re-typesetting of the article was prepared, which meant reading every word of it and of its appendix against the published pages. That is a finer sieve than any pass over the analysis, and no error is too small to list.
 
 The first two entries are transcription errors in the deposited case data, and the four that follow are their consequences. The imputed potential outcomes in this article are not measurements. They are qualitative judgments, set out case by case in appendix C with the reasoning behind each one, and the deposited `cases_clean.csv` is a transcription of those judgments. `r str_to_sentence(english_number(nrow(corrections)))` of its imputation probabilities do not match the probability the appendix C narrative for that case states. Correcting them restores what the article always said it was doing.
 
@@ -553,6 +631,13 @@ emit(10)
 
 ```{r entry-11, results="asis"}
 emit(11)
+```
+
+```{r entries-12-to-18, results="asis"}
+# Seven small corrections found by reading the article against its own pages while the
+# remastered edition was prepared. Emitted in a loop rather than one block each: they are
+# the same shape, and a block apiece would say only that they were found later.
+walk(12:18, emit)
 ```
 
 ```{r emit-spine}
