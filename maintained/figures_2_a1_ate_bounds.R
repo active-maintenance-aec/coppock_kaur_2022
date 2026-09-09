@@ -25,14 +25,20 @@ distributions <- cases_long |>
   group_by(step, transition_fac) |>
   reframe(bounds_distribution(y0, y1))
 
+# The distribution's two columns are renamed before the summary, because
+# summarise() evaluates its arguments in order and the summary wants the same
+# two names. Without the rename, estimate_lower would be reassigned on the first
+# line and the quantiles below would read that one number rather than the
+# distribution they are meant to summarise.
 gg_df <- distributions |>
+  rename(attainable_lower = estimate_lower, attainable_upper = estimate_upper) |>
   summarise(
-    estimate_low_est = sum(low_est * prob) * 100,
-    estimate_high_est = sum(high_est * prob) * 100,
-    conf_low_low_est = weighted_quantile(low_est, prob, 0.025) * 100,
-    conf_high_low_est = weighted_quantile(low_est, prob, 0.975) * 100,
-    conf_low_high_est = weighted_quantile(high_est, prob, 0.025) * 100,
-    conf_high_high_est = weighted_quantile(high_est, prob, 0.975) * 100,
+    estimate_lower = sum(attainable_lower * prob) * 100,
+    estimate_upper = sum(attainable_upper * prob) * 100,
+    conf.low_lower = weighted_quantile(attainable_lower, prob, 0.025) * 100,
+    conf.high_lower = weighted_quantile(attainable_lower, prob, 0.975) * 100,
+    conf.low_upper = weighted_quantile(attainable_upper, prob, 0.025) * 100,
+    conf.high_upper = weighted_quantile(attainable_upper, prob, 0.975) * 100,
     .by = c(step, transition_fac)
   ) |>
   mutate(
@@ -43,26 +49,26 @@ gg_df <- distributions |>
 
 make_ate_plot <- function(df) {
   ggplot(df, aes(y = description)) +
-    geom_point(aes(x = estimate_low_est), size = 2) +
-    geom_point(aes(x = estimate_high_est), size = 2) +
+    geom_point(aes(x = estimate_lower), size = 2) +
+    geom_point(aes(x = estimate_upper), size = 2) +
     geom_errorbar(
-      aes(xmin = conf_low_high_est, xmax = conf_high_high_est),
+      aes(xmin = conf.low_upper, xmax = conf.high_upper),
       width = 0.3, orientation = "y"
     ) +
     geom_errorbar(
-      aes(xmin = conf_low_low_est, xmax = conf_high_low_est),
+      aes(xmin = conf.low_lower, xmax = conf.high_lower),
       width = 0.3, orientation = "y"
     ) +
     geom_linerange(
-      aes(xmin = estimate_low_est, xmax = estimate_high_est),
+      aes(xmin = estimate_lower, xmax = estimate_upper),
       linewidth = 2, alpha = 0.2
     ) +
     geom_text(
-      aes(x = estimate_low_est, label = bound_label(estimate_low_est)),
+      aes(x = estimate_lower, label = bound_label(estimate_lower)),
       nudge_y = 0.35, size = 3
     ) +
     geom_text(
-      aes(x = estimate_high_est, label = bound_label(estimate_high_est)),
+      aes(x = estimate_upper, label = bound_label(estimate_upper)),
       nudge_y = 0.35, size = 3
     ) +
     theme_bw() +

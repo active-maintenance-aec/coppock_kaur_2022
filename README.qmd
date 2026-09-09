@@ -103,8 +103,8 @@ n_complemented <- sum(near(corrections$deposited_probability +
                              corrections$appendix_c_probability, 1))
 n_off_by_one_step <- nrow(corrections) - n_complemented
 final_dem_label <- sprintf("[%.0f, %.0f]",
-                           exact_bound("Democratization", "ATE", "s4", "low"),
-                           exact_bound("Democratization", "ATE", "s4", "high"))
+                           exact_bound("Democratization", "ATE", "s4", "lower"),
+                           exact_bound("Democratization", "ATE", "s4", "upper"))
 n_final_label_holds <- sum(seeds$final_dem_label == final_dem_label)
 other_dem_labels <- str_c(setdiff(seeds$final_dem_label, final_dem_label), collapse = " and ")
 n_boundary <- sum(expected_bounds$on_rounding_boundary)
@@ -117,15 +117,15 @@ n_boundary_att <- sum(expected_bounds$on_rounding_boundary &
 # figures label each bound separately, so the counts a reader compares against
 # the seed sweep are counts of labels.
 n_labels <- 2 * nrow(expected_bounds)
-n_boundary_labels <- sum(near(expected_bounds$expected_low %% 1, 0.5)) +
-  sum(near(expected_bounds$expected_high %% 1, 0.5))
+n_boundary_labels <- sum(near(expected_bounds$expected_lower %% 1, 0.5)) +
+  sum(near(expected_bounds$expected_upper %% 1, 0.5))
 n_determined_labels <- n_labels - n_boundary_labels
 att_label_split <- seeds |>
   count(dem_att_label) |>
   arrange(desc(n))
 max_simulation_gap <- max(
-  abs(expected_bounds$simulated_low - expected_bounds$expected_low),
-  abs(expected_bounds$simulated_high - expected_bounds$expected_high)
+  abs(expected_bounds$simulated_lower - expected_bounds$expected_lower),
+  abs(expected_bounds$simulated_upper - expected_bounds$expected_upper)
 )
 
 n_paper_internal_fail <- sum(gt$defect_locus == "paper_internal" & gt$match_rewrite == 0,
@@ -139,8 +139,8 @@ n_prose_fail <- sum(gt$match_rewrite == 0 &
                       gt$table_figure %in% c("text", "table_4", "appendix_a"),
                     na.rm = TRUE)
 
-ate_width_exact <- exact_bound("Democratization", "ATE", "s4", "high") -
-  exact_bound("Democratization", "ATE", "s4", "low")
+ate_width_exact <- exact_bound("Democratization", "ATE", "s4", "upper") -
+  exact_bound("Democratization", "ATE", "s4", "lower")
 
 imputation_count <- function(quantity_label) {
   hit <- out("text_imputation_counts.csv") |>
@@ -204,7 +204,7 @@ Two smaller things. `table_4.R` prints its bounds as fractions where the paper p
 
 ## Does the maintained rewrite reproduce the paper?
 
-Mostly, and the exceptions have one cause. `r n_rewrite_match` of the `r n_rewrite_verifiable` verifiable ground truth claims match the published values to reported precision: every cell and bound of Table 3, every bound of Figure 1, every row of Table 4, the democratization row of Table 5, every label of Figures A1 and A2, all ten bounds of Figure 4, `r n_appendix_agree` of the `r n_appendix_printed` cells the two appendix case tables print, the abstract, and every in-text quantity from the Expert Survey section and Appendix A. The article's headline result is among them: the extreme value bounds on the ATE come to [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "high"))`], `r sprintf("%.0f", ate_width_exact)` points wide, as published. A few of those matching labels are printed here at one decimal rather than as a whole number, because the bound falls exactly halfway between two whole numbers and no whole number states it; each agrees with the published label at the precision the page prints, and the table under *The unseeded simulation* lists every one.
+Mostly, and the exceptions have one cause. `r n_rewrite_match` of the `r n_rewrite_verifiable` verifiable ground truth claims match the published values to reported precision: every cell and bound of Table 3, every bound of Figure 1, every row of Table 4, the democratization row of Table 5, every label of Figures A1 and A2, all ten bounds of Figure 4, `r n_appendix_agree` of the `r n_appendix_printed` cells the two appendix case tables print, the abstract, and every in-text quantity from the Expert Survey section and Appendix A. The article's headline result is among them: the extreme value bounds on the ATE come to [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "lower"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "upper"))`], `r sprintf("%.0f", ate_width_exact)` points wide, as published. A few of those matching labels are printed here at one decimal rather than as a whole number, because the bound falls exactly halfway between two whole numbers and no whole number states it; each agrees with the published label at the precision the page prints, and the table under *The unseeded simulation* lists every one.
 
 The `r n_rewrite_fail` that do not match fall into three groups.
 
@@ -216,7 +216,7 @@ The last is a second cell of appendix Table B.2, an observed outcome the deposit
 
 The remaining `r n_unverifiable` recorded quantities have no comparison to make: four are the end-of-conflict row of the imputation summary, which the rewrite computes and neither the article nor the appendix prints, and one is a survey fact the deposit never recorded.
 
-All of it is set out with corrected sentences and corrected floats in `coppock_kaur_2022_errata.pdf` at the root of this repository. **No conclusion of the article changes.** One published quantity moves materially: the average treatment effect on the treated, which the article states as a `r published_value("figure_3|low_bound_att_unimputable_cases")` percentage point effect and which is `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` points once the imputation probabilities appendix C states are the ones the analysis uses.
+All of it is set out with corrected sentences and corrected floats in `coppock_kaur_2022_errata.pdf` at the root of this repository. **No conclusion of the article changes.** One published quantity moves materially: the average treatment effect on the treated, which the article states as a `r published_value("figure_3|low_bound_att_unimputable_cases")` percentage point effect and which is `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "lower"))` points once the imputation probabilities appendix C states are the ones the analysis uses.
 
 # Paper overview
 
@@ -297,8 +297,8 @@ expected_bounds |>
     Sample = transition_fac,
     Estimand = estimand,
     Step = as.character(description),
-    Exact = sprintf("[%.1f, %.1f]", expected_low, expected_high),
-    Drawn = sprintf("[%.0f, %.0f]", label_low, label_high)
+    Exact = sprintf("[%.1f, %.1f]", expected_lower, expected_upper),
+    Drawn = sprintf("[%.0f, %.0f]", label_lower, label_upper)
   ) |>
   kable(
     booktabs = TRUE,
@@ -308,7 +308,7 @@ expected_bounds |>
   latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 8))
 ```
 
-The `r n_boundary_att` democratization ATT rows from *Treated Cases* onwards are the consequential ones, and they are the only rows in the table the corrections create. The ATT is exactly `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` once South Africa carries the probability appendix C states for it, so a whole-number label for it is not decided by the estimate at all: over twenty seeds the deposit's method prints `r str_c(att_label_split$dem_att_label, " at ", att_label_split$n, collapse = " and ")`. The rest of the table was on a boundary in the deposit as published, and the labels the article prints for them are one draw of a coin flip.
+The `r n_boundary_att` democratization ATT rows from *Treated Cases* onwards are the consequential ones, and they are the only rows in the table the corrections create. The ATT is exactly `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "lower"))` once South Africa carries the probability appendix C states for it, so a whole-number label for it is not decided by the estimate at all: over twenty seeds the deposit's method prints `r str_c(att_label_split$dem_att_label, " at ", att_label_split$n, collapse = " and ")`. The rest of the table was on a boundary in the deposit as published, and the labels the article prints for them are one draw of a coin flip.
 
 ## Checksums
 
@@ -364,9 +364,9 @@ Appendix Table B.2 prints the deposited value in all `r nrow(corrections)` cases
 
 ### What it moves
 
-The article's headline result is unchanged. The extreme value bounds on the ATE stay at [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "high"))`] and `r sprintf("%.0f", ate_width_exact)` points wide, as do the abstract's three numbers, the expert survey comparison in Figure 4, Table 5, and every quantity in the end-of-conflict application, all seven corrections being democratization cases. The two intermediate steps of Figure 2 move by about one point in each label, and the ATU bounds of Figure 3 by about one and a half.
+The article's headline result is unchanged. The extreme value bounds on the ATE stay at [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "lower"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "upper"))`] and `r sprintf("%.0f", ate_width_exact)` points wide, as do the abstract's three numbers, the expert survey comparison in Figure 4, Table 5, and every quantity in the end-of-conflict application, all seven corrections being democratization cases. The two intermediate steps of Figure 2 move by about one point in each label, and the ATU bounds of Figure 3 by about one and a half.
 
-The consequential movement is in the ATT. Every treated case has both potential outcomes filled in by the second imputation step, which is why the ATT bounds collapse to a point, and South Africa is one of the `r english_number(n_treated)` treated cases. Restoring its probability from 0.2 to the 0.8 that both the main text and appendix C state moves the ATT from `r published_value("figure_3|low_bound_att_unimputable_cases")` to `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` percentage points.
+The consequential movement is in the ATT. Every treated case has both potential outcomes filled in by the second imputation step, which is why the ATT bounds collapse to a point, and South Africa is one of the `r english_number(n_treated)` treated cases. Restoring its probability from 0.2 to the 0.8 that both the main text and appendix C state moves the ATT from `r published_value("figure_3|low_bound_att_unimputable_cases")` to `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "lower"))` percentage points.
 
 ```{r consequence_table}
 tibble(
@@ -382,16 +382,16 @@ tibble(
     published_bounds("figure_3", "att_", "unimputable_cases")
   ),
   Corrected = c(
-    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATE", "s1", "low"),
-            exact_bound("Democratization", "ATE", "s1", "high")),
-    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATE", "s2", "low"),
-            exact_bound("Democratization", "ATE", "s2", "high")),
-    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATE", "s4", "low"),
-            exact_bound("Democratization", "ATE", "s4", "high")),
-    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATU", "s4", "low"),
-            exact_bound("Democratization", "ATU", "s4", "high")),
-    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATT", "s4", "low"),
-            exact_bound("Democratization", "ATT", "s4", "high"))
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATE", "s1", "lower"),
+            exact_bound("Democratization", "ATE", "s1", "upper")),
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATE", "s2", "lower"),
+            exact_bound("Democratization", "ATE", "s2", "upper")),
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATE", "s4", "lower"),
+            exact_bound("Democratization", "ATE", "s4", "upper")),
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATU", "s4", "lower"),
+            exact_bound("Democratization", "ATU", "s4", "upper")),
+    sprintf("[%.1f, %.1f]", exact_bound("Democratization", "ATT", "s4", "lower"),
+            exact_bound("Democratization", "ATT", "s4", "upper"))
   )
 ) |>
   kable(
@@ -401,7 +401,7 @@ tibble(
   latex_only(\(k) k |> kable_styling(latex_options = "hold_position", font_size = 8))
 ```
 
-The article's ATU claim is untouched. It says the ATU bounds are "greater than `r published_value("text|atu_final_bounds_width")` points wide", and that width is `r sprintf("%.1f", exact_bound("Democratization", "ATU", "s4", "high") - exact_bound("Democratization", "ATU", "s4", "low"))` points before the correction and after it, because both ATU bounds move by the same amount.
+The article's ATU claim is untouched. It says the ATU bounds are "greater than `r published_value("text|atu_final_bounds_width")` points wide", and that width is `r sprintf("%.1f", exact_bound("Democratization", "ATU", "s4", "upper") - exact_bound("Democratization", "ATU", "s4", "lower"))` points before the correction and after it, because both ATU bounds move by the same amount.
 
 One imputation changes class. An imputation is made with certainty when its probability is exactly 0 or exactly 1, and Uruguay (1973-1984) is carried at 1 in the deposit where appendix C entry C.3.6 states 0.9. The split the article states as "`r published_value("text|unobserved_potential_outcomes_imputed_with_certainty")` with certainty, `r published_value("text|unobserved_potential_outcomes_imputed_probabilistically")` probabilistically" is `r n_certain + 1` and `r n_probabilistic - 1` in the deposit, Uruguay being the difference, and `r n_certain` and `r n_probabilistic` once appendix C is followed. The number left unimputed, `r n_unimputed`, and the `r n_certain + n_probabilistic` imputed in total are the same either way.
 
@@ -421,7 +421,7 @@ South Africa - Namibia (1966-1988), an end-of-conflict case, is the fourth place
 
 **Entry 10, the count of disbanded and discredited cases.** Step 1 names two democratization cases, Bolivia and the Philippines, then says in the next sentence that "the observed outcome $Y_i(0)$ in each of these four cases was 0". Appendix Table B.2 lists two cases at that step. Appendix Table B.1 lists four end-of-conflict cases at the same step, which is where the count appears to have come from.
 
-**Entry 3, the ATT.** "We can summarize the ATT as a `r published_value("figure_3|low_bound_att_unimputable_cases")` percentage point effect on return to authoritarianism." That is what the deposited data give; it is `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "low"))` under the appendix C probabilities.
+**Entry 3, the ATT.** "We can summarize the ATT as a `r published_value("figure_3|low_bound_att_unimputable_cases")` percentage point effect on return to authoritarianism." That is what the deposited data give; it is `r sprintf("%.1f", exact_bound("Democratization", "ATT", "s4", "lower"))` under the appendix C probabilities.
 
 ## Two appendix cells the deposit does not support
 

@@ -1,4 +1,4 @@
-step,low_bound,high_bound,width
+step,estimate_lower,estimate_upper,width
 Before Any Data,-100,100,200
 Initial Values,-40,60,100
 Easy Cases,-19.999999999999996,30,50

@@ -29,29 +29,29 @@ table_4 <- map2(
     tibble(
       unit_6 = y0_vec[6],
       unit_7 = y0_vec[7],
-      low_est = bounds[["low_est"]] * 100,
-      high_est = bounds[["high_est"]] * 100,
+      estimate_lower = bounds[["estimate_lower"]] * 100,
+      estimate_upper = bounds[["estimate_upper"]] * 100,
       prob = prob
     )
   }
 ) |>
   bind_rows() |>
-  mutate(ev_bounds = paste0("[", low_est, ", ", high_est, "]"))
+  mutate(ev_bounds = paste0("[", estimate_lower, ", ", estimate_upper, "]"))
 
 # Point estimate and uncertainty interval for each bound.
 summary_df <- tibble(
-  quantity = c("low_est", "high_est"),
+  quantity = c("estimate_lower", "estimate_upper"),
   point_estimate = c(
-    sum(table_4$low_est * table_4$prob),
-    sum(table_4$high_est * table_4$prob)
+    sum(table_4$estimate_lower * table_4$prob),
+    sum(table_4$estimate_upper * table_4$prob)
   ),
   q025 = c(
-    weighted_quantile(table_4$low_est, table_4$prob, 0.025),
-    weighted_quantile(table_4$high_est, table_4$prob, 0.025)
+    weighted_quantile(table_4$estimate_lower, table_4$prob, 0.025),
+    weighted_quantile(table_4$estimate_upper, table_4$prob, 0.025)
   ),
   q975 = c(
-    weighted_quantile(table_4$low_est, table_4$prob, 0.975),
-    weighted_quantile(table_4$high_est, table_4$prob, 0.975)
+    weighted_quantile(table_4$estimate_lower, table_4$prob, 0.975),
+    weighted_quantile(table_4$estimate_upper, table_4$prob, 0.975)
   )
 )
 
@@ -59,7 +59,7 @@ print(select(table_4, unit_6, unit_7, ev_bounds, prob))
 print(summary_df)
 
 write_csv(
-  select(table_4, unit_6, unit_7, ev_bounds, low_est, high_est, prob),
+  select(table_4, unit_6, unit_7, ev_bounds, estimate_lower, estimate_upper, prob),
   here::here("maintained", "output", "table_4_probabilistic.csv")
 )
 write_csv(summary_df, here::here("maintained", "output", "table_4_summary.csv"))

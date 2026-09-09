@@ -1,4 +1,4 @@
-step,transition_fac,estimate_low_est,estimate_high_est,conf_low_low_est,conf_high_low_est,conf_low_high_est,conf_high_high_est,description
+step,transition_fac,estimate_lower,estimate_upper,conf.low_lower,conf.high_lower,conf.low_upper,conf.high_upper,description
 agnostic,Democratization,-100,100,-100,-100,100,100,Before Any Data
 obs,Democratization,-25.396825396825395,74.60317460317461,-25.396825396825395,-25.396825396825395,74.60317460317461,74.60317460317461,Initial Values
 s0,Democratization,-25.07936507936508,71.74603174603176,-25.396825396825395,-23.809523809523807,71.42857142857143,73.01587301587301,Disbanded and Discredited Cases

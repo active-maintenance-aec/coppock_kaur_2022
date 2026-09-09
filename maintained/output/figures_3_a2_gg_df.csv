@@ -1,4 +1,4 @@
-step,transition_fac,treatment,estimate_low_est,estimate_high_est,conf_low_low_est,conf_high_low_est,conf_low_high_est,conf_high_high_est,description,estimand
+step,transition_fac,treatment,estimate_lower,estimate_upper,conf.low_lower,conf.high_lower,conf.low_upper,conf.high_upper,description,estimand
 agnostic,Democratization,0,-100,100,-100,-100,100,100,Before Any Data,"Average Treatment Effect
 on Untreated Units (ATU)"
 obs,Democratization,0,-16.363636363636363,83.63636363636363,-16.363636363636363,-16.363636363636363,83.63636363636363,83.63636363636363,Initial Values,"Average Treatment Effect

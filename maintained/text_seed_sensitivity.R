@@ -31,18 +31,18 @@ exact <- bind_rows(
   read_csv(here::here("maintained", "output", "figures_2_a1_gg_df.csv"),
            show_col_types = FALSE) |>
     transmute(step, transition_fac, estimand = "ATE",
-              exact_low = estimate_low_est, exact_high = estimate_high_est),
+              exact_lower = estimate_lower, exact_upper = estimate_upper),
   read_csv(here::here("maintained", "output", "figures_3_a2_gg_df.csv"),
            show_col_types = FALSE) |>
     transmute(step, transition_fac, estimand = if_else(treatment == 1, "ATT", "ATU"),
-              exact_low = estimate_low_est, exact_high = estimate_high_est)
+              exact_lower = estimate_lower, exact_upper = estimate_upper)
 ) |>
   mutate(
-    exact_label = str_c("[", bound_label(exact_low), ", ", bound_label(exact_high), "]"),
+    exact_label = str_c("[", bound_label(exact_lower), ", ", bound_label(exact_upper), "]"),
     # A label is determined when the exact bound is not halfway between two whole
     # numbers. bound_label() prints a decimal point exactly when it is not.
-    low_determined = !str_detect(bound_label(exact_low), fixed(".")),
-    high_determined = !str_detect(bound_label(exact_high), fixed("."))
+    low_determined = !str_detect(bound_label(exact_lower), fixed(".")),
+    high_determined = !str_detect(bound_label(exact_upper), fixed("."))
   )
 
 draw_labels <- function(seed) {
@@ -67,8 +67,8 @@ draw_labels <- function(seed) {
   ) |>
     left_join(exact, by = c("step", "transition_fac", "estimand"),
               relationship = "one-to-one") |>
-    mutate(drawn_label = str_c("[", sprintf("%.0f", low_est), ", ",
-                               sprintf("%.0f", high_est), "]"))
+    mutate(drawn_label = str_c("[", sprintf("%.0f", estimate_lower), ", ",
+                               sprintf("%.0f", estimate_upper), "]"))
 
   stopifnot(nrow(drawn) == nrow(exact))
 
@@ -84,9 +84,9 @@ draw_labels <- function(seed) {
     seed = seed,
     labels_moved =
       sum(drawn$low_determined &
-            sprintf("%.0f", drawn$low_est) != sprintf("%.0f", drawn$exact_low)) +
+            sprintf("%.0f", drawn$estimate_lower) != sprintf("%.0f", drawn$exact_lower)) +
       sum(drawn$high_determined &
-            sprintf("%.0f", drawn$high_est) != sprintf("%.0f", drawn$exact_high)),
+            sprintf("%.0f", drawn$estimate_upper) != sprintf("%.0f", drawn$exact_upper)),
     # The two labels the article states in a sentence as well as printing in a
     # figure, so that whether they hold across seeds is a recorded number rather
     # than an impression left by a count.

@@ -23,18 +23,18 @@ dat <- read_rds(here::here("maintained", "output", "cases_corrected.rds"))
 
 ate_width <- function(sample, which_step) {
   row <- ate |> filter(transition_fac == sample, step == which_step)
-  row$estimate_high_est - row$estimate_low_est
+  row$estimate_upper - row$estimate_lower
 }
 
 ate_bound <- function(sample, which_step, side) {
   row <- ate |> filter(transition_fac == sample, step == which_step)
-  row[[paste0("estimate_", side, "_est")]]
+  row[[paste0("estimate_", side)]]
 }
 
 att_atu_bound <- function(sample, which_treatment, which_step, side) {
   row <- att_atu |>
     filter(transition_fac == sample, treatment == which_treatment, step == which_step)
-  row[[paste0("estimate_", side, "_est")]]
+  row[[paste0("estimate_", side)]]
 }
 
 expert_width <- function(which_set, which_person) {
@@ -68,13 +68,13 @@ text_summary <- tibble(
   value = c(
     ate_width("Democratization", "agnostic"),
     ate_width("Democratization", "obs"),
-    ate_bound("Democratization", "s4", "low"),
-    ate_bound("Democratization", "s4", "high"),
+    ate_bound("Democratization", "s4", "lower"),
+    ate_bound("Democratization", "s4", "upper"),
     ate_width("Democratization", "s4"),
-    att_atu_bound("Democratization", 0, "s4", "high") -
-      att_atu_bound("Democratization", 0, "s4", "low"),
-    att_atu_bound("Democratization", 1, "s4", "low"),
-    att_atu_bound("Democratization", 1, "s4", "high"),
+    att_atu_bound("Democratization", 0, "s4", "upper") -
+      att_atu_bound("Democratization", 0, "s4", "lower"),
+    att_atu_bound("Democratization", 1, "s4", "lower"),
+    att_atu_bound("Democratization", 1, "s4", "upper"),
     expert_width("The 20 Cases with Expert Responses", "us"),
     expert_width("The 20 Cases with Expert Responses", "expert"),
     expert_width("All 63 Democratization Cases", "us"),
@@ -82,11 +82,11 @@ text_summary <- tibble(
     expert_width("All 63 Democratization Cases", "combined"),
     sum(dat$transition_fac == "Democratization" & dat$tau_i != 0, na.rm = TRUE),
     ate_width("End of conflict", "obs"),
-    ate_bound("End of conflict", "s4", "low"),
-    ate_bound("End of conflict", "s4", "high"),
+    ate_bound("End of conflict", "s4", "lower"),
+    ate_bound("End of conflict", "s4", "upper"),
     ate_width("End of conflict", "s4"),
-    att_atu_bound("End of conflict", 1, "s4", "low"),
-    att_atu_bound("End of conflict", 1, "s4", "high")
+    att_atu_bound("End of conflict", 1, "s4", "lower"),
+    att_atu_bound("End of conflict", 1, "s4", "upper")
   )
 ) |>
   mutate(label = bound_label(value))

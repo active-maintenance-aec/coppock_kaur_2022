@@ -1,4 +1,4 @@
-transition_fac,estimand,step,description,expected_low,expected_high,simulated_low,simulated_high,simulated_se,label_low,label_high,on_rounding_boundary
+transition_fac,estimand,step,description,expected_lower,expected_upper,simulated_lower,simulated_upper,simulated_se,label_lower,label_upper,on_rounding_boundary
 Democratization,ATE,agnostic,Before Any Data,-100,100,-100,100,0,-100,100,FALSE
 Democratization,ATE,obs,Initial Values,-25.396825396825395,74.60317460317461,-25.396825396825403,74.6031746031746,0,-25,75,FALSE
 Democratization,ATE,s0,Disbanded and Discredited Cases,-25.07936507936508,71.74603174603176,-25.082539682539682,71.74285714285713,0.021295885499998,-25,72,FALSE

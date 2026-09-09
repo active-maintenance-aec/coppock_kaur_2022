@@ -27,9 +27,9 @@ table_3 <- tibble(
 # Bounds beneath the table, in percentage points as the paper reports them.
 bounds_df <- tibble(
   step = toy$step_labels,
-  low_bound = map2_dbl(toy$Y0, toy$Y1, \(y0, y1) ev_bounds(y0, y1)[["low_est"]]) * 100,
-  high_bound = map2_dbl(toy$Y0, toy$Y1, \(y0, y1) ev_bounds(y0, y1)[["high_est"]]) * 100,
-  width = high_bound - low_bound
+  estimate_lower = map2_dbl(toy$Y0, toy$Y1, \(y0, y1) ev_bounds(y0, y1)[["estimate_lower"]]) * 100,
+  estimate_upper = map2_dbl(toy$Y0, toy$Y1, \(y0, y1) ev_bounds(y0, y1)[["estimate_upper"]]) * 100,
+  width = estimate_upper - estimate_lower
 )
 
 print(table_3, n = nrow(table_3))

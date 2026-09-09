@@ -98,7 +98,7 @@ count_value <- function(sample, quantity_label) {
 ate_bound <- function(sample, which_step, side) {
   row <- figures_2_a1 |> filter(transition_fac == sample, step == which_step)
   stopifnot(nrow(row) == 1)
-  row[[str_c("estimate_", side, "_est")]]
+  row[[str_c("estimate_", side)]]
 }
 
 # The imputation probability the analysis actually draws from, which is the
@@ -204,18 +204,18 @@ walk(
 
 table_3_bounds |>
   filter(step != "Before Any Data") |>
-  pwalk(\(step, low_bound, high_bound, width) {
-    claim(id_for("table_3", "EV bounds low, ", step), pp(low_bound))
-    claim(id_for("table_3", "EV bounds high, ", step), pp(high_bound))
+  pwalk(\(step, estimate_lower, estimate_upper, width) {
+    claim(id_for("table_3", "EV bounds low, ", step), pp(estimate_lower))
+    claim(id_for("table_3", "EV bounds high, ", step), pp(estimate_upper))
   })
 
 # Figure 1 ----
 # The bounds at each step of the toy example, as the figure prints them.
 # covers: figure_1|*
 figure_1 |>
-  pwalk(\(description, li, ui) {
-    claim(id_for("figure_1", "low bound, ", description), pp(li))
-    claim(id_for("figure_1", "high bound, ", description), pp(ui))
+  pwalk(\(description, estimate_lower, estimate_upper) {
+    claim(id_for("figure_1", "low bound, ", description), pp(estimate_lower))
+    claim(id_for("figure_1", "high bound, ", description), pp(estimate_upper))
   })
 
 # Probabilistic Extension ----
@@ -243,27 +243,27 @@ claim("text|probabilistic_extension_possible_sets_of_potential_outcomes", pp(nro
 # the lower bound and [10, 30] for the upper bound."
 # covers: table_4|probability_weighted_point_estimate_* table_4|*_quantile_of_the_*_bound
 claim("table_4|probability_weighted_point_estimate_lower_bound",
-      pp(table_4_summary$point_estimate[table_4_summary$quantity == "low_est"]))
+      pp(table_4_summary$point_estimate[table_4_summary$quantity == "estimate_lower"]))
 claim("table_4|probability_weighted_point_estimate_upper_bound",
-      pp(table_4_summary$point_estimate[table_4_summary$quantity == "high_est"]))
+      pp(table_4_summary$point_estimate[table_4_summary$quantity == "estimate_upper"]))
 claim("table_4|2_5th_quantile_of_the_lower_bound",
-      pp(table_4_summary$q025[table_4_summary$quantity == "low_est"]))
+      pp(table_4_summary$q025[table_4_summary$quantity == "estimate_lower"]))
 claim("table_4|97_5th_quantile_of_the_lower_bound",
-      pp(table_4_summary$q975[table_4_summary$quantity == "low_est"]))
+      pp(table_4_summary$q975[table_4_summary$quantity == "estimate_lower"]))
 claim("table_4|2_5th_quantile_of_the_upper_bound",
-      pp(table_4_summary$q025[table_4_summary$quantity == "high_est"]))
+      pp(table_4_summary$q025[table_4_summary$quantity == "estimate_upper"]))
 claim("table_4|97_5th_quantile_of_the_upper_bound",
-      pp(table_4_summary$q975[table_4_summary$quantity == "high_est"]))
+      pp(table_4_summary$q975[table_4_summary$quantity == "estimate_upper"]))
 
 # Table 4 ----
 # The four realisations of the uncertain imputations for units 6 and 7, with the
 # bounds and the probability each implies.
 # covers: table_4|ev_bounds_* table_4|probability_unit_*
 table_4 |>
-  pwalk(\(unit_6, unit_7, ev_bounds, low_est, high_est, prob) {
+  pwalk(\(unit_6, unit_7, ev_bounds, estimate_lower, estimate_upper, prob) {
     scenario <- str_c("unit 6 = ", unit_6, ", unit 7 = ", unit_7)
-    claim(id_for("table_4", "EV bounds low, ", scenario), pp(low_est))
-    claim(id_for("table_4", "EV bounds high, ", scenario), pp(high_est))
+    claim(id_for("table_4", "EV bounds low, ", scenario), pp(estimate_lower))
+    claim(id_for("table_4", "EV bounds high, ", scenario), pp(estimate_upper))
     claim(id_for("table_4", "probability, ", scenario), pp(prob, 2))
   })
 
@@ -394,10 +394,10 @@ walk(
 # and end of conflict in Figure A.1, as the figures label them.
 # covers: figure_2|* figure_a1|*
 figures_2_a1 |>
-  pwalk(\(transition_fac, description, estimate_low_est, estimate_high_est, ...) {
+  pwalk(\(transition_fac, description, estimate_lower, estimate_upper, ...) {
     float <- if (transition_fac == "Democratization") "figure_2" else "figure_a1"
-    claim(id_for(float, "low bound, ", description), bound_label(estimate_low_est))
-    claim(id_for(float, "high bound, ", description), bound_label(estimate_high_est))
+    claim(id_for(float, "low bound, ", description), bound_label(estimate_lower))
+    claim(id_for(float, "high bound, ", description), bound_label(estimate_upper))
   })
 
 # Figure 3 and Figure A.2 ----
@@ -406,12 +406,12 @@ figures_2_a1 |>
 figures_3_a2 |>
   mutate(estimand_short = if_else(treatment == 1, "ATT", "ATU")) |>
   pwalk(\(transition_fac, description, estimand_short,
-          estimate_low_est, estimate_high_est, ...) {
+          estimate_lower, estimate_upper, ...) {
     float <- if (transition_fac == "Democratization") "figure_3" else "figure_a2"
     claim(id_for(float, "low bound, ", estimand_short, ", ", description),
-          bound_label(estimate_low_est))
+          bound_label(estimate_lower))
     claim(id_for(float, "high bound, ", estimand_short, ", ", description),
-          bound_label(estimate_high_est))
+          bound_label(estimate_upper))
   })
 
 # "There are far more untreated units than treated units, and we know far less
@@ -520,9 +520,9 @@ claim("text|no_expert_assigned_to_a_treated_case_declined_to_impute",
 # The bounds implied by the expert imputations, in both panels.
 # covers: figure_4|*
 figure_4 |>
-  pwalk(\(set, person, li, ui, ...) {
-    claim(id_for("figure_4", "low bound, ", person, ", ", set), pp(li))
-    claim(id_for("figure_4", "high bound, ", person, ", ", set), pp(ui))
+  pwalk(\(set, person, estimate_lower, estimate_upper, ...) {
+    claim(id_for("figure_4", "low bound, ", person, ", ", set), pp(estimate_lower))
+    claim(id_for("figure_4", "high bound, ", person, ", ", set), pp(estimate_upper))
   })
 
 # Discussion ----

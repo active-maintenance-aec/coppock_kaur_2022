@@ -19,17 +19,22 @@ democratization_df <- dat |> filter(transition_fac == "Democratization")
 bounds_long <- function(df, combined) {
   out <- df |>
     summarise(
-      li_expert = ev_bounds(y0_expert, y1_expert)[["low_est"]] * 100,
-      ui_expert = ev_bounds(y0_expert, y1_expert)[["high_est"]] * 100,
-      li_us = ev_bounds(y0_s4, y1_s4)[["low_est"]] * 100,
-      ui_us = ev_bounds(y0_s4, y1_s4)[["high_est"]] * 100,
-      li_combined = ev_bounds(y0_combined, y1_combined)[["low_est"]] * 100,
-      ui_combined = ev_bounds(y0_combined, y1_combined)[["high_est"]] * 100
+      estimate_lower_expert = ev_bounds(y0_expert, y1_expert)[["estimate_lower"]] * 100,
+      estimate_upper_expert = ev_bounds(y0_expert, y1_expert)[["estimate_upper"]] * 100,
+      estimate_lower_us = ev_bounds(y0_s4, y1_s4)[["estimate_lower"]] * 100,
+      estimate_upper_us = ev_bounds(y0_s4, y1_s4)[["estimate_upper"]] * 100,
+      estimate_lower_combined = ev_bounds(y0_combined, y1_combined)[["estimate_lower"]] * 100,
+      estimate_upper_combined = ev_bounds(y0_combined, y1_combined)[["estimate_upper"]] * 100
     )
-  if (!combined) out <- select(out, -li_combined, -ui_combined)
+  if (!combined) out <- select(out, -estimate_lower_combined, -estimate_upper_combined)
   out |>
-    pivot_longer(everything(), names_to = "variable", values_to = "value") |>
-    separate_wider_delim(variable, delim = "_", names = c("bound", "person")) |>
+    # The bound name now carries an underscore of its own, so the split is by
+    # pattern rather than at the first delimiter: estimate_lower_expert is the
+    # lower bound for the expert imputations, not an "estimate" bound belonging
+    # to a "lower_expert".
+    pivot_longer(everything(),
+                 names_to = c("bound", "person"),
+                 names_pattern = "^(estimate_(?:lower|upper))_(.+)$") |>
     pivot_wider(id_cols = person, names_from = bound, values_from = value)
 }
 
@@ -56,13 +61,13 @@ gg_df <- bind_rows(
         "Our original bounds"
       )
     ),
-    width = ui - li
+    width = estimate_upper - estimate_lower
   )
 
 g <- ggplot(gg_df, aes(y = description)) +
-  geom_linerange(aes(xmin = li, xmax = ui), linewidth = 2) +
+  geom_linerange(aes(xmin = estimate_lower, xmax = estimate_upper), linewidth = 2) +
   geom_text(
-    aes(x = (li + ui) / 2, label = paste0("[", round(li, 0), ", ", round(ui, 0), "]")),
+    aes(x = (estimate_lower + estimate_upper) / 2, label = paste0("[", round(estimate_lower, 0), ", ", round(estimate_upper, 0), "]")),
     nudge_y = 0.35
   ) +
   theme_bw() +

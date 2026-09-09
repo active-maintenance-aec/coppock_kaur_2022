@@ -120,19 +120,19 @@ complemented <- corrections |>
 off_by_one_step <- corrections |>
   filter(!near(deposited_probability + appendix_c_probability, 1))
 
-att_exact <- exact_bound("Democratization", "ATT", "s4", "low")
+att_exact <- exact_bound("Democratization", "ATT", "s4", "lower")
 att_published <- published_value("figure_3|low_bound_att_unimputable_cases")
 
 # Widths are differences of two exact bounds rather than of two draws, for the
 # same reason the bounds themselves are.
-atu_width_exact <- exact_bound("Democratization", "ATU", "s4", "high") -
-  exact_bound("Democratization", "ATU", "s4", "low")
-ate_width_exact <- exact_bound("Democratization", "ATE", "s4", "high") -
-  exact_bound("Democratization", "ATE", "s4", "low")
-eoc_initial_width_exact <- exact_bound("End of conflict", "ATE", "obs", "high") -
-  exact_bound("End of conflict", "ATE", "obs", "low")
-eoc_final_width_exact <- exact_bound("End of conflict", "ATE", "s4", "high") -
-  exact_bound("End of conflict", "ATE", "s4", "low")
+atu_width_exact <- exact_bound("Democratization", "ATU", "s4", "upper") -
+  exact_bound("Democratization", "ATU", "s4", "lower")
+ate_width_exact <- exact_bound("Democratization", "ATE", "s4", "upper") -
+  exact_bound("Democratization", "ATE", "s4", "lower")
+eoc_initial_width_exact <- exact_bound("End of conflict", "ATE", "obs", "upper") -
+  exact_bound("End of conflict", "ATE", "obs", "lower")
+eoc_final_width_exact <- exact_bound("End of conflict", "ATE", "s4", "upper") -
+  exact_bound("End of conflict", "ATE", "s4", "lower")
 
 # What the deposited script's method gives for the same four bounds, which is a
 # different pair of whole numbers depending on the seed it is run at. The
@@ -161,12 +161,12 @@ label_table <- function(float, which_estimand, sample, id_infix) {
                         ", ", map_chr(str_c(float, "|high_bound_", id_infix, slug), published_value),
                         "]"),
       corrected = str_c(
-        "[", sprintf("%.1f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "low"))),
-        ", ", sprintf("%.1f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "high"))),
+        "[", sprintf("%.1f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "lower"))),
+        ", ", sprintf("%.1f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "upper"))),
         "]"
       ),
-      moved = published != str_c("[", sprintf("%.0f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "low"))),
-                                 ", ", sprintf("%.0f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "high"))), "]"),
+      moved = published != str_c("[", sprintf("%.0f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "lower"))),
+                                 ", ", sprintf("%.0f", map_dbl(step, \(s) exact_bound(sample, which_estimand, s, "upper"))), "]"),
       corrected = if_else(moved, str_c("\\textbf{", corrected, "}"), corrected)
     ) |>
     select(Step = description, Published = published, Corrected = corrected)
@@ -327,8 +327,8 @@ entries <- tribble(
   str_glue(
     "The next clause of the same sentence calls the resulting bounds 45 points wide, which ",
     "is the difference of the rounded endpoints ",
-    "[{sprintf('%.0f', exact_bound('End of conflict', 'ATE', 's4', 'low'))}, ",
-    "{sprintf('%.0f', exact_bound('End of conflict', 'ATE', 's4', 'high'))}]. Rounding the ",
+    "[{sprintf('%.0f', exact_bound('End of conflict', 'ATE', 's4', 'lower'))}, ",
+    "{sprintf('%.0f', exact_bound('End of conflict', 'ATE', 's4', 'upper'))}]. Rounding the ",
     "width itself gives {sprintf('%.0f', eoc_final_width_exact)} instead, so ",
     "{sprintf('%.0f', eoc_final_width_exact)} and 45 are the two whole numbers one exact ",
     "quantity yields depending on where the rounding is applied, and both are defensible. 41 ",
@@ -469,7 +469,7 @@ emit <- function(n) {
 }
 ```
 
-This note lists `r english_number(nrow(entries))` corrections to "Qualitative Imputation of Missing Potential Outcomes," published in *American Journal of Political Science* 66(3), doi [10.1111/ajps.12697](https://doi.org/10.1111/ajps.12697). **None of them changes a conclusion of the article.** The extreme value bounds on the average treatment effect, which are the article's headline result, are unchanged at [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "low"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "high"))`] with a width of `r sprintf("%.0f", ate_width_exact)` points, as are every number in the abstract, the expert survey comparison in Figure 4, Table 5, and every quantity in the end-of-conflict application in Appendix A. **One published quantity does move materially**: the average treatment effect on the treated, which the article summarizes as a `r att_published` percentage point effect and which is `r sprintf("%.1f", att_exact)` points once the imputation probabilities the article's own appendix C states are the ones the analysis uses.
+This note lists `r english_number(nrow(entries))` corrections to "Qualitative Imputation of Missing Potential Outcomes," published in *American Journal of Political Science* 66(3), doi [10.1111/ajps.12697](https://doi.org/10.1111/ajps.12697). **None of them changes a conclusion of the article.** The extreme value bounds on the average treatment effect, which are the article's headline result, are unchanged at [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "lower"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "upper"))`] with a width of `r sprintf("%.0f", ate_width_exact)` points, as are every number in the abstract, the expert survey comparison in Figure 4, Table 5, and every quantity in the end-of-conflict application in Appendix A. **One published quantity does move materially**: the average treatment effect on the treated, which the article summarizes as a `r att_published` percentage point effect and which is `r sprintf("%.1f", att_exact)` points once the imputation probabilities the article's own appendix C states are the ones the analysis uses.
 
 The last seven entries are of a different kind from the eleven before them. They are misspellings, a missing space, a missing full stop and three defects in the reference list, and they are here because a corrected re-typesetting of the article was prepared, which meant reading every word of it and of its appendix against the published pages. That is a finer sieve than any pass over the analysis, and no error is too small to list.
 

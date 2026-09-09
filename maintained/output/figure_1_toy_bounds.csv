@@ -1,4 +1,4 @@
-description,li,ui
+description,estimate_lower,estimate_upper
 Before Any Data,-100,100
 Initial Values,-40,60
 Easy Cases,-19.999999999999996,30

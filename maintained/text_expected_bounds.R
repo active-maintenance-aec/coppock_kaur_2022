@@ -38,12 +38,12 @@ cases_long <- read_rds(here::here("maintained", "output", "cases_long.rds"))
 exact_ate <- read_csv(here::here("maintained", "output", "figures_2_a1_gg_df.csv"),
                       show_col_types = FALSE) |>
   transmute(transition_fac, step, estimand = "ATE",
-            expected_low = estimate_low_est, expected_high = estimate_high_est)
+            expected_lower = estimate_lower, expected_upper = estimate_upper)
 
 exact_att_atu <- read_csv(here::here("maintained", "output", "figures_3_a2_gg_df.csv"),
                           show_col_types = FALSE) |>
   transmute(transition_fac, step, estimand = if_else(treatment == 1, "ATT", "ATU"),
-            expected_low = estimate_low_est, expected_high = estimate_high_est)
+            expected_lower = estimate_lower, expected_upper = estimate_upper)
 
 # The deposit's method, at the number of draws the deposited script uses for each
 # pair of figures. The standard error is that of the mean of those draws: each
@@ -61,7 +61,7 @@ simulated_ate <- cases_long |>
   pivot_wider(id_cols = c(step, transition_fac), names_from = name,
               values_from = estimate) |>
   transmute(transition_fac, step, estimand = "ATE",
-            simulated_low = low_est, simulated_high = high_est)
+            simulated_lower = estimate_lower, simulated_upper = estimate_upper)
 
 simulated_att_atu <- cases_long |>
   group_by(step, transition_fac, treatment) |>
@@ -70,7 +70,7 @@ simulated_att_atu <- cases_long |>
   pivot_wider(id_cols = c(step, transition_fac, treatment), names_from = name,
               values_from = estimate) |>
   transmute(transition_fac, step, estimand = if_else(treatment == 1, "ATT", "ATU"),
-            simulated_low = low_est, simulated_high = high_est)
+            simulated_lower = estimate_lower, simulated_upper = estimate_upper)
 
 standard_errors <- bind_rows(
   cases_long |>
@@ -93,32 +93,32 @@ expected_bounds <- bind_rows(exact_ate, exact_att_atu) |>
             relationship = "one-to-one") |>
   mutate(
     description = factor(step, levels = quimpo_step_levels, labels = quimpo_step_labels),
-    label_low = round(simulated_low, 0),
-    label_high = round(simulated_high, 0),
+    label_lower = round(simulated_lower, 0),
+    label_upper = round(simulated_upper, 0),
     # An expectation sitting exactly halfway between two integers has no
     # whole-number label: which one a figure rounding to whole points printed
     # would be decided by the tie-breaking rule rather than by the quantity, so
     # it is flagged, and the figures print it at one decimal.
-    on_rounding_boundary = near(expected_low %% 1, 0.5) | near(expected_high %% 1, 0.5)
+    on_rounding_boundary = near(expected_lower %% 1, 0.5) | near(expected_upper %% 1, 0.5)
   ) |>
   select(transition_fac, estimand, step, description,
-         expected_low, expected_high, simulated_low, simulated_high, simulated_se,
-         label_low, label_high, on_rounding_boundary) |>
+         expected_lower, expected_upper, simulated_lower, simulated_upper, simulated_se,
+         label_lower, label_upper, on_rounding_boundary) |>
   arrange(transition_fac, estimand, description, .locale = "en")
 
 # The simulated estimate must sit within Monte Carlo error of the exact value,
 # and where nothing is probabilistic the two must be identical.
 agreement <- expected_bounds |>
   mutate(
-    gap_low = abs(simulated_low - expected_low),
-    gap_high = abs(simulated_high - expected_high),
-    gap_in_ses = if_else(simulated_se > 0, pmax(gap_low, gap_high) / simulated_se, 0)
+    gap_lower = abs(simulated_lower - expected_lower),
+    gap_upper = abs(simulated_upper - expected_upper),
+    gap_in_ses = if_else(simulated_se > 0, pmax(gap_lower, gap_upper) / simulated_se, 0)
   )
 
 stopifnot(
   max(agreement$gap_in_ses) < 5,
-  all(agreement$gap_low[agreement$simulated_se == 0] < 1e-10),
-  all(agreement$gap_high[agreement$simulated_se == 0] < 1e-10)
+  all(agreement$gap_lower[agreement$simulated_se == 0] < 1e-10),
+  all(agreement$gap_upper[agreement$simulated_se == 0] < 1e-10)
 )
 
 print(expected_bounds, n = nrow(expected_bounds))
@@ -130,7 +130,7 @@ print(tibble(
             "largest gap in standard errors of the simulated estimate"),
   value = c(2 * nrow(expected_bounds),
             2 * sum(agreement$simulated_se == 0),
-            max(agreement$gap_low, agreement$gap_high),
+            max(agreement$gap_lower, agreement$gap_upper),
             max(agreement$gap_in_ses))
 ))
 

@@ -21,8 +21,8 @@ ev_bounds <- function(Y0, Y1, min = 0, max = 1) {
   Y0_high[is.na(Y0)] <- max
   Y1_high[is.na(Y1)] <- max
   c(
-    low_est = mean(Y1_low) - mean(Y0_high),
-    high_est = mean(Y1_high) - mean(Y0_low)
+    estimate_lower = mean(Y1_low) - mean(Y0_high),
+    estimate_upper = mean(Y1_high) - mean(Y0_low)
   )
 }
 
@@ -80,10 +80,10 @@ bounds_distribution <- function(Y0, Y1) {
   ) |>
     mutate(
       prob = ones_Y1[realised_Y1 + 1] * ones_Y0[realised_Y0 + 1],
-      low_est = (realised_Y1 - realised_Y0 - sum(is.na(Y0))) / units,
-      high_est = (realised_Y1 + sum(is.na(Y1)) - realised_Y0) / units
+      estimate_lower = (realised_Y1 - realised_Y0 - sum(is.na(Y0))) / units,
+      estimate_upper = (realised_Y1 + sum(is.na(Y1)) - realised_Y0) / units
     ) |>
-    summarise(prob = sum(prob), .by = c(low_est, high_est))
+    summarise(prob = sum(prob), .by = c(estimate_lower, estimate_upper))
 }
 
 # The label a figure prints for a bound. The published figures label whole
