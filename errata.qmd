@@ -101,7 +101,8 @@ exact_bound <- function(sample, which_estimand, which_step, side) {
 english_number <- function(x) {
   words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
              "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
-             "eighteen", "nineteen", "twenty")
+             "eighteen", "nineteen", "twenty", "twenty-one", "twenty-two", "twenty-three",
+             "twenty-four", "twenty-five")
   stopifnot(x >= 1, x <= length(words), x == round(x))
   words[x]
 }
@@ -441,6 +442,36 @@ entries <- tribble(
         "$2 \\times 2$ tables ...\" (doi ",
         "[10.1214/17-AOAS1048](https://doi.org/10.1214/17-AOAS1048)). The published page sets ",
         "the multiplication sign as a math italic X with no space around it."),
+  "",
+
+  # Entries 19 to 21 come from the reference audit's re-run of 2026-10-29, which learned to
+  # read a page range printed as its first page alone. Each corrected range keeps the
+  # list's own style, which drops the leading digits a last page shares with the first.
+  19, "reference", "reference_audit", "brief",
+  "A page range printed as its first page alone, in Bullock, Green, and Ha (2010)",
+  "published, the reference list, p. 694",
+  "Journal of Personality and Social Psychology 98(4): [[550]].",
+  "Journal of Personality and Social Psychology 98(4): [[550–58]].",
+  str_c("The article runs from 550 to 558 (doi ",
+        "[10.1037/a0018933](https://doi.org/10.1037/a0018933))."),
+  "",
+
+  20, "reference", "reference_audit", "brief",
+  "A page range printed as its first page alone, in Laplante and Theidon (2007)",
+  "published, the reference list, p. 695",
+  "Human Rights Quarterly 29: [[228]].",
+  "Human Rights Quarterly 29: [[228–50]].",
+  str_c("The article runs from 228 to 250 (doi ",
+        "[10.1353/hrq.2007.0009](https://doi.org/10.1353/hrq.2007.0009))."),
+  "",
+
+  21, "reference", "reference_audit", "brief",
+  "A page range printed as its first page alone, in Rubin (1974)",
+  "published, the reference list, p. 695",
+  "Journal of Educational Psychology 66(5): [[688]].",
+  "Journal of Educational Psychology 66(5): [[688–701]].",
+  str_c("The article runs from 688 to 701 (doi ",
+        "[10.1037/h0037350](https://doi.org/10.1037/h0037350))."),
   ""
 ) |>
   mutate(across(c(title, published, corrected, note, claim_ids), as.character))
@@ -471,7 +502,7 @@ emit <- function(n) {
 
 This note lists `r english_number(nrow(entries))` corrections to "Qualitative Imputation of Missing Potential Outcomes," published in *American Journal of Political Science* 66(3), doi [10.1111/ajps.12697](https://doi.org/10.1111/ajps.12697). **None of them changes a conclusion of the article.** The extreme value bounds on the average treatment effect, which are the article's headline result, are unchanged at [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "lower"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "upper"))`] with a width of `r sprintf("%.0f", ate_width_exact)` points, as are every number in the abstract, the expert survey comparison in Figure 4, Table 5, and every quantity in the end-of-conflict application in Appendix A. **One published quantity does move materially**: the average treatment effect on the treated, which the article summarizes as a `r att_published` percentage point effect and which is `r sprintf("%.1f", att_exact)` points once the imputation probabilities the article's own appendix C states are the ones the analysis uses.
 
-The last seven entries are of a different kind from the eleven before them. They are misspellings, a missing space, a missing full stop and three defects in the reference list, and they are here because a corrected re-typesetting of the article was prepared, which meant reading every word of it and of its appendix against the published pages. That is a finer sieve than any pass over the analysis, and no error is too small to list.
+The last ten entries are of a different kind from the eleven before them. Entries 12 to 18 are misspellings, a missing space, a missing full stop, and three defects in the reference list, and they are here because a corrected re-typesetting of the article was prepared, which meant reading every word of it and of its appendix against the published pages. That is a finer sieve than any pass over the analysis, and no error is too small to list. Entries 19 to 21 are reference page ranges printed as a first page alone, found by an audit that checks every entry in the reference list against Crossref.
 
 The first two entries are transcription errors in the deposited case data, and the four that follow are their consequences. The imputed potential outcomes in this article are not measurements. They are qualitative judgments, set out case by case in appendix C with the reasoning behind each one, and the deposited `cases_clean.csv` is a transcription of those judgments. `r str_to_sentence(english_number(nrow(corrections)))` of its imputation probabilities do not match the probability the appendix C narrative for that case states. Correcting them restores what the article always said it was doing.
 
@@ -638,6 +669,11 @@ emit(11)
 # remastered edition was prepared. Emitted in a loop rather than one block each: they are
 # the same shape, and a block apiece would say only that they were found later.
 walk(12:18, emit)
+```
+
+```{r entries-19-to-21, results="asis"}
+# Three reference page ranges printed as a first page alone, found by the reference audit.
+walk(19:21, emit)
 ```
 
 ```{r emit-spine}

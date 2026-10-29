@@ -157,7 +157,8 @@ n_treated <- imputation_count("treated")
 english_number <- function(x) {
   words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
              "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
-             "eighteen", "nineteen", "twenty")
+             "eighteen", "nineteen", "twenty", "twenty-one", "twenty-two", "twenty-three",
+             "twenty-four", "twenty-five")
   stopifnot(x >= 1, x <= length(words), x == round(x))
   words[x]
 }

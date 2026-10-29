@@ -343,7 +343,7 @@ disagreement rather than failing on it.
 Nothing in the deposited code is wrong. The deposited data are wrong in
 seven cells, and eight claims in the article’s prose, spread over six
 sentences, are wrong on the article’s own terms. All of it is set out
-with corrected sentences and corrected floats as eighteen numbered
+with corrected sentences and corrected floats as twenty-one numbered
 entries in `coppock_kaur_2022_errata.pdf` at the root of this
 repository. None of it changes a conclusion. The sections below carry
 the note’s numbering.
@@ -1009,5 +1009,5 @@ and both reproduce.
 
 Package versions used for this report.
 
-R version: R version 4.6.0 (2026-04-24). The archive was written against
+R version: R version 4.6.1 (2026-06-24). The archive was written against
 R 4.1.2.
