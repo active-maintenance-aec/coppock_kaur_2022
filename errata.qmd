@@ -194,8 +194,22 @@ label_table <- function(float, which_estimand, sample, id_infix) {
 # truth summarises appendix Table B.2 one column at a time rather than one cell at a time,
 # so no row states an individual imputation probability. Every id here is checked against
 # the ground truth by build_ground_truth.R.
+# corrected_values runs parallel to claim_ids, one value per id in the same order, on the
+# claim's scale, carrying the corrected quantity as a number rather than as a sentence. Each
+# value is computed once, here, and the corrected sentence below is glued from the same
+# object, so the two cannot be written apart; the gate after the spine re-checks that each
+# value sits inside the [[...]] span it belongs to. An entry of a class that changes no
+# quantity, a note-form entry, and an entry with no claim_ids carry NA.
+cv3 <- sprintf('%.1f', att_exact)
+cv6 <- c(sprintf('%.0f', count_value('Democratization', 'imputed_with_certainty')),
+         sprintf('%.0f', count_value('Democratization', 'imputed_probabilistically')))
+cv7 <- treated_ones
+cv8 <- c(sprintf('%.1f', unit_6_probability), sprintf('%.1f', unit_7_probability))
+cv9 <- sprintf('%.1f', eoc_final_width_exact)
+cv10 <- disbanded_cases
+
 entries <- tribble(
-  ~entry, ~class, ~source, ~form, ~title, ~location, ~published, ~corrected, ~note, ~claim_ids,
+  ~entry, ~class, ~source, ~form, ~title, ~location, ~published, ~corrected, ~note, ~claim_ids, ~corrected_values,
 
   1, "quantity", "pipeline", "brief",
   str_glue("{str_to_sentence(english_number(nrow(complemented)))} imputation probabilities carried as their complements"),
@@ -211,6 +225,7 @@ entries <- tribble(
     "says the same thing on page 10: \"In other words, $Y_i(0) = 1$ with a probability of ",
     ".8.\" Sections C.4.12 and C.4.13 read \"with a probability of 0.7.\""),
   "",
+  NA_character_,
 
   2, "quantity", "pipeline", "brief",
   str_glue("{str_to_sentence(english_number(nrow(off_by_one_step)))} imputation probabilities differing by one step"),
@@ -222,12 +237,13 @@ entries <- tribble(
     "the table: at the deposited 1 it is an imputation made with certainty, and at the 0.9 ",
     "appendix C states it is a probabilistic one. That is what entry 6 below turns on."),
   "",
+  NA_character_,
 
   3, "quantity", "pipeline", "full",
   "The average treatment effect on the treated",
   "published, *Imputing Missing Potential Outcomes*, Summary",
   str_glue("The bounds on the ATU are greater than 58 points wide, compared with the bounds on the ATT, which shrink all the way down to a point. We can summarize the ATT as a [[{att_published}]] percentage point effect on return to authoritarianism."),
-  str_glue("The bounds on the ATU are greater than 58 points wide, compared with the bounds on the ATT, which shrink all the way down to a point. We can summarize the ATT as a [[{sprintf('%.1f', att_exact)}]] percentage point effect on return to authoritarianism."),
+  str_glue("The bounds on the ATU are greater than 58 points wide, compared with the bounds on the ATT, which shrink all the way down to a point. We can summarize the ATT as a [[{cv3}]] percentage point effect on return to authoritarianism."),
   str_glue(
     "Every treated case has both potential outcomes filled in by the second imputation step, ",
     "which is why the ATT bounds collapse to a point, and that point is the mean of the ",
@@ -247,6 +263,7 @@ entries <- tribble(
     "{published_value('text|atu_final_bounds_width')}\" holds exactly as written and is not ",
     "restated at one decimal here."),
   "text|att_summarised_as_a_point_effect",
+  cv3,
 
   4, "float", "pipeline", "brief",
   "Figure 3, the bounds by treatment status",
@@ -264,6 +281,7 @@ entries <- tribble(
     "figure_3|low_bound_atu_untreated_cases;figure_3|high_bound_atu_untreated_cases;",
     "figure_3|low_bound_atu_unimputable_cases;",
     "figure_3|high_bound_atu_unimputable_cases"),
+  NA_character_,
 
   5, "float", "pipeline", "brief",
   "Figure 2, the bounds on the average treatment effect",
@@ -275,12 +293,13 @@ entries <- tribble(
     "figure_2|low_bound_treated_cases;figure_2|high_bound_treated_cases;",
     "figure_2|low_bound_non_transitional_cases;",
     "figure_2|high_bound_non_transitional_cases"),
+  NA_character_,
 
   6, "quantity", "pipeline", "full",
   "How the 63 missing potential outcomes were imputed",
   "published, *Imputing Missing Potential Outcomes*",
   "For all 63 unobserved potential outcomes, we imputed [[5]] with certainty, [[26]] probabilistically and we left 32 unimputed.",
-  str_glue("For all 63 unobserved potential outcomes, we imputed [[{sprintf('%.0f', count_value('Democratization', 'imputed_with_certainty'))}]] with certainty, [[{sprintf('%.0f', count_value('Democratization', 'imputed_probabilistically'))}]] probabilistically and we left 32 unimputed."),
+  str_glue("For all 63 unobserved potential outcomes, we imputed [[{cv6[1]}]] with certainty, [[{cv6[2]}]] probabilistically and we left 32 unimputed."),
   paste(
     "An imputation is made with certainty when the stated probability that the missing",
     "potential outcome equals 1 is exactly 0 or exactly 1. Three cases qualify: Brazil",
@@ -289,24 +308,26 @@ entries <- tribble(
     "number left unimputed, and the 31 imputed in total, are unaffected either way."),
   str_c("text|unobserved_potential_outcomes_imputed_with_certainty;",
         "text|unobserved_potential_outcomes_imputed_probabilistically"),
+  str_c(cv6, collapse = ";"),
 
   7, "quantity", "pipeline", "full",
   "The toy example's treated outcomes",
   "published, *A Toy Example*",
   "The outcome for [[three]] of the treated units and one of the untreated units is 1; the outcome is equal to 0 for the remaining units.",
-  str_glue("The outcome for [[{english_number(treated_ones)}]] of the treated units and one of the untreated units is 1; the outcome is equal to 0 for the remaining units."),
+  str_glue("The outcome for [[{english_number(cv7)}]] of the treated units and one of the untreated units is 1; the outcome is equal to 0 for the remaining units."),
   str_glue(
     "Table 3, reprinted below, shows {english_number(treated_ones)} treated units with an ",
     "observed outcome of 1, and the deposited code that builds the example encodes ",
     "{english_number(treated_ones)}. Four is also what the [-40, 60] initial bounds two ",
     "sentences later require; three would give [-50, 50]."),
   "text|toy_example_treated_units_with_outcome_1",
+  as.character(cv7),
 
   8, "quantity", "pipeline", "full",
   "The probabilistic extension's stated probabilities",
   "published, *Probabilistic Extension*",
   "Instead of being sure that the untreated potential outcomes for units 6 and 7 are 0, we think the probabilities of being a `1' for units 6 and 7 are [[.3 and .4]], respectively ($k = 2$).",
-  str_glue("Instead of being sure that the untreated potential outcomes for units 6 and 7 are 0, we think the probabilities of being a `1' for units 6 and 7 are [[{sprintf('%.1f', unit_6_probability)} and {sprintf('%.1f', unit_7_probability)}]], respectively ($k = 2$)."),
+  str_glue("Instead of being sure that the untreated potential outcomes for units 6 and 7 are 0, we think the probabilities of being a `1' for units 6 and 7 are [[{cv8[1]} and {cv8[2]}]], respectively ($k = 2$)."),
   str_glue(
     "The four scenario probabilities Table 4 prints are the product distribution of ",
     "{sprintf('%.1f', unit_6_probability)} and {sprintf('%.1f', unit_7_probability)}, and ",
@@ -314,6 +335,7 @@ entries <- tribble(
     "read 0.42, 0.18, 0.28 and 0.12 rather than the published 0.56, 0.14, 0.24 and 0.06."),
   str_c("table_4|probability_that_unit_6_has_y0_1;",
         "table_4|probability_that_unit_7_has_y0_1"),
+  str_c(cv8, collapse = ";"),
 
   9, "quantity", "pipeline", "full",
   "The end-of-conflict bounds width",
@@ -324,7 +346,7 @@ entries <- tribble(
   # from the published one with no correction mark against it, which is what the
   # edition's title page promises never happens.
   "The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from [[100]] to [[41]] points.",
-  str_glue("The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from [[{sprintf('%.1f', eoc_initial_width_exact)}]] to [[{sprintf('%.1f', eoc_final_width_exact)}]] points."),
+  str_glue("The incorporation of qualitative beliefs about counterfactuals shrinks the width of the extreme value bounds from [[{sprintf('%.1f', eoc_initial_width_exact)}]] to [[{cv9}]] points."),
   str_glue(
     "The next clause of the same sentence calls the resulting bounds 45 points wide, which ",
     "is the difference of the rounded endpoints ",
@@ -337,18 +359,20 @@ entries <- tribble(
     "appendix C corrections, all {english_number(nrow(corrections))} of which are ",
     "democratization cases."),
   "appendix_a|bounds_width_after_imputation",
+  cv9,
 
   10, "quantity", "pipeline", "full",
   "The count of disbanded and discredited democratization cases",
   "published, *Imputing Missing Potential Outcomes*, Step 1",
   "The observed outcome $Y_i(0)$ in each of these [[four]] cases was 0, as authoritarianism did not resume within 10 years of transition.",
-  str_glue("The observed outcome $Y_i(0)$ in each of these [[{english_number(disbanded_cases)}]] cases was 0, as authoritarianism did not resume within 10 years of transition."),
+  str_glue("The observed outcome $Y_i(0)$ in each of these [[{english_number(cv10)}]] cases was 0, as authoritarianism did not resume within 10 years of transition."),
   str_glue(
     "The sentence before it names {english_number(disbanded_cases)} cases, Bolivia and the ",
     "Philippines, and appendix Table B.2 lists {english_number(disbanded_cases)} at this ",
     "step. Appendix Table B.1 lists four end-of-conflict cases at the same step, which is ",
     "where the count appears to have come from."),
   "text|disbanded_and_discredited_democratization_cases",
+  as.character(cv10),
 
   11, "float", "pipeline", "brief",
   "Two cells of appendix Table B.2 disagree with the case file behind it",
@@ -372,6 +396,7 @@ entries <- tribble(
     "deposit as well. Every other cell of both appendix tables reproduces."),
   str_c("table_b2|cells_printed_in_the_observed_outcome_column;",
         "table_b2|cells_printed_in_the_imputation_probability_column"),
+  NA_character_,
 
   # Entries 12 to 18 come from preparing the remastered edition, which reads every word of
   # the article and its appendix against the published PDFs and is a finer sieve than any
@@ -389,6 +414,7 @@ entries <- tribble(
   "our 63 cases falling into each of four imputation [[categories]]",
   "The word is spelled correctly everywhere else in the article and the appendix.",
   "",
+  NA_character_,
 
   13, "note", "reading", "brief",
   "A misspelling in the note to Figure 2",
@@ -398,6 +424,7 @@ entries <- tribble(
   str_c("The section the figure illustrates is headed *Probabilistic Extension* and spells the ",
         "word correctly throughout; the note under the figure is the only place it does not."),
   "",
+  NA_character_,
 
   14, "typography", "reading", "brief",
   "A missing space in the appendix's author note",
@@ -406,6 +433,7 @@ entries <- tribble(
   "Yale [[University. Dipin]] Kaur",
   "The note runs the first author's institution into the second author's name.",
   "",
+  NA_character_,
 
   15, "typography", "reading", "brief",
   "A list that ends without a full stop",
@@ -414,6 +442,7 @@ entries <- tribble(
   "Niger (1974-1991), Zambia [[(1967-1991).]]",
   "The paragraph listing the cases left unimputed ends with the last of them and no full stop.",
   "",
+  NA_character_,
 
   16, "reference", "reading", "brief",
   "An author list that begins with \"et al\"",
@@ -423,6 +452,7 @@ entries <- tribble(
   str_c("The entry is alphabetized under M, so the \"et al\" is not the publisher reading a ",
         "coauthor into the citation: the article Mombauer wrote has none."),
   "",
+  NA_character_,
 
   17, "reference", "reference_audit", "brief",
   "A page range whose last page belongs to another article",
@@ -432,6 +462,7 @@ entries <- tribble(
   str_c("Mombauer's article runs from 231 to 240 (doi ",
         "[10.1177/0022009412472712](https://doi.org/10.1177/0022009412472712))."),
   "",
+  NA_character_,
 
   18, "reference", "reading", "brief",
   "A multiplication sign printed as an italic X",
@@ -443,6 +474,7 @@ entries <- tribble(
         "[10.1214/17-AOAS1048](https://doi.org/10.1214/17-AOAS1048)). The published page sets ",
         "the multiplication sign as a math italic X with no space around it."),
   "",
+  NA_character_,
 
   # Entries 19 to 21 come from the reference audit's re-run of 2026-10-29, which learned to
   # read a page range printed as its first page alone. Each corrected range keeps the
@@ -455,6 +487,7 @@ entries <- tribble(
   str_c("The article runs from 550 to 558 (doi ",
         "[10.1037/a0018933](https://doi.org/10.1037/a0018933))."),
   "",
+  NA_character_,
 
   20, "reference", "reference_audit", "brief",
   "A page range printed as its first page alone, in Laplante and Theidon (2007)",
@@ -464,6 +497,7 @@ entries <- tribble(
   str_c("The article runs from 228 to 250 (doi ",
         "[10.1353/hrq.2007.0009](https://doi.org/10.1353/hrq.2007.0009))."),
   "",
+  NA_character_,
 
   21, "reference", "reference_audit", "brief",
   "A page range printed as its first page alone, in Rubin (1974)",
@@ -473,10 +507,60 @@ entries <- tribble(
   str_c("The article runs from 688 to 701 (doi ",
         "[10.1037/h0037350](https://doi.org/10.1037/h0037350))."),
   ""
-) |>
-  mutate(across(c(title, published, corrected, note, claim_ids), as.character))
+,
+  NA_character_) |>
+  mutate(across(c(title, published, corrected, note, claim_ids, corrected_values),
+                as.character))
 
 stopifnot(nrow(entries) == max(entries$entry), !anyDuplicated(entries$entry))
+
+# Gate: corrected_values agrees with the sentence it was glued into ----
+# The column and the sentence are written from one object, so they begin in agreement and
+# this gate exists for the edit that separates them: a value moved from one marked span to
+# another, a span reworded to carry a second number, a claim id appended without its value.
+# Each value has to be inside the span it belongs to, matched by position where the counts
+# line up, and inside SOME span where an entry marks a label as well as a number and its
+# spans outnumber its values. A count the sentence spells out is accepted in its spelled form.
+marked_spans <- function(x) str_match_all(x, "\\[\\[(.*?)\\]\\]")[[1]][, 2]
+
+in_span <- function(v, s) {
+  str_detect(s, fixed(v)) ||
+    (str_detect(v, "^[0-9]+$") && as.integer(v) %in% seq_len(25) &&
+       str_detect(s, fixed(english_number(as.integer(v)))))
+}
+
+quantified <- entries |>
+  filter(!is.na(corrected_values)) |>
+  mutate(ids = str_split(claim_ids, ";"), values = str_split(corrected_values, ";"),
+         spans = map(corrected, marked_spans))
+
+stopifnot(all(lengths(quantified$ids) == lengths(quantified$values)))
+
+value_placed <- pmap_lgl(quantified, function(...) {
+  e <- list(...)
+  if (length(e$values) == length(e$spans)) {
+    all(map2_lgl(e$values, e$spans, in_span))
+  } else {
+    all(map_lgl(e$values, \(v) any(map_lgl(e$spans, \(s) in_span(v, s)))))
+  }
+})
+
+if (!all(value_placed)) {
+  print(quantified |> filter(!value_placed) |> select(entry, title, corrected_values, corrected))
+  stop("An entry's corrected_values are not in the spans of its corrected sentence.")
+}
+
+# An entry that changes a quantity has to say which one, and an entry that changes none may
+# not carry a value. The class is the declaration and this is where it binds. A note-form
+# entry corrects nothing and carries NA even where its class is quantity, and an entry with
+# no claim_ids has no claim to carry a value for.
+has_ids <- !is.na(entries$claim_ids) & entries$claim_ids != ""
+stopifnot(
+  all(!is.na(entries$corrected_values[entries$class == "quantity" & entries$form != "note" & has_ids])),
+  all(is.na(entries$corrected_values[entries$class != "quantity"])),
+  all(is.na(entries$corrected_values[entries$form == "note"])),
+  all(is.na(entries$corrected_values) | has_ids)
+)
 
 # The spine's markup, resolved for this document. Another renderer resolves it differently.
 bold <- function(x) str_replace_all(x, "\\[\\[(.*?)\\]\\]", "**\\1**")
