@@ -185,8 +185,11 @@ label_table <- function(float, which_estimand, sample, id_infix) {
 # published and corrected fields name what moves while the corrected float is reprinted
 # beneath: floats are presentation, not spine.
 #
-# Numbering is the published note's and is APPEND-ONLY: an entry can already have been
-# cited, so a later finding is added at the end and never interleaved.
+# Numbering follows PROCEDURES.md Stage 4b: entries are ordered by severity block (quantity;
+# description, interpretation, definition; label, float, cross_reference; wording, spelling,
+# typography; bibliographic), discovery order inside a block, and a finding that lands in an
+# earlier block renumbers the entries after it. Renumbered 2026-11-07; the old-to-new map is
+# in that day's commit message.
 #
 # claim_ids names the ground-truth rows an entry corrects, semicolon-separated, so that
 # "is this finding published?" is a query rather than a judgment. Entries 1 and 2 carry
@@ -213,7 +216,7 @@ entries <- tribble(
 
   1, "quantity", "pipeline", "brief",
   str_glue("{str_to_sentence(english_number(nrow(complemented)))} imputation probabilities carried as their complements"),
-  "published, appendix Table B.2",
+  "app. Table B.2",
   str_glue("[[{english_number(nrow(complemented))} imputation probabilities in appendix Table B.2, each one minus the probability the appendix C entry for that case states]]"),
   "[[the probabilities appendix C states]]",
   str_glue(
@@ -229,19 +232,19 @@ entries <- tribble(
 
   2, "quantity", "pipeline", "brief",
   str_glue("{str_to_sentence(english_number(nrow(off_by_one_step)))} imputation probabilities differing by one step"),
-  "published, appendix Table B.2",
+  "app. Table B.2",
   str_glue("[[{english_number(nrow(off_by_one_step))} imputation probabilities in appendix Table B.2, each differing from the probability appendix C states by 0.1]]"),
   "[[the probabilities appendix C states]]",
   str_glue(
     "Uruguay is the one of the {english_number(nrow(off_by_one_step))} that matters beyond ",
     "the table: at the deposited 1 it is an imputation made with certainty, and at the 0.9 ",
-    "appendix C states it is a probabilistic one. That is what entry 6 below turns on."),
+    "appendix C states it is a probabilistic one. That is what entry 4 below turns on."),
   "",
   NA_character_,
 
   3, "quantity", "pipeline", "full",
   "The average treatment effect on the treated",
-  "published, *Imputing Missing Potential Outcomes*, Summary",
+  "*Imputing Missing Potential Outcomes*, Summary",
   str_glue("The bounds on the ATU are greater than 58 points wide, compared with the bounds on the ATT, which shrink all the way down to a point. We can summarize the ATT as a [[{att_published}]] percentage point effect on return to authoritarianism."),
   str_glue("The bounds on the ATU are greater than 58 points wide, compared with the bounds on the ATT, which shrink all the way down to a point. We can summarize the ATT as a [[{cv3}]] percentage point effect on return to authoritarianism."),
   str_glue(
@@ -265,39 +268,9 @@ entries <- tribble(
   "text|att_summarised_as_a_point_effect",
   cv3,
 
-  4, "float", "pipeline", "brief",
-  "Figure 3, the bounds by treatment status",
-  "published, Figure 3",
-  "[[Figure 3's ATT bounds from *Treated Cases* onward, and its ATU bounds at *Untreated Cases* and *Unimputable Cases*]]",
-  "[[the same bounds with the appendix C probabilities restored]]",
-  "",
-  str_c(
-    "figure_3|low_bound_att_treated_cases;figure_3|high_bound_att_treated_cases;",
-    "figure_3|low_bound_att_non_transitional_cases;",
-    "figure_3|high_bound_att_non_transitional_cases;",
-    "figure_3|low_bound_att_untreated_cases;figure_3|high_bound_att_untreated_cases;",
-    "figure_3|low_bound_att_unimputable_cases;",
-    "figure_3|high_bound_att_unimputable_cases;",
-    "figure_3|low_bound_atu_untreated_cases;figure_3|high_bound_atu_untreated_cases;",
-    "figure_3|low_bound_atu_unimputable_cases;",
-    "figure_3|high_bound_atu_unimputable_cases"),
-  NA_character_,
-
-  5, "float", "pipeline", "brief",
-  "Figure 2, the bounds on the average treatment effect",
-  "published, Figure 2",
-  "[[two of Figure 2's seven step labels]]",
-  "[[the same bounds with the appendix C probabilities restored]]",
-  "",
-  str_c(
-    "figure_2|low_bound_treated_cases;figure_2|high_bound_treated_cases;",
-    "figure_2|low_bound_non_transitional_cases;",
-    "figure_2|high_bound_non_transitional_cases"),
-  NA_character_,
-
-  6, "quantity", "pipeline", "full",
+  4, "quantity", "pipeline", "full",
   "How the 63 missing potential outcomes were imputed",
-  "published, *Imputing Missing Potential Outcomes*",
+  "*Imputing Missing Potential Outcomes*",
   "For all 63 unobserved potential outcomes, we imputed [[5]] with certainty, [[26]] probabilistically and we left 32 unimputed.",
   str_glue("For all 63 unobserved potential outcomes, we imputed [[{cv6[1]}]] with certainty, [[{cv6[2]}]] probabilistically and we left 32 unimputed."),
   paste(
@@ -310,9 +283,9 @@ entries <- tribble(
         "text|unobserved_potential_outcomes_imputed_probabilistically"),
   str_c(cv6, collapse = ";"),
 
-  7, "quantity", "pipeline", "full",
+  5, "quantity", "pipeline", "full",
   "The toy example's treated outcomes",
-  "published, *A Toy Example*",
+  "*A Toy Example*",
   "The outcome for [[three]] of the treated units and one of the untreated units is 1; the outcome is equal to 0 for the remaining units.",
   str_glue("The outcome for [[{english_number(cv7)}]] of the treated units and one of the untreated units is 1; the outcome is equal to 0 for the remaining units."),
   str_glue(
@@ -323,9 +296,9 @@ entries <- tribble(
   "text|toy_example_treated_units_with_outcome_1",
   as.character(cv7),
 
-  8, "quantity", "pipeline", "full",
+  6, "quantity", "pipeline", "full",
   "The probabilistic extension's stated probabilities",
-  "published, *Probabilistic Extension*",
+  "*Probabilistic Extension*",
   "Instead of being sure that the untreated potential outcomes for units 6 and 7 are 0, we think the probabilities of being a `1' for units 6 and 7 are [[.3 and .4]], respectively ($k = 2$).",
   str_glue("Instead of being sure that the untreated potential outcomes for units 6 and 7 are 0, we think the probabilities of being a `1' for units 6 and 7 are [[{cv8[1]} and {cv8[2]}]], respectively ($k = 2$)."),
   str_glue(
@@ -337,9 +310,9 @@ entries <- tribble(
         "table_4|probability_that_unit_7_has_y0_1"),
   str_c(cv8, collapse = ";"),
 
-  9, "quantity", "pipeline", "full",
+  7, "quantity", "pipeline", "full",
   "The end-of-conflict bounds width",
-  "published, Appendix A",
+  "app. A",
   # Both numbers are marked, not just the one that moves. The initial width is
   # restated at one decimal like every other percentage-point quantity here, and
   # an unmarked restatement would put a word on the remastered page that differs
@@ -361,9 +334,9 @@ entries <- tribble(
   "appendix_a|bounds_width_after_imputation",
   cv9,
 
-  10, "quantity", "pipeline", "full",
+  8, "quantity", "pipeline", "full",
   "The count of disbanded and discredited democratization cases",
-  "published, *Imputing Missing Potential Outcomes*, Step 1",
+  "*Imputing Missing Potential Outcomes*, Step 1",
   "The observed outcome $Y_i(0)$ in each of these [[four]] cases was 0, as authoritarianism did not resume within 10 years of transition.",
   str_glue("The observed outcome $Y_i(0)$ in each of these [[{english_number(cv10)}]] cases was 0, as authoritarianism did not resume within 10 years of transition."),
   str_glue(
@@ -374,9 +347,39 @@ entries <- tribble(
   "text|disbanded_and_discredited_democratization_cases",
   as.character(cv10),
 
+  9, "float", "pipeline", "brief",
+  "Figure 3, the bounds by treatment status",
+  "Figure 3",
+  "[[Figure 3's ATT bounds from *Treated Cases* onward, and its ATU bounds at *Untreated Cases* and *Unimputable Cases*]]",
+  "[[the same bounds with the appendix C probabilities restored]]",
+  "",
+  str_c(
+    "figure_3|low_bound_att_treated_cases;figure_3|high_bound_att_treated_cases;",
+    "figure_3|low_bound_att_non_transitional_cases;",
+    "figure_3|high_bound_att_non_transitional_cases;",
+    "figure_3|low_bound_att_untreated_cases;figure_3|high_bound_att_untreated_cases;",
+    "figure_3|low_bound_att_unimputable_cases;",
+    "figure_3|high_bound_att_unimputable_cases;",
+    "figure_3|low_bound_atu_untreated_cases;figure_3|high_bound_atu_untreated_cases;",
+    "figure_3|low_bound_atu_unimputable_cases;",
+    "figure_3|high_bound_atu_unimputable_cases"),
+  NA_character_,
+
+  10, "float", "pipeline", "brief",
+  "Figure 2, the bounds on the average treatment effect",
+  "Figure 2",
+  "[[two of Figure 2's seven step labels]]",
+  "[[the same bounds with the appendix C probabilities restored]]",
+  "",
+  str_c(
+    "figure_2|low_bound_treated_cases;figure_2|high_bound_treated_cases;",
+    "figure_2|low_bound_non_transitional_cases;",
+    "figure_2|high_bound_non_transitional_cases"),
+  NA_character_,
+
   11, "float", "pipeline", "brief",
   "Two cells of appendix Table B.2 disagree with the case file behind it",
-  "published, appendix Table B.2",
+  "app. Table B.2",
   str_glue(
     "[[Azerbaijan (1991-1992) at an observed outcome of ",
     "{fmt0(azerbaijan$Y_published)}, and Burundi (1996-2005) at an imputation ",
@@ -407,18 +410,18 @@ entries <- tribble(
   # Two are in a float's note, which is the one part of the article no automatic check
   # reaches: the remaster's token gate drops a float's interior by rectangle on both sides,
   # and check_floats.py verifies cells rather than prose.
-  12, "note", "reading", "brief",
+  12, "spelling", "reading", "brief",
   "A misspelling in the note to Table 5",
-  "published, the note to Table 5, p. 691",
+  "p. 691, the note to Table 5",
   "our 63 cases falling into each of four imputation [[catagories]]",
   "our 63 cases falling into each of four imputation [[categories]]",
   "The word is spelled correctly everywhere else in the article and the appendix.",
   "",
   NA_character_,
 
-  13, "note", "reading", "brief",
+  13, "spelling", "reading", "brief",
   "A misspelling in the note to Figure 2",
-  "published, the note to Figure 2, p. 690",
+  "p. 690, the note to Figure 2",
   "so we use the [[probabalistic]] extension",
   "so we use the [[probabilistic]] extension",
   str_c("The section the figure illustrates is headed *Probabilistic Extension* and spells the ",
@@ -428,7 +431,7 @@ entries <- tribble(
 
   14, "typography", "reading", "brief",
   "A missing space in the appendix's author note",
-  "published appendix, the starred author note, appendix p. 1",
+  "app. p. 1, the starred author note",
   "Yale [[University.Dipin]] Kaur",
   "Yale [[University. Dipin]] Kaur",
   "The note runs the first author's institution into the second author's name.",
@@ -437,16 +440,16 @@ entries <- tribble(
 
   15, "typography", "reading", "brief",
   "A list that ends without a full stop",
-  "published appendix, section C.5, appendix p. 19",
+  "app. p. 19, Section C.5",
   "Niger (1974-1991), Zambia [[(1967-1991)]]",
   "Niger (1974-1991), Zambia [[(1967-1991).]]",
   "The paragraph listing the cases left unimputed ends with the last of them and no full stop.",
   "",
   NA_character_,
 
-  16, "reference", "reading", "brief",
+  16, "bibliographic", "reading", "brief",
   "An author list that begins with \"et al\"",
-  "published, the reference list, p. 695",
+  "p. 695, refs",
   "[[et al Mombauer, Annika.]] 2013.",
   "[[Mombauer, Annika.]] 2013.",
   str_c("The entry is alphabetized under M, so the \"et al\" is not the publisher reading a ",
@@ -454,9 +457,9 @@ entries <- tribble(
   "",
   NA_character_,
 
-  17, "reference", "reference_audit", "brief",
+  17, "bibliographic", "reference_audit", "brief",
   "A page range whose last page belongs to another article",
-  "published, the reference list, p. 695",
+  "p. 695, refs",
   "48(2): 231–[[417]].",
   "48(2): 231–[[40]].",
   str_c("Mombauer's article runs from 231 to 240 (doi ",
@@ -464,9 +467,9 @@ entries <- tribble(
   "",
   NA_character_,
 
-  18, "reference", "reading", "brief",
+  18, "bibliographic", "reading", "brief",
   "A multiplication sign printed as an italic X",
-  "published, the reference list, p. 695",
+  "p. 695, refs",
   "Causal Effects from [[2X 2]] Tables",
   "Causal Effects from [[2 $\\times$ 2]] Tables",
   str_c("Keele and Quinn's title is \"Bayesian sensitivity analysis for causal effects from ",
@@ -479,9 +482,9 @@ entries <- tribble(
   # Entries 19 to 21 come from the reference audit's re-run of 2026-10-29, which learned to
   # read a page range printed as its first page alone. Each corrected range keeps the
   # list's own style, which drops the leading digits a last page shares with the first.
-  19, "reference", "reference_audit", "brief",
+  19, "bibliographic", "reference_audit", "brief",
   "A page range printed as its first page alone, in Bullock, Green, and Ha (2010)",
-  "published, the reference list, p. 694",
+  "p. 694, refs",
   "Journal of Personality and Social Psychology 98(4): [[550]].",
   "Journal of Personality and Social Psychology 98(4): [[550–58]].",
   str_c("The article runs from 550 to 558 (doi ",
@@ -489,9 +492,9 @@ entries <- tribble(
   "",
   NA_character_,
 
-  20, "reference", "reference_audit", "brief",
+  20, "bibliographic", "reference_audit", "brief",
   "A page range printed as its first page alone, in Laplante and Theidon (2007)",
-  "published, the reference list, p. 695",
+  "p. 695, refs",
   "Human Rights Quarterly 29: [[228]].",
   "Human Rights Quarterly 29: [[228–50]].",
   str_c("The article runs from 228 to 250 (doi ",
@@ -499,9 +502,9 @@ entries <- tribble(
   "",
   NA_character_,
 
-  21, "reference", "reference_audit", "brief",
+  21, "bibliographic", "reference_audit", "brief",
   "A page range printed as its first page alone, in Rubin (1974)",
-  "published, the reference list, p. 695",
+  "p. 695, refs",
   "Journal of Educational Psychology 66(5): [[688]].",
   "Journal of Educational Psychology 66(5): [[688–701]].",
   str_c("The article runs from 688 to 701 (doi ",
@@ -588,7 +591,7 @@ This note lists `r english_number(nrow(entries))` corrections to "Qualitative Im
 
 The last ten entries are of a different kind from the eleven before them. Entries 12 to 18 are misspellings, a missing space, a missing full stop, and three defects in the reference list, and they are here because a corrected re-typesetting of the article was prepared, which meant reading every word of it and of its appendix against the published pages. That is a finer sieve than any pass over the analysis, and no error is too small to list. Entries 19 to 21 are reference page ranges printed as a first page alone, found by an audit that checks every entry in the reference list against Crossref.
 
-The first two entries are transcription errors in the deposited case data, and the four that follow are their consequences. The imputed potential outcomes in this article are not measurements. They are qualitative judgments, set out case by case in appendix C with the reasoning behind each one, and the deposited `cases_clean.csv` is a transcription of those judgments. `r str_to_sentence(english_number(nrow(corrections)))` of its imputation probabilities do not match the probability the appendix C narrative for that case states. Correcting them restores what the article always said it was doing.
+The first two entries are transcription errors in the deposited case data, and entries 3, 4, 9, and 10 are their consequences. The imputed potential outcomes in this article are not measurements. They are qualitative judgments, set out case by case in appendix C with the reasoning behind each one, and the deposited `cases_clean.csv` is a transcription of those judgments. `r str_to_sentence(english_number(nrow(corrections)))` of its imputation probabilities do not match the probability the appendix C narrative for that case states. Correcting them restores what the article always said it was doing.
 
 Every corrected value is computed at the time this document is rendered, from the deposited replication archive ([10.7910/DVN/2IVKXD](https://doi.org/10.7910/DVN/2IVKXD)) with those `r english_number(nrow(corrections))` probabilities restored. The bounds are computed exactly, where the deposited script estimates them by simulation. It is the same quantity by a different route rather than a different estimator: a bound is affine in the imputed potential outcomes, so the distribution the deposit draws from can be written down and averaged, and the two agree to within the error of the simulation. What computing it exactly changes is that a bound falling exactly halfway between two whole numbers is visible as such, rather than being settled by whichever side an unseeded draw happened to land on. The code supporting each correction is at [github.com/active-maintenance-aec/coppock_kaur_2022](https://github.com/active-maintenance-aec/coppock_kaur_2022). Bold marks the values that change; unbolded numbers are recomputed rather than copied, so a reader diffing published against corrected sees every quantity verified and not only the ones at issue.
 
@@ -666,8 +669,45 @@ table_b2_corrected |>
 emit(3)
 ```
 
-```{r entry-4-heading, results="asis"}
-emit_heading(4, lead = paste(
+```{r entry-4, results="asis"}
+emit(4)
+```
+
+```{r entry-5, results="asis"}
+emit(5)
+```
+
+```{r table-3}
+table_3 |>
+  select(Unit = unit, `$d_i$` = d, `$Y_i$` = Y) |>
+  kable(format = "latex", booktabs = TRUE, escape = FALSE, align = "ccc", linesep = "")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} The observed columns of Table 3, drawn from the deposited replication archive by \texttt{maintained/table\_3\_toy\_example.R}. Nothing in the table is corrected; it is reprinted because it is the authority the sentence disagrees with.}
+
+```{r entry-6, results="asis"}
+emit(6)
+```
+
+```{r table-4}
+table_4 |>
+  transmute(`Unit 6` = unit_6, `Unit 7` = unit_7, `EV Bounds` = ev_bounds,
+            Probability = sprintf("%.2f", prob)) |>
+  kable(format = "latex", booktabs = TRUE, align = "cclc")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Table 4, drawn from the deposited replication archive by \texttt{maintained/table\_4\_probabilistic.R}. No cell is corrected; the table is reprinted because its probability column is what the sentence disagrees with.}
+
+```{r entry-7, results="asis"}
+emit(7)
+```
+
+```{r entry-8, results="asis"}
+emit(8)
+```
+
+```{r entry-9-heading, results="asis"}
+emit_heading(9, lead = paste(
   "The corrected Figure 3 is reprinted below. The ATT bounds move at every step from",
   "*Treated Cases* onward, and the ATU bounds move at *Untreated Cases* and",
   "*Unimputable Cases*."))
@@ -690,8 +730,8 @@ include_graphics("maintained/output/figure_3_dem_att_atu_bounds.pdf")
 
 \parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Figure 3 recomputed with the `r english_number(nrow(corrections))` appendix C probabilities restored, and with the bounds computed exactly rather than simulated, so the labels are the same on every run. The ATT labels from \textit{Initial Values} onward carry a decimal, because at every one of those steps the bound falls exactly halfway between two whole numbers and no whole number states it.}
 
-```{r entry-5-heading, results="asis"}
-emit_heading(5)
+```{r entry-10-heading, results="asis"}
+emit_heading(10)
 ```
 
 ```{r figure-2-labels}
@@ -706,43 +746,6 @@ include_graphics("maintained/output/figure_2_dem_ate_bounds.pdf")
 ```
 
 \parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Figure 2 recomputed with the `r english_number(nrow(corrections))` appendix C probabilities restored.}
-
-```{r entry-6, results="asis"}
-emit(6)
-```
-
-```{r entry-7, results="asis"}
-emit(7)
-```
-
-```{r table-3}
-table_3 |>
-  select(Unit = unit, `$d_i$` = d, `$Y_i$` = Y) |>
-  kable(format = "latex", booktabs = TRUE, escape = FALSE, align = "ccc", linesep = "")
-```
-
-\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} The observed columns of Table 3, drawn from the deposited replication archive by \texttt{maintained/table\_3\_toy\_example.R}. Nothing in the table is corrected; it is reprinted because it is the authority the sentence disagrees with.}
-
-```{r entry-8, results="asis"}
-emit(8)
-```
-
-```{r table-4}
-table_4 |>
-  transmute(`Unit 6` = unit_6, `Unit 7` = unit_7, `EV Bounds` = ev_bounds,
-            Probability = sprintf("%.2f", prob)) |>
-  kable(format = "latex", booktabs = TRUE, align = "cclc")
-```
-
-\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Table 4, drawn from the deposited replication archive by \texttt{maintained/table\_4\_probabilistic.R}. No cell is corrected; the table is reprinted because its probability column is what the sentence disagrees with.}
-
-```{r entry-9, results="asis"}
-emit(9)
-```
-
-```{r entry-10, results="asis"}
-emit(10)
-```
 
 ```{r entry-11, results="asis"}
 emit(11)
@@ -764,5 +767,12 @@ walk(19:21, emit)
 # The machine-readable spine, written wherever this document is rendered. Anything else
 # that needs these entries reads it rather than keeping its own copy, so the two cannot
 # drift.
+# The spine's vocabularies are closed (cleanup of 2026-11-07): a value outside them is a
+# typo, and the edition builders read these columns to shape every entry.
+stopifnot(
+  all(entries$class %in% c("quantity", "description", "interpretation", "definition", "label", "float", "cross_reference", "wording", "spelling", "typography", "bibliographic")),
+  all(entries$form %in% c("full", "brief", "note")),
+  all(entries$source %in% c("pipeline", "reading", "reference_audit", "publisher_record", "authors_archive", "proof"))
+)
 write_csv(entries, here("errata_entries.csv"))
 ```

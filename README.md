@@ -18,8 +18,8 @@
     - [What it moves](#what-it-moves)
     - [One inconsistency this does not
       resolve](#one-inconsistency-this-does-not-resolve)
-  - [Entries 3 and 6 through 10: eight claims in the article’s
-    prose](#entries-3-and-6-through-10-eight-claims-in-the-articles-prose)
+  - [Entries 3 and 4 through 10: eight claims in the article’s
+    prose](#entries-3-and-4-through-10-eight-claims-in-the-articles-prose)
   - [Two appendix cells the deposit does not
     support](#two-appendix-cells-the-deposit-does-not-support)
 - [Number-by-number comparison](#number-by-number-comparison)
@@ -456,9 +456,9 @@ probability anywhere to resolve it against, and the case is left exactly
 as deposited. The three democratization cases of the same shape are
 corrected above, because for those a stated probability exists.
 
-## Entries 3 and 6 through 10: eight claims in the article’s prose
+## Entries 3 and 4 through 10: eight claims in the article’s prose
 
-**Entry 7, the toy example’s treated outcomes.** The text introducing
+**Entry 5, the toy example’s treated outcomes.** The text introducing
 the toy example says “the outcome for three of the treated units and one
 of the untreated units is 1”. Table 3 on the facing page shows units 1
 through 4 treated with an observed outcome of 1, which is four, and the
@@ -466,7 +466,7 @@ deposited `Y <- rep(c(1, 0, 1, 0), c(4, 3, 1, 2))` encodes four. Four is
 also what the bounds require: the initial bounds of \[-40, 60\] follow
 from four treated ones and would be \[-50, 50\] with three.
 
-**Entry 8, the probabilistic extension’s probabilities.** The text says
+**Entry 6, the probabilistic extension’s probabilities.** The text says
 that instead of imputing 0 for units 6 and 7, “we think the
 probabilities of being a ‘1’ for units 6 and 7 are .3 and .4”. Table 4
 gives the four scenario probabilities as 0.56, 0.14, 0.24 and 0.06,
@@ -474,7 +474,7 @@ which is the product distribution of 0.2 and 0.3, not of 0.3 and 0.4,
 which would give 0.42, 0.18, 0.28 and 0.12. The deposited `table_4.R`
 uses 0.2 and 0.3 and reproduces Table 4 exactly, as does the rewrite.
 
-**Entry 9, Appendix A’s bounds width.** Appendix A says the imputations
+**Entry 7, Appendix A’s bounds width.** Appendix A says the imputations
 shrink “the width of the extreme value bounds from 100 to 41 points” and
 then, in the next sentence, that “the bounds come to \[-3, 42\] (only 45
 points wide)”. Both cannot hold. The pipeline gives final
@@ -482,14 +482,14 @@ end-of-conflict bounds of \[-2.9, 41.5\], a width of 44.4 points, which
 rounds to 44 and which is 45 if taken as the difference of the rounded
 endpoints, as the second sentence does. The 41 matches nothing.
 
-**Entry 6, how the 63 missing potential outcomes were imputed.** The
+**Entry 4, how the 63 missing potential outcomes were imputed.** The
 empirical section says “for all 63 unobserved potential outcomes, we
 imputed 5 with certainty, 26 probabilistically and we left 32
 unimputed”. Neither number holds under either reading of the data, as
 set out above. The 32 left unimputed and the 31 imputed in total are
 right.
 
-**Entry 10, the count of disbanded and discredited cases.** Step 1 names
+**Entry 8, the count of disbanded and discredited cases.** Step 1 names
 two democratization cases, Bolivia and the Philippines, then says in the
 next sentence that “the observed outcome $Y_i(0)$ in each of these four
 cases was 0”. Appendix Table B.2 lists two cases at that step. Appendix
