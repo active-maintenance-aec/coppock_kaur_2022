@@ -20,8 +20,8 @@
       resolve](#one-inconsistency-this-does-not-resolve)
   - [Entries 3 and 4 through 10: eight claims in the article’s
     prose](#entries-3-and-4-through-10-eight-claims-in-the-articles-prose)
-  - [Two appendix cells the deposit does not
-    support](#two-appendix-cells-the-deposit-does-not-support)
+  - [Two appendix cells the deposit does not support, and two it
+    transposes](#two-appendix-cells-the-deposit-does-not-support-and-two-it-transposes)
 - [Number-by-number comparison](#number-by-number-comparison)
   - [Coverage](#coverage)
   - [Appendix Tables B.1 and B.2](#appendix-tables-b1-and-b2)
@@ -343,7 +343,7 @@ disagreement rather than failing on it.
 Nothing in the deposited code is wrong. The deposited data are wrong in
 seven cells, and eight claims in the article’s prose, spread over six
 sentences, are wrong on the article’s own terms. All of it is set out
-with corrected sentences and corrected floats as twenty-one numbered
+with corrected sentences and corrected floats as twenty-two numbered
 entries in `coppock_kaur_2022_errata.pdf` at the root of this
 repository. None of it changes a conclusion. The sections below carry
 the note’s numbering.
@@ -500,7 +500,7 @@ where the count appears to have come from.
 point effect on return to authoritarianism.” That is what the deposited
 data give; it is -22.5 under the appendix C probabilities.
 
-## Two appendix cells the deposit does not support
+## Two appendix cells the deposit does not support, and two it transposes
 
 Appendix Tables B.1 and B.2 print the full case datasets, 763 cells
 between them, and the deposited case file reproduces 761.
@@ -512,13 +512,39 @@ data carry 0.8. Deposit and appendix agree here, so there is nothing to
 correct in the data; the table cell is the outlier and no bound is
 affected.
 
-**Azerbaijan’s observed outcome.** Table B.2 prints an observed outcome
-of 0 for Azerbaijan (1991-1992), consistent with the untreated potential
-outcome of 0 printed beside it. The deposited `outcome` column records 1
-for that case while its `y0_obs` column records 0, so the deposit
-contradicts the switching equation for this one case. Nothing in the
-analysis reads the `outcome` column, so nothing published depends on it,
-and the table matches what the analysis used.
+**Azerbaijan’s observed outcome (entry 11).** Table B.2 prints an
+observed outcome of 0 for Azerbaijan (1991-1992), consistent with the
+untreated potential outcome of 0 printed beside it. The deposited
+`outcome` column records 1 for that case, and 1 is right, as the next
+paragraph shows.
+
+**Azerbaijan’s and Bangladesh’s revealed untreated outcomes (entry
+22).** An untreated case reveals $Y_i(0)$, so its observed outcome and
+its `y0` columns must agree. In the deposit they disagree for two
+democratization cases, in opposite directions: Azerbaijan (1991-1992)
+has `outcome` 1 and `y0_obs` 0, and Bangladesh (1982-1990) has `outcome`
+0 and `y0_obs` 1. The article codes the outcome 1 when authoritarianism
+resumes within 10 years of the transition, and Polity IV, from which the
+case universe was drawn, settles both: Azerbaijan’s polity score falls
+from 1 in 1992 to -3 in 1993, and Bangladesh’s holds at 6 from 1991
+through 2006 and falls only in 2007. The `outcome` column is right and
+the `y0` columns, which the analysis reads, carry the two values
+transposed. Table B.2 prints the `y0` values as the deposit holds them,
+in both its $Y_i(0)$ and $\tilde{Y}_i(0)$ columns. **The rewrite
+corrects both** in a second section of
+`maintained/apply_appendix_c_corrections.R`, which asserts the deposited
+value in every column that carries the revealed $Y_i(0)$ before
+overwriting it, writes `output/revealed_outcome_corrections.csv`, and
+then asserts that the switching equation holds for every case in both
+samples. Both cases are left unimputed, so each enters the analysis
+through this value alone, and because the two values are swapped the sum
+of the untreated outcomes is unchanged: every table, figure, and in-text
+quantity the pipeline writes is byte-identical with and without the
+correction. `table_b1_b2_case_dataset.R` still compares the published
+table against the deposit, so the comparison counts below are
+unaffected. Earlier versions of this report described Azerbaijan as the
+only case breaking the switching equation; the column that script writes
+had flagged Bangladesh as well.
 
 # Number-by-number comparison
 
@@ -827,10 +853,12 @@ paper’s contribution and are carried over with their logic unchanged;
 what changes is the tidyverse around them. The first exception is
 `apply_appendix_c_corrections.R`, which restores the 7 imputation
 probabilities the deposit transcribes differently from the appendix that
-states them. The second is that the four bounds figures enumerate the
-distribution of each bound with `bounds_distribution()` rather than
-sampling it with `sample_bounds()`, which is the same quantity computed
-exactly instead of estimated. Both are described in the sections above.
+states them, and corrects the two revealed untreated outcomes the
+deposit transposes between Azerbaijan and Bangladesh. The second is that
+the four bounds figures enumerate the distribution of each bound with
+`bounds_distribution()` rather than sampling it with `sample_bounds()`,
+which is the same quantity computed exactly instead of estimated. Both
+are described in the sections above.
 
 ## Architecture
 
@@ -1001,13 +1029,13 @@ and both reproduce.
 | tidyverse  | 2.0.0   |
 | here       | 1.0.2   |
 | janitor    | 2.2.1   |
-| knitr      | 1.51    |
-| kableExtra | 1.4.0   |
+| knitr      | 1.52    |
+| kableExtra | 1.4.1   |
 | ggplot2    | 4.0.3   |
 | dplyr      | 1.2.1   |
 | tidyr      | 1.3.2   |
 
 Package versions used for this report.
 
-R version: R version 4.6.1 (2026-06-24). The archive was written against
+R version: R version 4.6.2 (2026-10-29). The archive was written against
 R 4.1.2.

@@ -50,8 +50,11 @@ table_b1_b2 <- dat |>
 
 # The switching equation is what makes the observed column meaningful: an untreated
 # case reveals Yi(0) and a treated case reveals Yi(1), and either way the revealed
-# potential outcome is the observed outcome. One deposited case breaks it, so this
-# is recorded as a column rather than asserted.
+# potential outcome is the observed outcome. Two deposited cases break it,
+# Azerbaijan (1991-1992) and Bangladesh (1982-1990), whose revealed untreated
+# outcomes are transposed between them; apply_appendix_c_corrections.R corrects
+# them in the case file the analysis reads. This table answers to the deposit, so
+# the check is recorded as a column rather than asserted.
 table_b1_b2 <- table_b1_b2 |>
   mutate(switching_holds = observed == Y)
 

@@ -1,5 +1,6 @@
 # coppock_kaur_2022/maintained/apply_appendix_c_corrections.R
-# Output: output/cases_corrected.rds, output/appendix_c_corrections.csv
+# Output: output/cases_corrected.rds, output/appendix_c_corrections.csv,
+#   output/revealed_outcome_corrections.csv
 # Depends on: helpers.R, original/replication_archive/cases_clean.csv
 # Description: The imputed potential outcomes in this article are not
 #   measurements. They are qualitative judgments, written out case by case in
@@ -21,6 +22,12 @@
 #   `probability` repeats it. Every one of those columns is corrected, and the
 #   deposited value in each is asserted before it is overwritten, so a change to
 #   the deposit would stop the run rather than be silently absorbed.
+#
+#   The second section corrects two observed values rather than imputed ones.
+#   Azerbaijan (1991-1992) and Bangladesh (1982-1990) carry revealed untreated
+#   outcomes transposed between them: each case's y0 columns hold the other's
+#   value, while the deposited `outcome` column holds the right one. See that
+#   section for the evidence.
 
 source(here::here("maintained", "helpers.R"))
 
@@ -85,7 +92,65 @@ for (i in seq_len(nrow(appendix_c_corrections))) {
 
 print(as.data.frame(appendix_c_corrections))
 
+# Revealed untreated outcomes ----
+# An untreated case reveals Yi(0), so its observed outcome and its y0 columns must
+# agree. In two democratization cases they do not, and in opposite directions. The
+# article codes the outcome 1 when authoritarianism resumes within 10 years of the
+# transition, and Polity IV, from which the case universe was drawn, settles both:
+# Azerbaijan's polity score falls from 1 in 1992 to -3 in 1993, a return to
+# authoritarianism within a year, and Bangladesh's stays at 6 from 1991 to 2006,
+# falling only in 2007, seventeen years after the transition. The deposited
+# `outcome` column records 1 and 0 accordingly; the y0 columns, which are what
+# the analysis reads, carry 0 and 1. Both cases are left unimputed, so each
+# contributes its revealed Y0 alone, and because the two values are swapped
+# rather than both wrong in one direction, the sum of the untreated outcomes is
+# unchanged and no bound moves at any step.
+revealed_outcome_corrections <- tribble(
+  ~location, ~conflict_start, ~conflict_end, ~deposited_y0, ~corrected_y0,
+  "Azerbaijan", 1991, 1992, 0, 1,
+  "Bangladesh", 1982, 1990, 1, 0
+)
+
+# Every column that carries the revealed Yi(0): the observed value, its copy at
+# each imputation step, the expert and combined versions the cleaning script
+# copies it into, and the probability columns, which hold an observed value as a
+# probability of 0 or 1.
+y0_columns <- c(
+  "y0_obs", str_c("y0_s", 0:4), "y0_expert", "y0_combined",
+  str_c("y0_s", 0:4, "_prob"), "y0_expert_prob"
+)
+
+for (i in seq_len(nrow(revealed_outcome_corrections))) {
+  correction <- revealed_outcome_corrections[i, ]
+
+  row <- which(
+    cases_corrected$location == correction$location &
+      cases_corrected$conflict_start == correction$conflict_start &
+      cases_corrected$conflict_end == correction$conflict_end
+  )
+  stopifnot(
+    length(row) == 1,
+    cases_corrected$transition_fac[row] == "Democratization",
+    cases_corrected$treatment[row] == 0,
+    is.na(cases_corrected$y1_s4[row]),
+    cases_corrected$outcome[row] == correction$corrected_y0,
+    all(map_dbl(y0_columns, \(column) cases_corrected[[column]][row]) ==
+          correction$deposited_y0)
+  )
+
+  for (column in y0_columns) {
+    cases_corrected[[column]][row] <- correction$corrected_y0
+  }
+}
+
+# After the correction the switching equation holds for every case in both samples.
+stopifnot(with(cases_corrected, all(outcome == if_else(treatment == 1, y1_obs, y0_obs))))
+
+print(as.data.frame(revealed_outcome_corrections))
+
 write_csv(appendix_c_corrections,
           here::here("maintained", "output", "appendix_c_corrections.csv"))
+write_csv(revealed_outcome_corrections,
+          here::here("maintained", "output", "revealed_outcome_corrections.csv"))
 write_rds(cases_corrected,
           here::here("maintained", "output", "cases_corrected.rds"))

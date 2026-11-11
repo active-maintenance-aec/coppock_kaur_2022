@@ -15,7 +15,9 @@ source(here::here("download_original.R"))
 # Data ----
 # apply_appendix_c_corrections.R restores the seven imputation probabilities the
 # deposited case file transcribes differently from the appendix C narrative that
-# states them, and writes the corrected case file every script below reads.
+# states them, corrects the two revealed untreated outcomes the deposit transposes
+# between Azerbaijan and Bangladesh, and writes the corrected case file every script
+# below reads.
 source(here::here("maintained", "apply_appendix_c_corrections.R"))
 source(here::here("maintained", "clean_cases.R"))
 

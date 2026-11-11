@@ -50,6 +50,22 @@ stopifnot(nrow(azerbaijan) == 1, nrow(burundi) == 1,
           azerbaijan$Y_published != azerbaijan$Y_rewrite,
           burundi$probability_published != burundi$probability_rewrite)
 
+# The two revealed untreated outcomes transposed between Azerbaijan and Bangladesh. The
+# published side is the transcription of the appendix, which prints the deposit; the
+# corrected side is the value apply_appendix_c_corrections.R restores. The swap is what
+# leaves every bound where it was, so the gate checks it rather than the prose asserting it.
+revealed <- out("revealed_outcome_corrections.csv") |>
+  mutate(case = str_c(location, " (", conflict_start, "-", conflict_end, ")")) |>
+  left_join(appendix_pair |> filter(table == "B.2") |>
+              select(case, observed_published, imputed_y0_published),
+            by = "case", relationship = "one-to-one")
+revealed_az <- revealed |> filter(location == "Azerbaijan")
+revealed_bd <- revealed |> filter(location == "Bangladesh")
+stopifnot(nrow(revealed_az) == 1, nrow(revealed_bd) == 1,
+          all(revealed$observed_published == revealed$deposited_y0),
+          all(as.numeric(revealed$imputed_y0_published) == revealed$deposited_y0),
+          sum(revealed$corrected_y0) == sum(revealed$deposited_y0))
+
 fmt0 <- function(x) sprintf("%.0f", x)
 fmt1 <- function(x) sprintf("%.1f", x)
 
@@ -396,7 +412,8 @@ entries <- tribble(
     "the deposited file both carry {fmt1(burundi$probability_rewrite)}. Neither is the ",
     "transcription the first two entries describe, where the table faithfully prints a ",
     "deposited value that contradicts appendix C: here the table disagrees with the ",
-    "deposit as well. Every other cell of both appendix tables reproduces."),
+    "deposit as well. Every other cell of both appendix tables reproduces. Entry 22 ",
+    "corrects the revealed untreated outcome in the same row."),
   str_c("table_b2|cells_printed_in_the_observed_outcome_column;",
         "table_b2|cells_printed_in_the_imputation_probability_column"),
   NA_character_,
@@ -509,8 +526,38 @@ entries <- tribble(
   "Journal of Educational Psychology 66(5): [[688–701]].",
   str_c("The article runs from 688 to 701 (doi ",
         "[10.1037/h0037350](https://doi.org/10.1037/h0037350))."),
-  ""
-,
+  "",
+  NA_character_,
+
+  # Entry 22 was found on 2026-11-11 while tabulating the democratization cases for a
+  # reader: the switching-equation column table_b1_b2_case_dataset.R writes had flagged
+  # both cases since August, and only Azerbaijan had been read.
+  22, "float", "pipeline", "brief",
+  "Two revealed untreated outcomes transposed in appendix Table B.2",
+  "app. Table B.2",
+  str_glue(
+    "[[Azerbaijan (1991-1992) at a revealed untreated outcome of ",
+    "{fmt0(revealed_az$observed_published)}, and Bangladesh (1982-1990) at ",
+    "{fmt0(revealed_bd$observed_published)}]], in the $Y_i(0)$ column and again in the ",
+    "$\\tilde{{Y}}_i(0)$ column"),
+  str_glue(
+    "[[Azerbaijan (1991-1992) at a revealed untreated outcome of ",
+    "{fmt0(revealed_az$corrected_y0)}, and Bangladesh (1982-1990) at ",
+    "{fmt0(revealed_bd$corrected_y0)}]], in the $Y_i(0)$ column and again in the ",
+    "$\\tilde{{Y}}_i(0)$ column"),
+  str_glue(
+    "The article codes the outcome 1 when authoritarianism resumes within 10 years of the ",
+    "transition. Polity IV, from which the case universe is drawn, records Azerbaijan's polity ",
+    "score falling from 1 in 1992 to -3 in 1993, and Bangladesh's holding at 6 from 1991 through 2006 and falling only in ",
+    "2007, seventeen years after its transition. The deposited `outcome` column records ",
+    "{fmt0(revealed_az$corrected_y0)} and {fmt0(revealed_bd$corrected_y0)} accordingly. The ",
+    "deposit's untreated potential outcome columns, which are what the analysis reads, carry ",
+    "the two values transposed, and the table prints them as the deposit holds them. With ",
+    "entry 11, the corrected Azerbaijan row reads 1 in all three columns. Both cases are left ",
+    "unimputed, so each enters the analysis through this value alone, and because the two are ",
+    "swapped the sum of the untreated outcomes is the same either way: no bound, figure, or ",
+    "table in the article moves."),
+  "",
   NA_character_) |>
   mutate(across(c(title, published, corrected, note, claim_ids, corrected_values),
                 as.character))
@@ -589,11 +636,11 @@ emit <- function(n) {
 
 This note lists `r english_number(nrow(entries))` corrections to "Qualitative Imputation of Missing Potential Outcomes," published in *American Journal of Political Science* 66(3), doi [10.1111/ajps.12697](https://doi.org/10.1111/ajps.12697). **None of them changes a conclusion of the article.** The extreme value bounds on the average treatment effect, which are the article's headline result, are unchanged at [`r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "lower"))`, `r sprintf("%.0f", exact_bound("Democratization", "ATE", "s4", "upper"))`] with a width of `r sprintf("%.0f", ate_width_exact)` points, as are every number in the abstract, the expert survey comparison in Figure 4, Table 5, and every quantity in the end-of-conflict application in Appendix A. **One published quantity does move materially**: the average treatment effect on the treated, which the article summarizes as a `r att_published` percentage point effect and which is `r sprintf("%.1f", att_exact)` points once the imputation probabilities the article's own appendix C states are the ones the analysis uses.
 
-The last ten entries are of a different kind from the eleven before them. Entries 12 to 18 are misspellings, a missing space, a missing full stop, and three defects in the reference list, and they are here because a corrected re-typesetting of the article was prepared, which meant reading every word of it and of its appendix against the published pages. That is a finer sieve than any pass over the analysis, and no error is too small to list. Entries 19 to 21 are reference page ranges printed as a first page alone, found by an audit that checks every entry in the reference list against Crossref.
+Entries 12 to 21 are of a different kind from the eleven before them. Entries 12 to 18 are misspellings, a missing space, a missing full stop, and three defects in the reference list, and they are here because a corrected re-typesetting of the article was prepared, which meant reading every word of it and of its appendix against the published pages. That is a finer sieve than any pass over the analysis, and no error is too small to list. Entries 19 to 21 are reference page ranges printed as a first page alone, found by an audit that checks every entry in the reference list against Crossref.
 
-The first two entries are transcription errors in the deposited case data, and entries 3, 4, 9, and 10 are their consequences. The imputed potential outcomes in this article are not measurements. They are qualitative judgments, set out case by case in appendix C with the reasoning behind each one, and the deposited `cases_clean.csv` is a transcription of those judgments. `r str_to_sentence(english_number(nrow(corrections)))` of its imputation probabilities do not match the probability the appendix C narrative for that case states. Correcting them restores what the article always said it was doing.
+The first two entries are transcription errors in the deposited case data, and entries 3, 4, 9, and 10 are their consequences. The imputed potential outcomes in this article are not measurements. They are qualitative judgments, set out case by case in appendix C with the reasoning behind each one, and the deposited `cases_clean.csv` is a transcription of those judgments. `r str_to_sentence(english_number(nrow(corrections)))` of its imputation probabilities do not match the probability the appendix C narrative for that case states. Correcting them restores what the article always said it was doing. Entry 22 is a third transcription error, in two observed outcomes rather than imputed ones, and it moves no quantity.
 
-Every corrected value is computed at the time this document is rendered, from the deposited replication archive ([10.7910/DVN/2IVKXD](https://doi.org/10.7910/DVN/2IVKXD)) with those `r english_number(nrow(corrections))` probabilities restored. The bounds are computed exactly, where the deposited script estimates them by simulation. It is the same quantity by a different route rather than a different estimator: a bound is affine in the imputed potential outcomes, so the distribution the deposit draws from can be written down and averaged, and the two agree to within the error of the simulation. What computing it exactly changes is that a bound falling exactly halfway between two whole numbers is visible as such, rather than being settled by whichever side an unseeded draw happened to land on. The code supporting each correction is at [github.com/active-maintenance-aec/coppock_kaur_2022](https://github.com/active-maintenance-aec/coppock_kaur_2022). Bold marks the values that change; unbolded numbers are recomputed rather than copied, so a reader diffing published against corrected sees every quantity verified and not only the ones at issue.
+Every corrected value is computed at the time this document is rendered, from the deposited replication archive ([10.7910/DVN/2IVKXD](https://doi.org/10.7910/DVN/2IVKXD)) with those `r english_number(nrow(corrections))` probabilities restored and the two outcomes of entry 22 corrected. The bounds are computed exactly, where the deposited script estimates them by simulation. It is the same quantity by a different route rather than a different estimator: a bound is affine in the imputed potential outcomes, so the distribution the deposit draws from can be written down and averaged, and the two agree to within the error of the simulation. What computing it exactly changes is that a bound falling exactly halfway between two whole numbers is visible as such, rather than being settled by whichever side an unseeded draw happened to land on. The code supporting each correction is at [github.com/active-maintenance-aec/coppock_kaur_2022](https://github.com/active-maintenance-aec/coppock_kaur_2022). Bold marks the values that change; unbolded numbers are recomputed rather than copied, so a reader diffing published against corrected sees every quantity verified and not only the ones at issue.
 
 ```{r entry-1-heading, results="asis"}
 emit_heading(1, lead = str_glue(
@@ -761,6 +808,10 @@ walk(12:18, emit)
 ```{r entries-19-to-21, results="asis"}
 # Three reference page ranges printed as a first page alone, found by the reference audit.
 walk(19:21, emit)
+```
+
+```{r entry-22, results="asis"}
+emit(22)
 ```
 
 ```{r emit-spine}
