@@ -392,7 +392,9 @@ they do.
 
 **The rewrite uses the values appendix C states.**
 `maintained/apply_appendix_c_corrections.R` is a visible, named step
-that writes both the corrected case file every analysis script reads and
+that writes both the corrected case file every analysis script reads (as
+`output/cases_corrected.rds`, and as `output/cases_corrected.csv` for
+anyone who wants the corrected data without running R) and
 `output/appendix_c_corrections.csv`, the table above, so the deposited
 value sits beside the value that replaced it. It asserts the deposited
 value in every column it touches before overwriting it, so a change to

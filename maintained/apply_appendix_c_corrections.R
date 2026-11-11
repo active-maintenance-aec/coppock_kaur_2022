@@ -1,6 +1,6 @@
 # coppock_kaur_2022/maintained/apply_appendix_c_corrections.R
-# Output: output/cases_corrected.rds, output/appendix_c_corrections.csv,
-#   output/revealed_outcome_corrections.csv
+# Output: output/cases_corrected.rds and the same data as output/cases_corrected.csv,
+#   output/appendix_c_corrections.csv, output/revealed_outcome_corrections.csv
 # Depends on: helpers.R, original/replication_archive/cases_clean.csv
 # Description: The imputed potential outcomes in this article are not
 #   measurements. They are qualitative judgments, written out case by case in
@@ -152,5 +152,9 @@ write_csv(appendix_c_corrections,
           here::here("maintained", "output", "appendix_c_corrections.csv"))
 write_csv(revealed_outcome_corrections,
           here::here("maintained", "output", "revealed_outcome_corrections.csv"))
+# The corrected case file as a CSV too, in the deposit's own columns, for readers who
+# want the data without running R.
+write_csv(cases_corrected,
+          here::here("maintained", "output", "cases_corrected.csv"))
 write_rds(cases_corrected,
           here::here("maintained", "output", "cases_corrected.rds"))
