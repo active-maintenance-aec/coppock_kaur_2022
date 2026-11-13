@@ -1,0 +1,11 @@
+pass,script,role,exit_status,outcome,stopped_at
+as_shipped,table_3_figure_1.R,analysis,0,clean,NA
+as_shipped,table_4.R,analysis,0,clean,NA
+as_shipped,figures_2_3_A1_A2.R,analysis,0,clean,NA
+as_shipped,table_5.R,analysis,0,clean,NA
+as_shipped,figure_4.R,analysis,0,clean,NA
+stripped,table_3_figure_1.R,analysis,0,clean,NA
+stripped,table_4.R,analysis,0,clean,NA
+stripped,figures_2_3_A1_A2.R,analysis,0,clean,NA
+stripped,table_5.R,analysis,0,clean,NA
+stripped,figure_4.R,analysis,0,clean,NA

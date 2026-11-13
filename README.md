@@ -33,7 +33,10 @@
 - [In-text quantities](#in-text-quantities)
 - [R environment](#r-environment)
 
-**Archived at Zenodo:** [doi:10.5281/zenodo.24168367](https://doi.org/10.5281/zenodo.24168367). This DOI always resolves to the latest release of the maintained version.
+**Archived at Zenodo:**
+[doi:10.5281/zenodo.24168367](https://doi.org/10.5281/zenodo.24168367).
+This DOI always resolves to the latest release of the maintained
+version.
 
 *Drafted by Claude Opus 5 under the supervision of Alex Coppock.*
 
@@ -65,10 +68,16 @@ code that produces it: `published_claims.csv` is the exhaustive list of
 numbers the article and its supporting information print, the ground
 truth CSV is the comparison against the deposit and against the rewrite,
 and `build_ground_truth.R` is the gate that stops the run if a published
-number is checked by neither instrument. `coppock_kaur_2022_errata.pdf`
-at the root lists the numbers in the article that its own tables,
-appendix and data do not support. `original/` is created by the download
-script and is deliberately absent from the repository. This file is the
+number is checked by neither instrument; it also writes
+`float_coverage.csv`, a count of the numbers each published table and
+figure prints and how many of them are reproduced. `run_archive.R` runs
+the deposited scripts on their own and records the outcome of each in
+`archive_run_status.csv` and every file a run writes in
+`archive_overwrites.csv`; it is not part of `run_all.R`, because it
+needs the deposit’s own packages. `coppock_kaur_2022_errata.pdf` at the
+root lists the numbers in the article that its own tables, appendix and
+data do not support. `original/` is created by the download script and
+is deliberately absent from the repository. This file is the
 reproducibility report, also available as a PDF in `report/`.
 
 **License.** CC0 1.0 Universal, matching the terms of the deposit this
@@ -554,238 +563,238 @@ had flagged Bangladesh as well.
 
 | Location | Quantity | Paper | Archive | Rewrite | Match | Match (rw) |
 |:---|:---|:---|:---|:---|:---|:---|
-| table_3 | column d | 1,1,1,1,1,1,1,0,0,0 | 1,1,1,1,1,1,1,0,0,0 | 1,1,1,1,1,1,1,0,0,0 | 1 | 1 |
-| table_3 | column Y | 1,1,1,1,0,0,0,1,0,0 | 1,1,1,1,0,0,0,1,0,0 | 1,1,1,1,0,0,0,1,0,0 | 1 | 1 |
-| table_3 | column Y0_initial | ?,?,?,?,?,?,?,1,0,0 | ?,?,?,?,?,?,?,1,0,0 | ?,?,?,?,?,?,?,1,0,0 | 1 | 1 |
-| table_3 | column Y1_initial | 1,1,1,1,0,0,0,?,?,? | 1,1,1,1,0,0,0,?,?,? | 1,1,1,1,0,0,0,?,?,? | 1 | 1 |
-| table_3 | column Y0_easy | 1,1,?,?,0,?,?,1,0,0 | 1,1,?,?,0,?,?,1,0,0 | 1,1,?,?,0,?,?,1,0,0 | 1 | 1 |
-| table_3 | column Y1_easy | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1 | 1 |
-| table_3 | column Y0_nulls | 1,1,?,?,0,0,0,1,0,0 | 1,1,?,?,0,0,0,1,0,0 | 1,1,?,?,0,0,0,1,0,0 | 1 | 1 |
-| table_3 | column Y1_nulls | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1 | 1 |
-| table_3 | column Y0_hard | 1,1,0,0,0,0,0,1,0,0 | 1,1,0,0,0,0,0,1,0,0 | 1,1,0,0,0,0,0,1,0,0 | 1 | 1 |
-| table_3 | column Y1_hard | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1 | 1 |
-| table_3 | EV bounds low, Initial Values | -40 | -40 | -40 | 1 | 1 |
-| table_3 | EV bounds high, Initial Values | 60 | 60 | 60 | 1 | 1 |
-| table_3 | EV bounds low, Easy Cases | -20 | -20 | -20 | 1 | 1 |
-| table_3 | EV bounds high, Easy Cases | 30 | 30 | 30 | 1 | 1 |
-| table_3 | EV bounds low, Nulls for 6&7 | 0 | 0 | 0 | 1 | 1 |
-| table_3 | EV bounds high, Nulls for 6&7 | 30 | 30 | 30 | 1 | 1 |
-| table_3 | EV bounds low, Hard Cases | 20 | 20 | 20 | 1 | 1 |
-| table_3 | EV bounds high, Hard Cases | 30 | 30 | 30 | 1 | 1 |
-| figure_1 | low bound, Before Any Data | -100 | -100 | -100 | 1 | 1 |
-| figure_1 | high bound, Before Any Data | 100 | 100 | 100 | 1 | 1 |
-| figure_1 | low bound, Initial Values | -40 | -40 | -40 | 1 | 1 |
-| figure_1 | high bound, Initial Values | 60 | 60 | 60 | 1 | 1 |
-| figure_1 | low bound, Easy Cases | -20 | -20 | -20 | 1 | 1 |
-| figure_1 | high bound, Easy Cases | 30 | 30 | 30 | 1 | 1 |
-| figure_1 | low bound, Nulls for 6&7 | 0 | 0 | 0 | 1 | 1 |
-| figure_1 | high bound, Nulls for 6&7 | 30 | 30 | 30 | 1 | 1 |
-| figure_1 | low bound, Hard Cases | 20 | 20 | 20 | 1 | 1 |
-| figure_1 | high bound, Hard Cases | 30 | 30 | 30 | 1 | 1 |
-| table_4 | EV bounds low, unit 6 = 0, unit 7 = 0 | 0 | 0 | 0 | 1 | 1 |
-| table_4 | EV bounds high, unit 6 = 0, unit 7 = 0 | 30 | 30 | 30 | 1 | 1 |
-| table_4 | probability, unit 6 = 0, unit 7 = 0 | 0.56 | 0.56 | 0.56 | 1 | 1 |
-| table_4 | EV bounds low, unit 6 = 1, unit 7 = 0 | -10 | -10 | -10 | 1 | 1 |
-| table_4 | EV bounds high, unit 6 = 1, unit 7 = 0 | 20 | 20 | 20 | 1 | 1 |
-| table_4 | probability, unit 6 = 1, unit 7 = 0 | 0.14 | 0.14 | 0.14 | 1 | 1 |
-| table_4 | EV bounds low, unit 6 = 0, unit 7 = 1 | -10 | -10 | -10 | 1 | 1 |
-| table_4 | EV bounds high, unit 6 = 0, unit 7 = 1 | 20 | 20 | 20 | 1 | 1 |
-| table_4 | probability, unit 6 = 0, unit 7 = 1 | 0.24 | 0.24 | 0.24 | 1 | 1 |
-| table_4 | EV bounds low, unit 6 = 1, unit 7 = 1 | -20 | -20 | -20 | 1 | 1 |
-| table_4 | EV bounds high, unit 6 = 1, unit 7 = 1 | 10 | 10 | 10 | 1 | 1 |
-| table_4 | probability, unit 6 = 1, unit 7 = 1 | 0.06 | 0.06 | 0.06 | 1 | 1 |
-| table_4 | probability-weighted point estimate, lower bound | -5 |  | -5 |  | 1 |
-| table_4 | probability-weighted point estimate, upper bound | 25 |  | 25 |  | 1 |
-| table_4 | 2.5th quantile of the lower bound | -20 |  | -20 |  | 1 |
-| table_4 | 97.5th quantile of the lower bound | 0 |  | 0 |  | 1 |
-| table_4 | 2.5th quantile of the upper bound | 10 |  | 10 |  | 1 |
-| table_4 | 97.5th quantile of the upper bound | 30 |  | 30 |  | 1 |
-| table_4 | probability that unit 6 has Y0 = 1 | 0.3 | 0.2 | 0.2 | 0 | 0 |
-| table_4 | probability that unit 7 has Y0 = 1 | 0.4 | 0.3 | 0.3 | 0 | 0 |
-| table_5 | democratization, Negative Effect | 2% (1) | 2% (1) | 2% (1) | 1 | 1 |
-| table_5 | end of conflict, Negative Effect |  | 0% (0) | 0% (0) |  |  |
-| table_5 | democratization, No Effect | 40% (25) | 40% (25) | 40% (25) | 1 | 1 |
-| table_5 | end of conflict, No Effect |  | 43% (23) | 43% (23) |  |  |
-| table_5 | democratization, Positive Effect | 8% (5) | 8% (5) | 8% (5) | 1 | 1 |
-| table_5 | end of conflict, Positive Effect |  | 13% (7) | 13% (7) |  |  |
-| table_5 | democratization, Unimputed | 51% (32) | 51% (32) | 51% (32) | 1 | 1 |
-| table_5 | end of conflict, Unimputed |  | 44% (24) | 44% (24) |  |  |
-| figure_2 | low bound, Before Any Data | -100 | -100 | -100 | 1 | 1 |
-| figure_2 | high bound, Before Any Data | 100 | 100 | 100 | 1 | 1 |
-| figure_2 | low bound, Initial Values | -25 | -25 | -25 | 1 | 1 |
-| figure_2 | high bound, Initial Values | 75 | 75 | 75 | 1 | 1 |
-| figure_2 | low bound, Disbanded and Discredited Cases | -25 | -25 | -25 | 1 | 1 |
-| figure_2 | high bound, Disbanded and Discredited Cases | 72 | 72 | 72 | 1 | 1 |
-| figure_2 | low bound, Treated Cases | -16 | -16 | -17 | 1 | 0 |
-| figure_2 | high bound, Treated Cases | 68 | 68 | 67 | 1 | 0 |
-| figure_2 | low bound, Non-transitional Cases | -12 | -12 | -13 | 1 | 0 |
-| figure_2 | high bound, Non-transitional Cases | 62 | 62 | 61 | 1 | 0 |
-| figure_2 | low bound, Untreated Cases | -2 | -2 | -2 | 1 | 1 |
-| figure_2 | high bound, Untreated Cases | 49 | 49 | 49 | 1 | 1 |
-| figure_2 | low bound, Unimputable Cases | -2 | -2 | -2 | 1 | 1 |
-| figure_2 | high bound, Unimputable Cases | 49 | 49 | 49 | 1 | 1 |
-| figure_a1 | low bound, Before Any Data | -100 | -100 | -100 | 1 | 1 |
-| figure_a1 | high bound, Before Any Data | 100 | 100 | 100 | 1 | 1 |
-| figure_a1 | low bound, Initial Values | -33 | -33 | -33 | 1 | 1 |
-| figure_a1 | high bound, Initial Values | 67 | 67 | 67 | 1 | 1 |
-| figure_a1 | low bound, Disbanded and Discredited Cases | -32 | -32 | -32 | 1 | 1 |
-| figure_a1 | high bound, Disbanded and Discredited Cases | 61 | 61 | 61 | 1 | 1 |
-| figure_a1 | low bound, Treated Cases | -26 | -26 | -26 | 1 | 1 |
-| figure_a1 | high bound, Treated Cases | 56 | 56 | 56 | 1 | 1 |
-| figure_a1 | low bound, Non-transitional Cases | -24 | -24 | -24 | 1 | 1 |
-| figure_a1 | high bound, Non-transitional Cases | 54 | 54 | 54 | 1 | 1 |
-| figure_a1 | low bound, Untreated Cases | -3 | -3 | -3 | 1 | 1 |
-| figure_a1 | high bound, Untreated Cases | 42 | 42 | 42 | 1 | 1 |
-| figure_a1 | low bound, Unimputable Cases | -3 | -3 | -3 | 1 | 1 |
-| figure_a1 | high bound, Unimputable Cases | 42 | 42 | 42 | 1 | 1 |
-| figure_3 | low bound, ATU, Before Any Data | -100 | -100 | -100 | 1 | 1 |
-| figure_3 | high bound, ATU, Before Any Data | 100 | 100 | 100 | 1 | 1 |
-| figure_3 | low bound, ATU, Initial Values | -16 | -16 | -16 | 1 | 1 |
-| figure_3 | high bound, ATU, Initial Values | 84 | 84 | 84 | 1 | 1 |
-| figure_3 | low bound, ATU, Disbanded and Discredited Cases | -16 | -16 | -16 | 1 | 1 |
-| figure_3 | high bound, ATU, Disbanded and Discredited Cases | 80 | 80 | 80 | 1 | 1 |
-| figure_3 | low bound, ATU, Treated Cases | -16 | -16 | -16 | 1 | 1 |
-| figure_3 | high bound, ATU, Treated Cases | 80 | 80 | 80 | 1 | 1 |
-| figure_3 | low bound, ATU, Non-transitional Cases | -12 | -12 | -12 | 1 | 1 |
-| figure_3 | high bound, ATU, Non-transitional Cases | 74 | 74 | 74 | 1 | 1 |
-| figure_3 | low bound, ATU, Untreated Cases | 0 | 0 | 1 | 1 | 0 |
-| figure_3 | high bound, ATU, Untreated Cases | 58 | 58 | 60 | 1 | 0 |
-| figure_3 | low bound, ATU, Unimputable Cases | 0 | 0 | 1 | 1 | 0 |
-| figure_3 | high bound, ATU, Unimputable Cases | 58 | 58 | 60 | 1 | 0 |
-| figure_3 | low bound, ATT, Before Any Data | -100 | -100 | -100 | 1 | 1 |
-| figure_3 | high bound, ATT, Before Any Data | 100 | 100 | 100 | 1 | 1 |
-| figure_3 | low bound, ATT, Initial Values | -88 | -88 | -87.5 | 1 | 1 |
-| figure_3 | high bound, ATT, Initial Values | 12 | 12 | 12.5 | 1 | 1 |
-| figure_3 | low bound, ATT, Disbanded and Discredited Cases | -88 | -88 | -87.5 | 1 | 1 |
-| figure_3 | high bound, ATT, Disbanded and Discredited Cases | 12 | 12 | 12.5 | 1 | 1 |
-| figure_3 | low bound, ATT, Treated Cases | -15 | -15 | -22.5 | 1 | 0 |
-| figure_3 | high bound, ATT, Treated Cases | -15 | -15 | -22.5 | 1 | 0 |
-| figure_3 | low bound, ATT, Non-transitional Cases | -15 | -15 | -22.5 | 1 | 0 |
-| figure_3 | high bound, ATT, Non-transitional Cases | -15 | -15 | -22.5 | 1 | 0 |
-| figure_3 | low bound, ATT, Untreated Cases | -15 | -15 | -22.5 | 1 | 0 |
-| figure_3 | high bound, ATT, Untreated Cases | -15 | -15 | -22.5 | 1 | 0 |
-| figure_3 | low bound, ATT, Unimputable Cases | -15 | -15 | -22.5 | 1 | 0 |
-| figure_3 | high bound, ATT, Unimputable Cases | -15 | -15 | -22.5 | 1 | 0 |
-| figure_a2 | low bound, ATU, Before Any Data | -100 | -100 | -100 | 1 | 1 |
-| figure_a2 | high bound, ATU, Before Any Data | 100 | 100 | 100 | 1 | 1 |
-| figure_a2 | low bound, ATU, Initial Values | -29 | -29 | -29 | 1 | 1 |
-| figure_a2 | high bound, ATU, Initial Values | 71 | 71 | 71 | 1 | 1 |
-| figure_a2 | low bound, ATU, Disbanded and Discredited Cases | -27 | -27 | -27.5 | 1 | 1 |
-| figure_a2 | high bound, ATU, Disbanded and Discredited Cases | 64 | 64 | 64 | 1 | 1 |
-| figure_a2 | low bound, ATU, Treated Cases | -27 | -27 | -27.5 | 1 | 1 |
-| figure_a2 | high bound, ATU, Treated Cases | 64 | 64 | 64 | 1 | 1 |
-| figure_a2 | low bound, ATU, Non-transitional Cases | -26 | -26 | -26 | 1 | 1 |
-| figure_a2 | high bound, ATU, Non-transitional Cases | 62 | 62 | 62 | 1 | 1 |
-| figure_a2 | low bound, ATU, Untreated Cases | -2 | -2 | -2 | 1 | 1 |
-| figure_a2 | high bound, ATU, Untreated Cases | 48 | 48 | 48 | 1 | 1 |
-| figure_a2 | low bound, ATU, Unimputable Cases | -2 | -2 | -2 | 1 | 1 |
-| figure_a2 | high bound, ATU, Unimputable Cases | 48 | 48 | 48 | 1 | 1 |
-| figure_a2 | low bound, ATT, Before Any Data | -100 | -100 | -100 | 1 | 1 |
-| figure_a2 | high bound, ATT, Before Any Data | 100 | 100 | 100 | 1 | 1 |
-| figure_a2 | low bound, ATT, Initial Values | -67 | -67 | -67 | 1 | 1 |
-| figure_a2 | high bound, ATT, Initial Values | 33 | 33 | 33 | 1 | 1 |
-| figure_a2 | low bound, ATT, Disbanded and Discredited Cases | -67 | -67 | -67 | 1 | 1 |
-| figure_a2 | high bound, ATT, Disbanded and Discredited Cases | 33 | 33 | 33 | 1 | 1 |
-| figure_a2 | low bound, ATT, Treated Cases | -10 | -10 | -10 | 1 | 1 |
-| figure_a2 | high bound, ATT, Treated Cases | -10 | -10 | -10 | 1 | 1 |
-| figure_a2 | low bound, ATT, Non-transitional Cases | -10 | -10 | -10 | 1 | 1 |
-| figure_a2 | high bound, ATT, Non-transitional Cases | -10 | -10 | -10 | 1 | 1 |
-| figure_a2 | low bound, ATT, Untreated Cases | -10 | -10 | -10 | 1 | 1 |
-| figure_a2 | high bound, ATT, Untreated Cases | -10 | -10 | -10 | 1 | 1 |
-| figure_a2 | low bound, ATT, Unimputable Cases | -10 | -10 | -10 | 1 | 1 |
-| figure_a2 | high bound, ATT, Unimputable Cases | -10 | -10 | -10 | 1 | 1 |
-| figure_4 | low bound, us, The 20 Cases with Expert Responses | -10 | -10 | -10 | 1 | 1 |
-| figure_4 | high bound, us, The 20 Cases with Expert Responses | 40 | 40 | 40 | 1 | 1 |
-| figure_4 | low bound, expert, The 20 Cases with Expert Responses | -15 | -15 | -15 | 1 | 1 |
-| figure_4 | high bound, expert, The 20 Cases with Expert Responses | 15 | 15 | 15 | 1 | 1 |
-| figure_4 | low bound, us, All 63 Democratization Cases | -2 | -2 | -2 | 1 | 1 |
-| figure_4 | high bound, us, All 63 Democratization Cases | 49 | 49 | 49 | 1 | 1 |
-| figure_4 | low bound, expert, All 63 Democratization Cases | -19 | -19 | -19 | 1 | 1 |
-| figure_4 | high bound, expert, All 63 Democratization Cases | 59 | 59 | 59 | 1 | 1 |
-| figure_4 | low bound, combined, All 63 Democratization Cases | -3 | -3 | -3 | 1 | 1 |
-| figure_4 | high bound, combined, All 63 Democratization Cases | 41 | 41 | 41 | 1 | 1 |
-| abstract | bounds width prior to any analysis | 100 | 100 | 100 | 1 | 1 |
-| abstract | bounds width after imputation | 51 | 51 | 51 | 1 | 1 |
-| abstract | bounds width after the expert survey | 44 | 44 | 44 | 1 | 1 |
-| text | democratization cases | 63 | 63 | 63 | 1 | 1 |
-| text | treated democratization cases | 8 | 8 | 8 | 1 | 1 |
-| text | bounds width before any data are collected | 200 | 200 | 200 | 1 | 1 |
-| text | bounds width once half the potential outcomes are revealed | 100 | 100 | 100 | 1 | 1 |
-| text | final ATE lower bound | -2 | -2 | -2 | 1 | 1 |
-| text | final ATE upper bound | 49 | 49 | 49 | 1 | 1 |
-| text | final ATE bounds width | 51 | 51 | 51 | 1 | 1 |
-| text | toy example: treated units with outcome 1 | 3 | 4 | 4 | 0 | 0 |
-| text | toy example: untreated units with outcome 1 | 1 | 1 | 1 | 1 | 1 |
-| text | toy example: bounds width before any data | 200 | 200 | 200 | 1 | 1 |
-| text | toy example: final bounds width | 10 | 10 | 10 | 1 | 1 |
-| text | ATU final bounds width | 58 | 58 | 58 | 1 | 1 |
-| text | ATT summarised as a point effect | -15 | -15 | -22.5 | 1 | 0 |
-| text | cases imputed as a non-zero causal effect | 6 | 6 | 6 | 1 | 1 |
-| text | expert responses received | 20 | 20 | 20 | 1 | 1 |
-| text | democratization cases without an expert response | 43 | 43 | 43 | 1 | 1 |
-| text | our bounds width, 20 responding cases | 50 | 50 | 50 | 1 | 1 |
-| text | expert bounds width, 20 responding cases | 30 | 30 | 30 | 1 | 1 |
-| text | our bounds width, all 63 cases | 51 | 51 | 51 | 1 | 1 |
-| text | expert bounds width, all 63 cases | 78 | 78 | 78 | 1 | 1 |
-| text | combined bounds width, all 63 cases | 44 | 44 | 44 | 1 | 1 |
-| text | expert and author imputations agreed | 7 | 7 | 7 | 1 | 1 |
-| text | expert and author imputations conflicted | 3 | 3 | 3 | 1 | 1 |
-| text | we imputed, the experts did not | 3 | 3 | 3 | 1 | 1 |
-| text | the experts imputed, we did not | 7 | 7 | 7 | 1 | 1 |
-| text | cases the experts imputed | 14 | 14 | 14 | 1 | 1 |
-| text | cases we imputed | 10 | 10 | 10 | 1 | 1 |
-| text | experts who declined to impute | 6 | 6 | 6 | 1 | 1 |
-| text | declining experts assigned to an untreated case | 6 | 6 | 6 | 1 | 1 |
-| text | expert imputations differing from the observed outcome | 0 | 0 | 0 | 1 | 1 |
-| appendix_a | end-of-conflict cases | 54 | 54 | 54 | 1 | 1 |
-| appendix_a | treated end-of-conflict cases | 6 | 6 | 6 | 1 | 1 |
-| appendix_a | bounds width once half the potential outcomes are revealed | 100 | 100 | 100 | 1 | 1 |
-| appendix_a | bounds width after imputation | 41 | 44 | 44 | 0 | 0 |
-| appendix_a | final ATE lower bound | -3 | -3 | -3 | 1 | 1 |
-| appendix_a | final ATE upper bound | 42 | 42 | 42 | 1 | 1 |
-| appendix_a | final ATE bounds width from the rounded endpoints | 45 | 45 | 45 | 1 | 1 |
-| appendix_a | ATT summarised as a point effect | -10 | -10 | -10 | 1 | 1 |
-| text | toy example: units | 10 |  | 10 |  | 1 |
-| text | toy example: treated units | 7 |  | 7 |  | 1 |
-| text | toy example: untreated units | 3 |  | 3 |  | 1 |
-| text | toy example: easy imputations | 5 |  | 5 |  | 1 |
-| text | toy example: untreated outcomes for units 1, 2 and 5 | 1, 1, 0 |  | 1, 1, 0 |  | 1 |
-| text | toy example: treated outcomes for units 8 and 9 | 1, 0 |  | 1, 0 |  | 1 |
-| text | probabilistic extension: possible sets of potential outcomes | 4 |  | 4 |  | 1 |
-| text | unobserved potential outcomes | 63 |  | 63 |  | 1 |
-| text | unobserved potential outcomes imputed with certainty | 5 |  | 3 |  | 0 |
-| text | unobserved potential outcomes imputed probabilistically | 26 |  | 28 |  | 0 |
-| text | unobserved potential outcomes left unimputed | 32 |  | 32 |  | 1 |
-| text | disbanded and discredited democratization cases | 4 |  | 2 |  | 0 |
-| text | observed outcome in the disbanded and discredited cases | 0 |  | 0 |  | 1 |
-| text | South Africa: probability the imputed untreated outcome equals 1 | 0.8 |  | 0.8 |  | 1 |
-| text | disbanded cases: probability the imputed outcome equals 1 | 0.1 |  | 0.1 |  | 1 |
-| text | Nigeria: probability the imputed untreated outcome equals 1 | 0.1 |  | 0.1 |  | 1 |
-| text | experts disagreeing with our coding of treatment and outcome | 5 |  |  |  |  |
-| text | expert imputations conflicting with ours, restated in the discussion | 3 |  | 3 |  | 1 |
-| text | end-of-conflict cases, stated in the main text footnote | 54 |  | 54 |  | 1 |
-| text | unimputed cases as a share of the total |  |  | 32 of 63, 50.8% |  | 1 |
-| text | the bounds around the ATE include zero |  |  | \[-2, 49\] contains 0 |  | 1 |
-| text | the ATT bounds shrink to a point |  |  | \[-22.5, -22.5\], width 0 |  | 1 |
-| text | the ATU bounds are wider than the ATT bounds |  |  | 58 against 0 |  | 1 |
-| text | the combined bounds are narrower than our original bounds |  |  | 44 against 51 |  | 1 |
-| text | no expert assigned to a treated case declined to impute |  |  | 0 of 6 declining experts |  | 1 |
-| text | expert bounds are narrower than ours among the 20 responding cases |  |  | 30 against 50 |  | 1 |
-| text | expert bounds are wider than ours among all 63 cases |  |  | 78 against 51 |  | 1 |
-| table_b1 | cells printed in the treatment indicator column | 54 |  | 54 |  | 1 |
-| table_b1 | cells printed in the observed outcome column | 54 |  | 54 |  | 1 |
-| table_b1 | cells printed in the revealed potential outcome column | 54 |  | 54 |  | 1 |
-| table_b1 | cells printed in the imputed untreated outcome column | 54 |  | 54 |  | 1 |
-| table_b1 | cells printed in the imputed treated outcome column | 54 |  | 54 |  | 1 |
-| table_b1 | cells printed in the imputation probability column | 30 |  | 30 |  | 1 |
-| table_b1 | cells printed in the unit-level effect column | 54 |  | 54 |  | 1 |
-| table_b2 | cells printed in the treatment indicator column | 63 |  | 63 |  | 1 |
-| table_b2 | cells printed in the observed outcome column | 63 |  | 62 |  | 0 |
-| table_b2 | cells printed in the revealed potential outcome column | 63 |  | 63 |  | 1 |
-| table_b2 | cells printed in the imputed untreated outcome column | 63 |  | 63 |  | 1 |
-| table_b2 | cells printed in the imputed treated outcome column | 63 |  | 63 |  | 1 |
-| table_b2 | cells printed in the imputation probability column | 31 |  | 30 |  | 0 |
-| table_b2 | cells printed in the unit-level effect column | 63 |  | 63 |  | 1 |
+| Table 3 | column d | 1,1,1,1,1,1,1,0,0,0 | 1,1,1,1,1,1,1,0,0,0 | 1,1,1,1,1,1,1,0,0,0 | 1 | 1 |
+| Table 3 | column Y | 1,1,1,1,0,0,0,1,0,0 | 1,1,1,1,0,0,0,1,0,0 | 1,1,1,1,0,0,0,1,0,0 | 1 | 1 |
+| Table 3 | column Y0_initial | ?,?,?,?,?,?,?,1,0,0 | ?,?,?,?,?,?,?,1,0,0 | ?,?,?,?,?,?,?,1,0,0 | 1 | 1 |
+| Table 3 | column Y1_initial | 1,1,1,1,0,0,0,?,?,? | 1,1,1,1,0,0,0,?,?,? | 1,1,1,1,0,0,0,?,?,? | 1 | 1 |
+| Table 3 | column Y0_easy | 1,1,?,?,0,?,?,1,0,0 | 1,1,?,?,0,?,?,1,0,0 | 1,1,?,?,0,?,?,1,0,0 | 1 | 1 |
+| Table 3 | column Y1_easy | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1 | 1 |
+| Table 3 | column Y0_nulls | 1,1,?,?,0,0,0,1,0,0 | 1,1,?,?,0,0,0,1,0,0 | 1,1,?,?,0,0,0,1,0,0 | 1 | 1 |
+| Table 3 | column Y1_nulls | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1 | 1 |
+| Table 3 | column Y0_hard | 1,1,0,0,0,0,0,1,0,0 | 1,1,0,0,0,0,0,1,0,0 | 1,1,0,0,0,0,0,1,0,0 | 1 | 1 |
+| Table 3 | column Y1_hard | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1,1,1,1,0,0,0,1,0,? | 1 | 1 |
+| Table 3 | EV bounds low, Initial Values | -40 | -40 | -40 | 1 | 1 |
+| Table 3 | EV bounds high, Initial Values | 60 | 60 | 60 | 1 | 1 |
+| Table 3 | EV bounds low, Easy Cases | -20 | -20 | -20 | 1 | 1 |
+| Table 3 | EV bounds high, Easy Cases | 30 | 30 | 30 | 1 | 1 |
+| Table 3 | EV bounds low, Nulls for 6&7 | 0 | 0 | 0 | 1 | 1 |
+| Table 3 | EV bounds high, Nulls for 6&7 | 30 | 30 | 30 | 1 | 1 |
+| Table 3 | EV bounds low, Hard Cases | 20 | 20 | 20 | 1 | 1 |
+| Table 3 | EV bounds high, Hard Cases | 30 | 30 | 30 | 1 | 1 |
+| Figure 1 | low bound, Before Any Data | -100 | -100 | -100 | 1 | 1 |
+| Figure 1 | high bound, Before Any Data | 100 | 100 | 100 | 1 | 1 |
+| Figure 1 | low bound, Initial Values | -40 | -40 | -40 | 1 | 1 |
+| Figure 1 | high bound, Initial Values | 60 | 60 | 60 | 1 | 1 |
+| Figure 1 | low bound, Easy Cases | -20 | -20 | -20 | 1 | 1 |
+| Figure 1 | high bound, Easy Cases | 30 | 30 | 30 | 1 | 1 |
+| Figure 1 | low bound, Nulls for 6&7 | 0 | 0 | 0 | 1 | 1 |
+| Figure 1 | high bound, Nulls for 6&7 | 30 | 30 | 30 | 1 | 1 |
+| Figure 1 | low bound, Hard Cases | 20 | 20 | 20 | 1 | 1 |
+| Figure 1 | high bound, Hard Cases | 30 | 30 | 30 | 1 | 1 |
+| Table 4 | EV bounds low, unit 6 = 0, unit 7 = 0 | 0 | 0 | 0 | 1 | 1 |
+| Table 4 | EV bounds high, unit 6 = 0, unit 7 = 0 | 30 | 30 | 30 | 1 | 1 |
+| Table 4 | probability, unit 6 = 0, unit 7 = 0 | 0.56 | 0.56 | 0.56 | 1 | 1 |
+| Table 4 | EV bounds low, unit 6 = 1, unit 7 = 0 | -10 | -10 | -10 | 1 | 1 |
+| Table 4 | EV bounds high, unit 6 = 1, unit 7 = 0 | 20 | 20 | 20 | 1 | 1 |
+| Table 4 | probability, unit 6 = 1, unit 7 = 0 | 0.14 | 0.14 | 0.14 | 1 | 1 |
+| Table 4 | EV bounds low, unit 6 = 0, unit 7 = 1 | -10 | -10 | -10 | 1 | 1 |
+| Table 4 | EV bounds high, unit 6 = 0, unit 7 = 1 | 20 | 20 | 20 | 1 | 1 |
+| Table 4 | probability, unit 6 = 0, unit 7 = 1 | 0.24 | 0.24 | 0.24 | 1 | 1 |
+| Table 4 | EV bounds low, unit 6 = 1, unit 7 = 1 | -20 | -20 | -20 | 1 | 1 |
+| Table 4 | EV bounds high, unit 6 = 1, unit 7 = 1 | 10 | 10 | 10 | 1 | 1 |
+| Table 4 | probability, unit 6 = 1, unit 7 = 1 | 0.06 | 0.06 | 0.06 | 1 | 1 |
+| Probabilistic Extension | probability-weighted point estimate, lower bound | -5 |  | -5 |  | 1 |
+| Probabilistic Extension | probability-weighted point estimate, upper bound | 25 |  | 25 |  | 1 |
+| Probabilistic Extension | 2.5th quantile of the lower bound | -20 |  | -20 |  | 1 |
+| Probabilistic Extension | 97.5th quantile of the lower bound | 0 |  | 0 |  | 1 |
+| Probabilistic Extension | 2.5th quantile of the upper bound | 10 |  | 10 |  | 1 |
+| Probabilistic Extension | 97.5th quantile of the upper bound | 30 |  | 30 |  | 1 |
+| Probabilistic Extension | probability that unit 6 has Y0 = 1 | 0.3 | 0.2 | 0.2 | 0 | 0 |
+| Probabilistic Extension | probability that unit 7 has Y0 = 1 | 0.4 | 0.3 | 0.3 | 0 | 0 |
+| Table 5 | democratization, Negative Effect | 2% (1) | 2% (1) | 2% (1) | 1 | 1 |
+| Table 5 | end of conflict, Negative Effect |  | 0% (0) | 0% (0) |  |  |
+| Table 5 | democratization, No Effect | 40% (25) | 40% (25) | 40% (25) | 1 | 1 |
+| Table 5 | end of conflict, No Effect |  | 43% (23) | 43% (23) |  |  |
+| Table 5 | democratization, Positive Effect | 8% (5) | 8% (5) | 8% (5) | 1 | 1 |
+| Table 5 | end of conflict, Positive Effect |  | 13% (7) | 13% (7) |  |  |
+| Table 5 | democratization, Unimputed | 51% (32) | 51% (32) | 51% (32) | 1 | 1 |
+| Table 5 | end of conflict, Unimputed |  | 44% (24) | 44% (24) |  |  |
+| Figure 2 | low bound, Before Any Data | -100 | -100 | -100 | 1 | 1 |
+| Figure 2 | high bound, Before Any Data | 100 | 100 | 100 | 1 | 1 |
+| Figure 2 | low bound, Initial Values | -25 | -25 | -25 | 1 | 1 |
+| Figure 2 | high bound, Initial Values | 75 | 75 | 75 | 1 | 1 |
+| Figure 2 | low bound, Disbanded and Discredited Cases | -25 | -25 | -25 | 1 | 1 |
+| Figure 2 | high bound, Disbanded and Discredited Cases | 72 | 72 | 72 | 1 | 1 |
+| Figure 2 | low bound, Treated Cases | -16 | -16 | -17 | 1 | 0 |
+| Figure 2 | high bound, Treated Cases | 68 | 68 | 67 | 1 | 0 |
+| Figure 2 | low bound, Non-transitional Cases | -12 | -12 | -13 | 1 | 0 |
+| Figure 2 | high bound, Non-transitional Cases | 62 | 62 | 61 | 1 | 0 |
+| Figure 2 | low bound, Untreated Cases | -2 | -2 | -2 | 1 | 1 |
+| Figure 2 | high bound, Untreated Cases | 49 | 49 | 49 | 1 | 1 |
+| Figure 2 | low bound, Unimputable Cases | -2 | -2 | -2 | 1 | 1 |
+| Figure 2 | high bound, Unimputable Cases | 49 | 49 | 49 | 1 | 1 |
+| Figure A.1 | low bound, Before Any Data | -100 | -100 | -100 | 1 | 1 |
+| Figure A.1 | high bound, Before Any Data | 100 | 100 | 100 | 1 | 1 |
+| Figure A.1 | low bound, Initial Values | -33 | -33 | -33 | 1 | 1 |
+| Figure A.1 | high bound, Initial Values | 67 | 67 | 67 | 1 | 1 |
+| Figure A.1 | low bound, Disbanded and Discredited Cases | -32 | -32 | -32 | 1 | 1 |
+| Figure A.1 | high bound, Disbanded and Discredited Cases | 61 | 61 | 61 | 1 | 1 |
+| Figure A.1 | low bound, Treated Cases | -26 | -26 | -26 | 1 | 1 |
+| Figure A.1 | high bound, Treated Cases | 56 | 56 | 56 | 1 | 1 |
+| Figure A.1 | low bound, Non-transitional Cases | -24 | -24 | -24 | 1 | 1 |
+| Figure A.1 | high bound, Non-transitional Cases | 54 | 54 | 54 | 1 | 1 |
+| Figure A.1 | low bound, Untreated Cases | -3 | -3 | -3 | 1 | 1 |
+| Figure A.1 | high bound, Untreated Cases | 42 | 42 | 42 | 1 | 1 |
+| Figure A.1 | low bound, Unimputable Cases | -3 | -3 | -3 | 1 | 1 |
+| Figure A.1 | high bound, Unimputable Cases | 42 | 42 | 42 | 1 | 1 |
+| Figure 3 | low bound, ATU, Before Any Data | -100 | -100 | -100 | 1 | 1 |
+| Figure 3 | high bound, ATU, Before Any Data | 100 | 100 | 100 | 1 | 1 |
+| Figure 3 | low bound, ATU, Initial Values | -16 | -16 | -16 | 1 | 1 |
+| Figure 3 | high bound, ATU, Initial Values | 84 | 84 | 84 | 1 | 1 |
+| Figure 3 | low bound, ATU, Disbanded and Discredited Cases | -16 | -16 | -16 | 1 | 1 |
+| Figure 3 | high bound, ATU, Disbanded and Discredited Cases | 80 | 80 | 80 | 1 | 1 |
+| Figure 3 | low bound, ATU, Treated Cases | -16 | -16 | -16 | 1 | 1 |
+| Figure 3 | high bound, ATU, Treated Cases | 80 | 80 | 80 | 1 | 1 |
+| Figure 3 | low bound, ATU, Non-transitional Cases | -12 | -12 | -12 | 1 | 1 |
+| Figure 3 | high bound, ATU, Non-transitional Cases | 74 | 74 | 74 | 1 | 1 |
+| Figure 3 | low bound, ATU, Untreated Cases | 0 | 0 | 1 | 1 | 0 |
+| Figure 3 | high bound, ATU, Untreated Cases | 58 | 58 | 60 | 1 | 0 |
+| Figure 3 | low bound, ATU, Unimputable Cases | 0 | 0 | 1 | 1 | 0 |
+| Figure 3 | high bound, ATU, Unimputable Cases | 58 | 58 | 60 | 1 | 0 |
+| Figure 3 | low bound, ATT, Before Any Data | -100 | -100 | -100 | 1 | 1 |
+| Figure 3 | high bound, ATT, Before Any Data | 100 | 100 | 100 | 1 | 1 |
+| Figure 3 | low bound, ATT, Initial Values | -88 | -88 | -87.5 | 1 | 1 |
+| Figure 3 | high bound, ATT, Initial Values | 12 | 12 | 12.5 | 1 | 1 |
+| Figure 3 | low bound, ATT, Disbanded and Discredited Cases | -88 | -88 | -87.5 | 1 | 1 |
+| Figure 3 | high bound, ATT, Disbanded and Discredited Cases | 12 | 12 | 12.5 | 1 | 1 |
+| Figure 3 | low bound, ATT, Treated Cases | -15 | -15 | -22.5 | 1 | 0 |
+| Figure 3 | high bound, ATT, Treated Cases | -15 | -15 | -22.5 | 1 | 0 |
+| Figure 3 | low bound, ATT, Non-transitional Cases | -15 | -15 | -22.5 | 1 | 0 |
+| Figure 3 | high bound, ATT, Non-transitional Cases | -15 | -15 | -22.5 | 1 | 0 |
+| Figure 3 | low bound, ATT, Untreated Cases | -15 | -15 | -22.5 | 1 | 0 |
+| Figure 3 | high bound, ATT, Untreated Cases | -15 | -15 | -22.5 | 1 | 0 |
+| Figure 3 | low bound, ATT, Unimputable Cases | -15 | -15 | -22.5 | 1 | 0 |
+| Figure 3 | high bound, ATT, Unimputable Cases | -15 | -15 | -22.5 | 1 | 0 |
+| Figure A.2 | low bound, ATU, Before Any Data | -100 | -100 | -100 | 1 | 1 |
+| Figure A.2 | high bound, ATU, Before Any Data | 100 | 100 | 100 | 1 | 1 |
+| Figure A.2 | low bound, ATU, Initial Values | -29 | -29 | -29 | 1 | 1 |
+| Figure A.2 | high bound, ATU, Initial Values | 71 | 71 | 71 | 1 | 1 |
+| Figure A.2 | low bound, ATU, Disbanded and Discredited Cases | -27 | -27 | -27.5 | 1 | 1 |
+| Figure A.2 | high bound, ATU, Disbanded and Discredited Cases | 64 | 64 | 64 | 1 | 1 |
+| Figure A.2 | low bound, ATU, Treated Cases | -27 | -27 | -27.5 | 1 | 1 |
+| Figure A.2 | high bound, ATU, Treated Cases | 64 | 64 | 64 | 1 | 1 |
+| Figure A.2 | low bound, ATU, Non-transitional Cases | -26 | -26 | -26 | 1 | 1 |
+| Figure A.2 | high bound, ATU, Non-transitional Cases | 62 | 62 | 62 | 1 | 1 |
+| Figure A.2 | low bound, ATU, Untreated Cases | -2 | -2 | -2 | 1 | 1 |
+| Figure A.2 | high bound, ATU, Untreated Cases | 48 | 48 | 48 | 1 | 1 |
+| Figure A.2 | low bound, ATU, Unimputable Cases | -2 | -2 | -2 | 1 | 1 |
+| Figure A.2 | high bound, ATU, Unimputable Cases | 48 | 48 | 48 | 1 | 1 |
+| Figure A.2 | low bound, ATT, Before Any Data | -100 | -100 | -100 | 1 | 1 |
+| Figure A.2 | high bound, ATT, Before Any Data | 100 | 100 | 100 | 1 | 1 |
+| Figure A.2 | low bound, ATT, Initial Values | -67 | -67 | -67 | 1 | 1 |
+| Figure A.2 | high bound, ATT, Initial Values | 33 | 33 | 33 | 1 | 1 |
+| Figure A.2 | low bound, ATT, Disbanded and Discredited Cases | -67 | -67 | -67 | 1 | 1 |
+| Figure A.2 | high bound, ATT, Disbanded and Discredited Cases | 33 | 33 | 33 | 1 | 1 |
+| Figure A.2 | low bound, ATT, Treated Cases | -10 | -10 | -10 | 1 | 1 |
+| Figure A.2 | high bound, ATT, Treated Cases | -10 | -10 | -10 | 1 | 1 |
+| Figure A.2 | low bound, ATT, Non-transitional Cases | -10 | -10 | -10 | 1 | 1 |
+| Figure A.2 | high bound, ATT, Non-transitional Cases | -10 | -10 | -10 | 1 | 1 |
+| Figure A.2 | low bound, ATT, Untreated Cases | -10 | -10 | -10 | 1 | 1 |
+| Figure A.2 | high bound, ATT, Untreated Cases | -10 | -10 | -10 | 1 | 1 |
+| Figure A.2 | low bound, ATT, Unimputable Cases | -10 | -10 | -10 | 1 | 1 |
+| Figure A.2 | high bound, ATT, Unimputable Cases | -10 | -10 | -10 | 1 | 1 |
+| Figure 4 | low bound, us, The 20 Cases with Expert Responses | -10 | -10 | -10 | 1 | 1 |
+| Figure 4 | high bound, us, The 20 Cases with Expert Responses | 40 | 40 | 40 | 1 | 1 |
+| Figure 4 | low bound, expert, The 20 Cases with Expert Responses | -15 | -15 | -15 | 1 | 1 |
+| Figure 4 | high bound, expert, The 20 Cases with Expert Responses | 15 | 15 | 15 | 1 | 1 |
+| Figure 4 | low bound, us, All 63 Democratization Cases | -2 | -2 | -2 | 1 | 1 |
+| Figure 4 | high bound, us, All 63 Democratization Cases | 49 | 49 | 49 | 1 | 1 |
+| Figure 4 | low bound, expert, All 63 Democratization Cases | -19 | -19 | -19 | 1 | 1 |
+| Figure 4 | high bound, expert, All 63 Democratization Cases | 59 | 59 | 59 | 1 | 1 |
+| Figure 4 | low bound, combined, All 63 Democratization Cases | -3 | -3 | -3 | 1 | 1 |
+| Figure 4 | high bound, combined, All 63 Democratization Cases | 41 | 41 | 41 | 1 | 1 |
+| Abstract | bounds width prior to any analysis | 100 | 100 | 100 | 1 | 1 |
+| Abstract | bounds width after imputation | 51 | 51 | 51 | 1 | 1 |
+| Abstract | bounds width after the expert survey | 44 | 44 | 44 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | democratization cases | 63 | 63 | 63 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | treated democratization cases | 8 | 8 | 8 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | bounds width before any data are collected | 200 | 200 | 200 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | bounds width once half the potential outcomes are revealed | 100 | 100 | 100 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | final ATE lower bound | -2 | -2 | -2 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | final ATE upper bound | 49 | 49 | 49 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | final ATE bounds width | 51 | 51 | 51 | 1 | 1 |
+| A Toy Example | toy example: treated units with outcome 1 | 3 | 4 | 4 | 0 | 0 |
+| A Toy Example | toy example: untreated units with outcome 1 | 1 | 1 | 1 | 1 | 1 |
+| A Toy Example | toy example: bounds width before any data | 200 | 200 | 200 | 1 | 1 |
+| A Toy Example | toy example: final bounds width | 10 | 10 | 10 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | ATU final bounds width | 58 | 58 | 58 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | ATT summarised as a point effect | -15 | -15 | -22.5 | 1 | 0 |
+| Application to the Average Effect of Truth Commissions | cases imputed as a non-zero causal effect | 6 | 6 | 6 | 1 | 1 |
+| Expert Survey | expert responses received | 20 | 20 | 20 | 1 | 1 |
+| Expert Survey | democratization cases without an expert response | 43 | 43 | 43 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | our bounds width, 20 responding cases | 50 | 50 | 50 | 1 | 1 |
+| Expert Survey | expert bounds width, 20 responding cases | 30 | 30 | 30 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | our bounds width, all 63 cases | 51 | 51 | 51 | 1 | 1 |
+| Expert Survey | expert bounds width, all 63 cases | 78 | 78 | 78 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | combined bounds width, all 63 cases | 44 | 44 | 44 | 1 | 1 |
+| Expert Survey | expert and author imputations agreed | 7 | 7 | 7 | 1 | 1 |
+| Expert Survey | expert and author imputations conflicted | 3 | 3 | 3 | 1 | 1 |
+| Expert Survey | we imputed, the experts did not | 3 | 3 | 3 | 1 | 1 |
+| Expert Survey | the experts imputed, we did not | 7 | 7 | 7 | 1 | 1 |
+| Expert Survey | cases the experts imputed | 14 | 14 | 14 | 1 | 1 |
+| Application to the Average Effect of Truth Commissions | cases we imputed | 10 | 10 | 10 | 1 | 1 |
+| Expert Survey | experts who declined to impute | 6 | 6 | 6 | 1 | 1 |
+| Expert Survey | declining experts assigned to an untreated case | 6 | 6 | 6 | 1 | 1 |
+| Expert Survey | expert imputations differing from the observed outcome | 0 | 0 | 0 | 1 | 1 |
+| Appendix A | end-of-conflict cases | 54 | 54 | 54 | 1 | 1 |
+| Appendix A | treated end-of-conflict cases | 6 | 6 | 6 | 1 | 1 |
+| Appendix A | bounds width once half the potential outcomes are revealed | 100 | 100 | 100 | 1 | 1 |
+| Appendix A | bounds width after imputation | 41 | 44 | 44 | 0 | 0 |
+| Appendix A | final ATE lower bound | -3 | -3 | -3 | 1 | 1 |
+| Appendix A | final ATE upper bound | 42 | 42 | 42 | 1 | 1 |
+| Appendix A | final ATE bounds width from the rounded endpoints | 45 | 45 | 45 | 1 | 1 |
+| Appendix A | ATT summarised as a point effect | -10 | -10 | -10 | 1 | 1 |
+| A Toy Example | toy example: units | 10 |  | 10 |  | 1 |
+| A Toy Example | toy example: treated units | 7 |  | 7 |  | 1 |
+| A Toy Example | toy example: untreated units | 3 |  | 3 |  | 1 |
+| A Toy Example | toy example: easy imputations | 5 |  | 5 |  | 1 |
+| A Toy Example | toy example: untreated outcomes for units 1, 2 and 5 | 1, 1, 0 |  | 1, 1, 0 |  | 1 |
+| A Toy Example | toy example: treated outcomes for units 8 and 9 | 1, 0 |  | 1, 0 |  | 1 |
+| A Toy Example | probabilistic extension: possible sets of potential outcomes | 4 |  | 4 |  | 1 |
+| Imputing Missing Potential Outcomes | unobserved potential outcomes | 63 |  | 63 |  | 1 |
+| Imputing Missing Potential Outcomes | unobserved potential outcomes imputed with certainty | 5 |  | 3 |  | 0 |
+| Imputing Missing Potential Outcomes | unobserved potential outcomes imputed probabilistically | 26 |  | 28 |  | 0 |
+| Imputing Missing Potential Outcomes | unobserved potential outcomes left unimputed | 32 |  | 32 |  | 1 |
+| Imputing Missing Potential Outcomes | disbanded and discredited democratization cases | 4 |  | 2 |  | 0 |
+| Imputing Missing Potential Outcomes | observed outcome in the disbanded and discredited cases | 0 |  | 0 |  | 1 |
+| Imputing Missing Potential Outcomes | South Africa: probability the imputed untreated outcome equals 1 | 0.8 |  | 0.8 |  | 1 |
+| Imputing Missing Potential Outcomes | disbanded cases: probability the imputed outcome equals 1 | 0.1 |  | 0.1 |  | 1 |
+| Imputing Missing Potential Outcomes | Nigeria: probability the imputed untreated outcome equals 1 | 0.1 |  | 0.1 |  | 1 |
+| Expert Survey | experts disagreeing with our coding of treatment and outcome | 5 |  |  |  |  |
+| Discussion | expert imputations conflicting with ours, restated in the discussion | 3 |  | 3 |  | 1 |
+| Application to the Average Effect of Truth Commissions | end-of-conflict cases, stated in the main text footnote | 54 |  | 54 |  | 1 |
+| Application to the Average Effect of Truth Commissions | unimputed cases as a share of the total |  |  | 32 of 63, 50.8% |  | 1 |
+| Application to the Average Effect of Truth Commissions | the bounds around the ATE include zero |  |  | \[-2, 49\] contains 0 |  | 1 |
+| Application to the Average Effect of Truth Commissions | the ATT bounds shrink to a point |  |  | \[-22.5, -22.5\], width 0 |  | 1 |
+| Application to the Average Effect of Truth Commissions | the ATU bounds are wider than the ATT bounds |  |  | 58 against 0 |  | 1 |
+| Application to the Average Effect of Truth Commissions | the combined bounds are narrower than our original bounds |  |  | 44 against 51 |  | 1 |
+| Expert Survey | no expert assigned to a treated case declined to impute |  |  | 0 of 6 declining experts |  | 1 |
+| Expert Survey | expert bounds are narrower than ours among the 20 responding cases |  |  | 30 against 50 |  | 1 |
+| Expert Survey | expert bounds are wider than ours among all 63 cases |  |  | 78 against 51 |  | 1 |
+| Table B.1 | cells printed in the treatment indicator column | 54 |  | 54 |  | 1 |
+| Table B.1 | cells printed in the observed outcome column | 54 |  | 54 |  | 1 |
+| Table B.1 | cells printed in the revealed potential outcome column | 54 |  | 54 |  | 1 |
+| Table B.1 | cells printed in the imputed untreated outcome column | 54 |  | 54 |  | 1 |
+| Table B.1 | cells printed in the imputed treated outcome column | 54 |  | 54 |  | 1 |
+| Table B.1 | cells printed in the imputation probability column | 30 |  | 30 |  | 1 |
+| Table B.1 | cells printed in the unit-level effect column | 54 |  | 54 |  | 1 |
+| Table B.2 | cells printed in the treatment indicator column | 63 |  | 63 |  | 1 |
+| Table B.2 | cells printed in the observed outcome column | 63 |  | 62 |  | 0 |
+| Table B.2 | cells printed in the revealed potential outcome column | 63 |  | 63 |  | 1 |
+| Table B.2 | cells printed in the imputed untreated outcome column | 63 |  | 63 |  | 1 |
+| Table B.2 | cells printed in the imputed treated outcome column | 63 |  | 63 |  | 1 |
+| Table B.2 | cells printed in the imputation probability column | 31 |  | 30 |  | 0 |
+| Table B.2 | cells printed in the unit-level effect column | 63 |  | 63 |  | 1 |
 
 Ground truth: the published value against the deposited script and
 against the maintained rewrite. A blank Paper column means the quantity

@@ -1,7 +1,9 @@
 # coppock_kaur_2022/maintained/in_text_claims.R
-# Output: printed to stdout, one CLAIM line per published claim
-# Depends on: helpers.R, every table, figure and in-text script's output in
-#             maintained/output/, and ground_truth/published_appendix_values.csv
+# Output: printed to stdout, one CLAIM line per published claim and a CLAIM SUMMARY
+#         line; no files
+# Depends on: helpers.R, excheckr, every table, figure, and in-text script's output
+#             in maintained/output/, ground_truth/published_claims.csv,
+#             errata_entries.csv, and ground_truth/published_appendix_values.csv
 #             for the two appendix tables whose claims are counts of published cells
 # Description: Every number the article and its supporting information print,
 #   paired with the sentence or the float cell it comes from, computed here from
@@ -16,15 +18,55 @@
 #   against ground_truth/published_claims.csv, and compares the two instruments
 #   line by line, so a disagreement between them stops the build.
 #
-#   Each block carries a "# covers:" line naming the claims it prints, as a
-#   claim_id or a prefix ending in *. Prose claims carry the article's sentence
-#   verbatim above them; float cells do not, because a cell is read off a page
-#   rather than out of a sentence.
+#   Every block prints a line of the form
 #
-#   cat() is used throughout, which is allowed here and nowhere else: the whole
-#   output is a human-read audit trail and every value needs a label beside it.
+#       CLAIM <claim_id> = <value> || [verdict] <label>
+#
+#   through excheckr, which also scores it. The expectation is derived, never typed
+#   at a call site: published_claims.csv says what the article prints, and
+#   errata_entries.csv says which of those a published quantity erratum corrects and
+#   to what. A claim ends on one of these verdicts:
+#
+#     [match]     the article's number and this one agree at the printed precision.
+#     [corrected] an erratum names the claim, so the two are required to disagree
+#                 and this value is required to equal the correction.
+#     [shape]     the sentence states no number (a bound that includes zero, one
+#                 width narrower than another), so the value is printed for a reader
+#                 and compared against nothing. Declared with expect = "shape".
+#     [absent]    the deposit has no counterpart for the number the article prints.
+#                 Declared with expect = "absent".
+#
+#   A failure is MISMATCH (the article and this file disagree and no erratum says
+#   they should), STALE (an erratum says they disagree and they no longer do),
+#   DRIFT (this value is not the correction the erratum publishes), or MISSING (no
+#   value at all). assert_claims() at the foot of the file stops the run on any of
+#   them.
+#
+#   Three kinds of claim need more than a number and the article's token:
+#
+#   * A figure labels each bound in whole points, and a bound that lies exactly
+#     halfway between two whole numbers has no determined label. Such a bound is
+#     printed at the one decimal that states it and compared with a tolerance of
+#     half a point, so either neighbouring label agrees with it.
+#   * A float erratum (entries 9, 10, and 11) names the cells it corrects but
+#     publishes no corrected values: it says the corrected float is the one the
+#     rewrite draws. Each cell it names is given this file's own value as its
+#     correction, so it scores corrected where the article disagrees and STALE
+#     where it no longer does. DRIFT cannot arise for these cells.
+#   * Some claims print a sequence rather than a number: a column of Table 3 read
+#     down the ten units, the outcomes of several toy units, a Table 5 cell that
+#     prints a share and a count. The number scored is the count of positions that
+#     agree with the article's own sequence, against the count it prints, or the
+#     count inside a Table 5 cell; the label carries the sequence this file builds,
+#     which build_ground_truth.R compares with the ground truth.
+#
+#   Prose claims carry the article's sentence verbatim above them; float cells do
+#   not, because a cell is read off a page rather than out of a sentence. cat() is
+#   used by excheckr throughout, which is allowed here and nowhere else: the whole
+#   output is a human-read audit trail.
 
 source(here::here("maintained", "helpers.R"))
+library(excheckr)
 
 options(width = 200)
 
@@ -53,15 +95,52 @@ published_appendix <- read_csv(
   show_col_types = FALSE, col_types = cols(.default = "c")
 )
 
-# Printing ----
-# One line per claim, carrying the claim identifier so the audit trail reads
-# straight down and build_ground_truth.R can match it line by line.
-claim <- function(id, value) cat("CLAIM ", id, " = ", value, "\n", sep = "")
+# The extraction and the errata spine, every column as character: value_paper
+# carries ".3" and corrected_values "44.4", and a reader left to guess would
+# destroy the precision the comparison depends on.
+published <- read_csv(here::here("ground_truth", "published_claims.csv"),
+                      col_types = cols(.default = col_character()))
+errata <- read_csv(here::here("errata_entries.csv"),
+                   col_types = cols(.default = col_character()))
 
-# A value that rounds to zero from below prints as -0, which no page ever shows.
-pp <- function(x, decimals = 0) {
-  printed <- sprintf(str_c("%.", decimals, "f"), x)
-  if_else(str_detect(printed, "^-0(\\.0+)?$"), str_remove(printed, "^-"), printed)
+# Entries 1 and 2 are of class quantity but name no claim: they correct imputation
+# probabilities in the deposited case file, which the article never prints one by one.
+# excheckr reads every quantity entry as naming claims, and two entries naming none
+# read to it as two corrections of the same missing claim, so only the entries that
+# name a claim are passed.
+claim_start(published = published, errata = filter(errata, !is.na(claim_ids)),
+            format = "id")
+
+# Claim helpers ----
+
+# The claims a float erratum names, which take this file's own value as their
+# correction (see the header).
+float_corrected <- errata |>
+  filter(class == "float", !is.na(claim_ids)) |>
+  pull(claim_ids) |>
+  str_split(";") |>
+  unlist()
+
+# claim_bound: a bound as a figure or a sentence labels it. A bound lying exactly
+# halfway between two whole numbers prints at one decimal and agrees with either
+# neighbouring whole-number label; every other bound is compared at the printed
+# precision. A cell a float erratum names takes its own label as its correction.
+claim_bound <- function(id, x, label = id) {
+  halfway <- near(x %% 1, 0.5)
+  claim(id, x, label,
+        corrected = if (id %in% float_corrected) bound_label(x) else NULL,
+        digits = if (halfway) 1 else NULL,
+        tol = if (halfway) 0.5 else NULL)
+}
+
+# claim_sequence: a claim printing a sequence of cells. Scored as the count of
+# positions agreeing with the article's own sequence, against the count it prints.
+claim_sequence <- function(id, cells, separator) {
+  printed_cells <- str_split_1(published$value_paper[published$claim_id == id], separator)
+  stopifnot(length(printed_cells) == length(cells))
+  claim(id, sum(as.character(cells) == printed_cells),
+        str_c(cells, collapse = separator),
+        published = as.character(length(printed_cells)))
 }
 
 # The identifier a claim carries is the ground truth's own label, slugged. Float
@@ -95,12 +174,6 @@ count_value <- function(sample, quantity_label) {
   hit
 }
 
-ate_bound <- function(sample, which_step, side) {
-  row <- figures_2_a1 |> filter(transition_fac == sample, step == which_step)
-  stopifnot(nrow(row) == 1)
-  row[[str_c("estimate_", side)]]
-}
-
 # The imputation probability the analysis actually draws from, which is the
 # appendix C value wherever the deposit transcribed it differently. Read from the
 # corrected case file rather than from the Table B.1 and B.2 reconstruction, which
@@ -111,7 +184,7 @@ case_probability <- function(which_case) {
           cases_corrected$conflict_end, ")") == which_case
   ]
   stopifnot(length(hit) == 1, !is.na(hit))
-  format(hit, trim = TRUE, drop0trailing = TRUE)
+  hit
 }
 
 # Abstract ----
@@ -120,76 +193,76 @@ case_probability <- function(which_case) {
 # effect on authoritarian resumption are 100 percentage points wide; imputation
 # shrinks the width of these bounds to 51 points."
 # covers: abstract|bounds_width_prior_to_any_analysis abstract|bounds_width_after_imputation
-claim("abstract|bounds_width_prior_to_any_analysis",
-      bound_label(summary_value("dem: bounds width once the world reveals half the potential outcomes")))
-claim("abstract|bounds_width_after_imputation",
-      bound_label(summary_value("dem: final ATE bounds width")))
+claim_bound("abstract|bounds_width_prior_to_any_analysis",
+      summary_value("dem: bounds width once the world reveals half the potential outcomes"))
+claim_bound("abstract|bounds_width_after_imputation",
+      summary_value("dem: final ATE bounds width"))
 
 # "We further demonstrate our method by aggregating specialists' beliefs about
 # causal effects gathered through an expert survey, shrinking the width of the
 # bounds to 44 points."
 # covers: abstract|bounds_width_after_the_expert_survey
-claim("abstract|bounds_width_after_the_expert_survey",
-      bound_label(summary_value("expert: combined bounds width, all 63 cases")))
+claim_bound("abstract|bounds_width_after_the_expert_survey",
+      summary_value("expert: combined bounds width, all 63 cases"))
 
 # The Procedure ----
 
 # "Before any data are collected, the extreme value bounds are 200 percentage
 # points wide."
 # covers: text|bounds_width_before_any_data_are_collected
-claim("text|bounds_width_before_any_data_are_collected",
-      bound_label(summary_value("dem: bounds width before any data")))
+claim_bound("text|bounds_width_before_any_data_are_collected",
+      summary_value("dem: bounds width before any data"))
 
 # "After data collection, the extreme value bounds shrink from 200 points wide to
 # 100 points wide."
 # covers: text|bounds_width_once_half_the_potential_outcomes_are_revealed
-claim("text|bounds_width_once_half_the_potential_outcomes_are_revealed",
-      bound_label(summary_value("dem: bounds width once the world reveals half the potential outcomes")))
+claim_bound("text|bounds_width_once_half_the_potential_outcomes_are_revealed",
+      summary_value("dem: bounds width once the world reveals half the potential outcomes"))
 
 # A Toy Example ----
 
 # "Consider a population of N = 10 units, seven of whom have been treated and
 # three of whom have not."
 # covers: text|toy_example_units text|toy_example_treated_units text|toy_example_untreated_units
-claim("text|toy_example_units", pp(nrow(table_3)))
-claim("text|toy_example_treated_units", pp(sum(table_3$d == 1)))
-claim("text|toy_example_untreated_units", pp(sum(table_3$d == 0)))
+claim("text|toy_example_units", nrow(table_3))
+claim("text|toy_example_treated_units", sum(table_3$d == 1))
+claim("text|toy_example_untreated_units", sum(table_3$d == 0))
 
 # "The outcome for three of the treated units and one of the untreated units is 1;
 # the outcome is equal to 0 for the remaining units."
 # covers: text|toy_example_treated_units_with_outcome_1 text|toy_example_untreated_units_with_outcome_1
 claim("text|toy_example_treated_units_with_outcome_1",
-      pp(sum(table_3$d == 1 & table_3$Y == 1)))
+      sum(table_3$d == 1 & table_3$Y == 1))
 claim("text|toy_example_untreated_units_with_outcome_1",
-      pp(sum(table_3$d == 0 & table_3$Y == 1)))
+      sum(table_3$d == 0 & table_3$Y == 1))
 
 # "Before adding any qualitative information, the bounds on the ATE extend from
 # -40 percentage points to 60 percentage points."
 # covers: text|toy_example_bounds_width_before_any_data
 claim("text|toy_example_bounds_width_before_any_data",
-      pp(table_3_bounds$width[table_3_bounds$step == "Before Any Data"]))
+      table_3_bounds$width[table_3_bounds$step == "Before Any Data"])
 
 # "The fourth and fifth columns describe the imputation of five 'easy' cases."
 # covers: text|toy_example_easy_imputations
 easy_imputations <- sum(table_3$Y0_initial == "?" & table_3$Y0_easy != "?") +
   sum(table_3$Y1_initial == "?" & table_3$Y1_easy != "?")
-claim("text|toy_example_easy_imputations", pp(easy_imputations))
+claim("text|toy_example_easy_imputations", easy_imputations)
 
 # "These are scenarios in which the untreated outcomes for units 1, 2, and 5 are
 # obviously (to the researcher) 1, 1, and 0, respectively. Similarly, the treated
 # outcomes of units 8 and 9 are 1 and 0."
 # covers: text|toy_example_untreated_outcomes_for_units_1_2_and_5 text|toy_example_treated_outcomes_for_units_8_and_9
-claim("text|toy_example_untreated_outcomes_for_units_1_2_and_5",
-      str_c(table_3$Y0_easy[c(1, 2, 5)], collapse = ", "))
-claim("text|toy_example_treated_outcomes_for_units_8_and_9",
-      str_c(table_3$Y1_easy[c(8, 9)], collapse = ", "))
+claim_sequence("text|toy_example_untreated_outcomes_for_units_1_2_and_5",
+               table_3$Y0_easy[c(1, 2, 5)], ", ")
+claim_sequence("text|toy_example_treated_outcomes_for_units_8_and_9",
+               table_3$Y1_easy[c(8, 9)], ", ")
 
 # "The incorporation of empirical information and qualitative beliefs reduces the
 # width of the bounds from 200 points to 10 points, corresponding to a dramatic
 # reduction in fundamental uncertainty."
 # covers: text|toy_example_final_bounds_width
 claim("text|toy_example_final_bounds_width",
-      pp(table_3_bounds$width[table_3_bounds$step == "Hard Cases"]))
+      table_3_bounds$width[table_3_bounds$step == "Hard Cases"])
 
 # Table 3 ----
 # The potential outcomes table, one claim per printed column read down the ten
@@ -198,15 +271,14 @@ claim("text|toy_example_final_bounds_width",
 walk(
   c("d", "Y", "Y0_initial", "Y1_initial", "Y0_easy", "Y1_easy",
     "Y0_nulls", "Y1_nulls", "Y0_hard", "Y1_hard"),
-  \(column) claim(id_for("table_3", "column ", column),
-                  str_c(table_3[[column]], collapse = ","))
+  \(column) claim_sequence(id_for("table_3", "column ", column), table_3[[column]], ",")
 )
 
 table_3_bounds |>
   filter(step != "Before Any Data") |>
   pwalk(\(step, estimate_lower, estimate_upper, width) {
-    claim(id_for("table_3", "EV bounds low, ", step), pp(estimate_lower))
-    claim(id_for("table_3", "EV bounds high, ", step), pp(estimate_upper))
+    claim(id_for("table_3", "EV bounds low, ", step), estimate_lower)
+    claim(id_for("table_3", "EV bounds high, ", step), estimate_upper)
   })
 
 # Figure 1 ----
@@ -214,8 +286,8 @@ table_3_bounds |>
 # covers: figure_1|*
 figure_1 |>
   pwalk(\(description, estimate_lower, estimate_upper) {
-    claim(id_for("figure_1", "low bound, ", description), pp(estimate_lower))
-    claim(id_for("figure_1", "high bound, ", description), pp(estimate_upper))
+    claim(id_for("figure_1", "low bound, ", description), estimate_lower)
+    claim(id_for("figure_1", "high bound, ", description), estimate_upper)
   })
 
 # Probabilistic Extension ----
@@ -228,14 +300,14 @@ figure_1 |>
 # from it, as the total probability of the scenarios in which each unit is a 1.
 # covers: table_4|probability_that_unit_6_has_y0_1 table_4|probability_that_unit_7_has_y0_1
 claim("table_4|probability_that_unit_6_has_y0_1",
-      pp(sum(table_4$prob[table_4$unit_6 == 1]), 1))
+      sum(table_4$prob[table_4$unit_6 == 1]))
 claim("table_4|probability_that_unit_7_has_y0_1",
-      pp(sum(table_4$prob[table_4$unit_7 == 1]), 1))
+      sum(table_4$prob[table_4$unit_7 == 1]))
 
 # "We now have to consider 2^2 = 4 possibilities for units 6 and 7 which occur
 # according to the researcher's probabilistic beliefs."
 # covers: text|probabilistic_extension_possible_sets_of_potential_outcomes
-claim("text|probabilistic_extension_possible_sets_of_potential_outcomes", pp(nrow(table_4)))
+claim("text|probabilistic_extension_possible_sets_of_potential_outcomes", nrow(table_4))
 
 # "The point estimate for each bound is a probability-weighted average: [-5, 25].
 # We can characterize the uncertainty attending to the bounds with reference to
@@ -243,17 +315,17 @@ claim("text|probabilistic_extension_possible_sets_of_potential_outcomes", pp(nro
 # the lower bound and [10, 30] for the upper bound."
 # covers: table_4|probability_weighted_point_estimate_* table_4|*_quantile_of_the_*_bound
 claim("table_4|probability_weighted_point_estimate_lower_bound",
-      pp(table_4_summary$point_estimate[table_4_summary$quantity == "estimate_lower"]))
+      table_4_summary$point_estimate[table_4_summary$quantity == "estimate_lower"])
 claim("table_4|probability_weighted_point_estimate_upper_bound",
-      pp(table_4_summary$point_estimate[table_4_summary$quantity == "estimate_upper"]))
+      table_4_summary$point_estimate[table_4_summary$quantity == "estimate_upper"])
 claim("table_4|2_5th_quantile_of_the_lower_bound",
-      pp(table_4_summary$q025[table_4_summary$quantity == "estimate_lower"]))
+      table_4_summary$q025[table_4_summary$quantity == "estimate_lower"])
 claim("table_4|97_5th_quantile_of_the_lower_bound",
-      pp(table_4_summary$q975[table_4_summary$quantity == "estimate_lower"]))
+      table_4_summary$q975[table_4_summary$quantity == "estimate_lower"])
 claim("table_4|2_5th_quantile_of_the_upper_bound",
-      pp(table_4_summary$q025[table_4_summary$quantity == "estimate_upper"]))
+      table_4_summary$q025[table_4_summary$quantity == "estimate_upper"])
 claim("table_4|97_5th_quantile_of_the_upper_bound",
-      pp(table_4_summary$q975[table_4_summary$quantity == "estimate_upper"]))
+      table_4_summary$q975[table_4_summary$quantity == "estimate_upper"])
 
 # Table 4 ----
 # The four realisations of the uncertain imputations for units 6 and 7, with the
@@ -262,9 +334,9 @@ claim("table_4|97_5th_quantile_of_the_upper_bound",
 table_4 |>
   pwalk(\(unit_6, unit_7, ev_bounds, estimate_lower, estimate_upper, prob) {
     scenario <- str_c("unit 6 = ", unit_6, ", unit 7 = ", unit_7)
-    claim(id_for("table_4", "EV bounds low, ", scenario), pp(estimate_lower))
-    claim(id_for("table_4", "EV bounds high, ", scenario), pp(estimate_upper))
-    claim(id_for("table_4", "probability, ", scenario), pp(prob, 2))
+    claim(id_for("table_4", "EV bounds low, ", scenario), estimate_lower)
+    claim(id_for("table_4", "EV bounds high, ", scenario), estimate_upper)
+    claim(id_for("table_4", "probability, ", scenario), prob)
   })
 
 # Application to the Average Effect of Truth Commissions ----
@@ -273,7 +345,7 @@ table_4 |>
 # authoritarianism and arrive at a dataset of 63 observations that have a
 # probability of experiencing a TTC between 0 and 1, exclusive."
 # covers: text|democratization_cases
-claim("text|democratization_cases", pp(count_value("Democratization", "cases")))
+claim("text|democratization_cases", count_value("Democratization", "cases"))
 
 # Footnote 4: "See the Supporting Information (SI) for an application of our
 # method to the study of truth commission in 54 post-conflict cases."
@@ -282,7 +354,7 @@ claim("text|democratization_cases", pp(count_value("Democratization", "cases")))
 # a disagreement between the article's two statements of it would be visible here.
 # covers: text|end_of_conflict_cases_stated_in_the_main_text_footnote
 claim("text|end_of_conflict_cases_stated_in_the_main_text_footnote",
-      pp(count_value("End of conflict", "cases")))
+      count_value("End of conflict", "cases"))
 
 # Imputing Missing Potential Outcomes ----
 
@@ -290,13 +362,13 @@ claim("text|end_of_conflict_cases_stated_in_the_main_text_footnote",
 # For all 63 unobserved potential outcomes, we imputed 5 with certainty, 26
 # probabilistically and we left 32 unimputed."
 # covers: text|unobserved_potential_outcomes text|unobserved_potential_outcomes_imputed_with_certainty text|unobserved_potential_outcomes_imputed_probabilistically text|unobserved_potential_outcomes_left_unimputed
-claim("text|unobserved_potential_outcomes", pp(count_value("Democratization", "cases")))
+claim("text|unobserved_potential_outcomes", count_value("Democratization", "cases"))
 claim("text|unobserved_potential_outcomes_imputed_with_certainty",
-      pp(count_value("Democratization", "imputed_with_certainty")))
+      count_value("Democratization", "imputed_with_certainty"))
 claim("text|unobserved_potential_outcomes_imputed_probabilistically",
-      pp(count_value("Democratization", "imputed_probabilistically")))
+      count_value("Democratization", "imputed_probabilistically"))
 claim("text|unobserved_potential_outcomes_left_unimputed",
-      pp(count_value("Democratization", "left_unimputed")))
+      count_value("Democratization", "left_unimputed"))
 
 # "Step 1: Disbanded and Discredited Cases. We first identify truth commissions
 # that were disbanded before completion (Bolivia in 1982 and the Philippines in
@@ -305,13 +377,14 @@ claim("text|unobserved_potential_outcomes_left_unimputed",
 # years of transition."
 # covers: text|disbanded_and_discredited_democratization_cases text|observed_outcome_in_the_disbanded_and_discredited_cases
 claim("text|disbanded_and_discredited_democratization_cases",
-      pp(count_value("Democratization", "cases at step: Disbanded and Discredited Cases")))
+      count_value("Democratization", "cases at step: Disbanded and Discredited Cases"))
 disbanded_outcomes <- table_b1_b2 |>
   filter(table == "B.2", step == "Disbanded and Discredited Cases") |>
   pull(observed) |>
   unique()
 stopifnot(length(disbanded_outcomes) == 1)
-claim("text|observed_outcome_in_the_disbanded_and_discredited_cases", disbanded_outcomes)
+claim("text|observed_outcome_in_the_disbanded_and_discredited_cases",
+      as.numeric(disbanded_outcomes))
 
 # "We impute the treated potential outcome in each of these cases to be
 # Yi(0) = Yi(1) = 0, with a probability of .1 that the imputed outcomes would take
@@ -339,7 +412,7 @@ claim("text|nigeria_probability_the_imputed_untreated_outcome_equals_1",
 
 # "Next, we turn to the eight cases treated with bona fide TTCs."
 # covers: text|treated_democratization_cases
-claim("text|treated_democratization_cases", pp(count_value("Democratization", "treated")))
+claim("text|treated_democratization_cases", count_value("Democratization", "treated"))
 
 # Summary ----
 
@@ -349,24 +422,26 @@ claim("text|treated_democratization_cases", pp(count_value("Democratization", "t
 # potential outcomes are filled in. The final bounds around the ATE are [-2, 49]
 # (51 points wide)."
 # covers: text|final_ate_lower_bound text|final_ate_upper_bound text|final_ate_bounds_width
-claim("text|final_ate_lower_bound", bound_label(summary_value("dem: final ATE lower bound")))
-claim("text|final_ate_upper_bound", bound_label(summary_value("dem: final ATE upper bound")))
-claim("text|final_ate_bounds_width", bound_label(summary_value("dem: final ATE bounds width")))
+claim_bound("text|final_ate_lower_bound", summary_value("dem: final ATE lower bound"))
+claim_bound("text|final_ate_upper_bound", summary_value("dem: final ATE upper bound"))
+claim_bound("text|final_ate_bounds_width", summary_value("dem: final ATE bounds width"))
 
 # "The bounds include zero. The data and our state of knowledge are currently
 # consistent with positive, negative and zero average effects."
 # covers: text|the_bounds_around_the_ate_include_zero
 final_low <- round(summary_value("dem: final ATE lower bound"))
 final_high <- round(summary_value("dem: final ATE upper bound"))
-claim("text|the_bounds_around_the_ate_include_zero",
-      str_c("[", pp(final_low), ", ", pp(final_high), "] ",
-            if_else(final_low <= 0 & final_high >= 0, "contains", "excludes"), " 0"))
+includes_zero <- final_low <= 0 & final_high >= 0
+claim("text|the_bounds_around_the_ate_include_zero", as.numeric(includes_zero),
+      sprintf("[%.0f, %.0f] %s 0", final_low, final_high,
+              if_else(includes_zero, "contains", "excludes")),
+      digits = 0, expect = "shape")
 
 # "In our view, the most important pattern is that we impute non-zero causal
 # effects only six times in these democratization cases."
 # covers: text|cases_imputed_as_a_non_zero_causal_effect
 claim("text|cases_imputed_as_a_non_zero_causal_effect",
-      pp(summary_value("dem: cases imputed as a non-zero causal effect")))
+      summary_value("dem: cases imputed as a non-zero causal effect"))
 
 # "Another important pattern is that we are unable to make imputations in about
 # half the total number of cases, hence the bounds remain wide and the gaps in our
@@ -374,19 +449,26 @@ claim("text|cases_imputed_as_a_non_zero_causal_effect",
 # covers: text|unimputed_cases_as_a_share_of_the_total
 unimputed <- count_value("Democratization", "left_unimputed")
 democratization_cases <- count_value("Democratization", "cases")
-claim("text|unimputed_cases_as_a_share_of_the_total",
-      str_c(pp(unimputed), " of ", pp(democratization_cases), ", ",
-            pp(100 * unimputed / democratization_cases, 1), "%"))
+unimputed_share <- 100 * unimputed / democratization_cases
+claim("text|unimputed_cases_as_a_share_of_the_total", unimputed_share,
+      sprintf("%.0f of %.0f, %.1f%%", unimputed, democratization_cases, unimputed_share),
+      digits = 1, expect = "shape")
 
 # Table 5 ----
 # The distribution of imputed unit-level effects. The article prints the
 # democratization row only; the end-of-conflict row is written out alongside it
-# and has no published counterpart.
+# and has no published counterpart. Each cell prints a share and a count, "2% (1)",
+# and the count is the number scored; the label carries the whole cell.
 # covers: table_5|democratization_*
 walk(
   c("Negative Effect", "No Effect", "Positive Effect", "Unimputed"),
-  \(column) claim(id_for("table_5", "democratization, ", column),
-                  table_5[[column]][table_5$transition_fac == "Democratization"])
+  \(column) {
+    id <- id_for("table_5", "democratization, ", column)
+    cell <- table_5[[column]][table_5$transition_fac == "Democratization"]
+    count_in <- \(x) str_match(x, "\\((\\d+)\\)$")[, 2]
+    claim(id, as.numeric(count_in(cell)), cell,
+          published = count_in(published$value_paper[published$claim_id == id]))
+  }
 )
 
 # Figure 2 and Figure A.1 ----
@@ -396,8 +478,8 @@ walk(
 figures_2_a1 |>
   pwalk(\(transition_fac, description, estimate_lower, estimate_upper, ...) {
     float <- if (transition_fac == "Democratization") "figure_2" else "figure_a1"
-    claim(id_for(float, "low bound, ", description), bound_label(estimate_lower))
-    claim(id_for(float, "high bound, ", description), bound_label(estimate_upper))
+    claim_bound(id_for(float, "low bound, ", description), estimate_lower)
+    claim_bound(id_for(float, "high bound, ", description), estimate_upper)
   })
 
 # Figure 3 and Figure A.2 ----
@@ -408,10 +490,10 @@ figures_3_a2 |>
   pwalk(\(transition_fac, description, estimand_short,
           estimate_lower, estimate_upper, ...) {
     float <- if (transition_fac == "Democratization") "figure_3" else "figure_a2"
-    claim(id_for(float, "low bound, ", estimand_short, ", ", description),
-          bound_label(estimate_lower))
-    claim(id_for(float, "high bound, ", estimand_short, ", ", description),
-          bound_label(estimate_upper))
+    claim_bound(id_for(float, "low bound, ", estimand_short, ", ", description),
+                estimate_lower)
+    claim_bound(id_for(float, "high bound, ", estimand_short, ", ", description),
+                estimate_upper)
   })
 
 # "There are far more untreated units than treated units, and we know far less
@@ -425,22 +507,25 @@ figures_3_a2 |>
 atu_width <- summary_value("dem: ATU final bounds width")
 att_low <- summary_value("dem: ATT final lower bound")
 att_high <- summary_value("dem: ATT final upper bound")
-claim("text|atu_final_bounds_width", bound_label(atu_width))
-claim("text|att_summarised_as_a_point_effect", bound_label(att_low))
-claim("text|the_att_bounds_shrink_to_a_point",
+claim_bound("text|atu_final_bounds_width", atu_width)
+claim_bound("text|att_summarised_as_a_point_effect", att_low)
+claim("text|the_att_bounds_shrink_to_a_point", att_high - att_low,
       str_c("[", bound_label(att_low), ", ", bound_label(att_high), "], width ",
-            bound_label(att_high - att_low)))
+            bound_label(att_high - att_low)),
+      digits = 0, expect = "shape")
 claim("text|the_atu_bounds_are_wider_than_the_att_bounds",
-      str_c(bound_label(atu_width), " against ", bound_label(att_high - att_low)))
+      as.numeric(atu_width > att_high - att_low),
+      str_c(bound_label(atu_width), " against ", bound_label(att_high - att_low)),
+      digits = 0, expect = "shape")
 
 # Expert Survey ----
 
 # "We conducted an email survey with country experts for each of our 63 cases...
 # We received 20 responses to our survey, the text of which is reproduced in the SI."
 # covers: text|expert_responses_received text|democratization_cases_without_an_expert_response
-claim("text|expert_responses_received", pp(expert_value("expert responses received")))
+claim("text|expert_responses_received", expert_value("expert responses received"))
 claim("text|democratization_cases_without_an_expert_response",
-      pp(expert_value("democratization cases without an expert response")))
+      expert_value("democratization cases without an expert response"))
 
 # "We first assessed whether the experts agreed with our characterization of the
 # observed outcome and the observed treatment status. All but five did agree."
@@ -449,8 +534,8 @@ claim("text|democratization_cases_without_an_expert_response",
 # and records nothing about whether they accepted our coding, so this quantity has
 # no counterpart anywhere in the deposit.
 # covers: text|experts_disagreeing_with_our_coding_of_treatment_and_outcome
-claim("text|experts_disagreeing_with_our_coding_of_treatment_and_outcome",
-      "not recorded in the deposit")
+claim("text|experts_disagreeing_with_our_coding_of_treatment_and_outcome", NA,
+      "not recorded in the deposit", expect = "absent")
 
 # "Of these 20 cases, the imputations fully agreed with ours seven times (we either
 # made the same imputations or both declined to impute) and directly conflicted
@@ -465,12 +550,12 @@ agreement_count <- function(coding) {
   stopifnot(length(hit) == 1)
   hit
 }
-claim("text|expert_and_author_imputations_agreed", pp(agreement_count("agreement")))
-claim("text|expert_and_author_imputations_conflicted", pp(agreement_count("disagreement")))
-claim("text|we_imputed_the_experts_did_not", pp(agreement_count("They declined, we imputed")))
-claim("text|the_experts_imputed_we_did_not", pp(agreement_count("They imputed, we declined")))
-claim("text|cases_the_experts_imputed", pp(expert_value("cases the experts imputed")))
-claim("text|cases_we_imputed", pp(expert_value("cases we imputed")))
+claim("text|expert_and_author_imputations_agreed", agreement_count("agreement"))
+claim("text|expert_and_author_imputations_conflicted", agreement_count("disagreement"))
+claim("text|we_imputed_the_experts_did_not", agreement_count("They declined, we imputed"))
+claim("text|the_experts_imputed_we_did_not", agreement_count("They imputed, we declined"))
+claim("text|cases_the_experts_imputed", expert_value("cases the experts imputed"))
+claim("text|cases_we_imputed", expert_value("cases we imputed"))
 
 # "Our original bounds for this set were 50 points wide; the bounds for the experts
 # are 30 points wide, again reflecting their greater case knowledge. Among the full
@@ -481,29 +566,32 @@ ours_20 <- round(summary_value("expert: our bounds width, 20 responding cases"))
 expert_20 <- round(summary_value("expert: expert bounds width, 20 responding cases"))
 ours_63 <- round(summary_value("expert: our bounds width, all 63 cases"))
 expert_63 <- round(summary_value("expert: expert bounds width, all 63 cases"))
-claim("text|our_bounds_width_20_responding_cases", pp(ours_20))
-claim("text|expert_bounds_width_20_responding_cases", pp(expert_20))
-claim("text|our_bounds_width_all_63_cases", pp(ours_63))
-claim("text|expert_bounds_width_all_63_cases", pp(expert_63))
+claim("text|our_bounds_width_20_responding_cases", ours_20)
+claim("text|expert_bounds_width_20_responding_cases", expert_20)
+claim("text|our_bounds_width_all_63_cases", ours_63)
+claim("text|expert_bounds_width_all_63_cases", expert_63)
 claim("text|expert_bounds_are_narrower_than_ours_among_the_20_responding_cases",
-      str_c(pp(expert_20), " against ", pp(ours_20)))
+      as.numeric(expert_20 < ours_20), sprintf("%.0f against %.0f", expert_20, ours_20),
+      digits = 0, expect = "shape")
 claim("text|expert_bounds_are_wider_than_ours_among_all_63_cases",
-      str_c(pp(expert_63), " against ", pp(ours_63)))
+      as.numeric(expert_63 > ours_63), sprintf("%.0f against %.0f", expert_63, ours_63),
+      digits = 0, expect = "shape")
 
 # "The combined bounds are narrower than our original, reflecting a small but
 # meaningful increase in cumulative beliefs about causal effects."
 # covers: text|combined_bounds_width_all_63_cases text|the_combined_bounds_are_narrower_than_our_original_bounds
 combined_63 <- round(summary_value("expert: combined bounds width, all 63 cases"))
-claim("text|combined_bounds_width_all_63_cases", pp(combined_63))
+claim("text|combined_bounds_width_all_63_cases", combined_63)
 claim("text|the_combined_bounds_are_narrower_than_our_original_bounds",
-      str_c(pp(combined_63), " against ", pp(ours_63)))
+      as.numeric(combined_63 < ours_63), sprintf("%.0f against %.0f", combined_63, ours_63),
+      digits = 0, expect = "shape")
 
 # "Surprisingly, all 20 of our respondents either made no imputation or imputed a
 # counterfactual outcome that was equal to the observed outcome: all responses were
 # either 'I don't know' or 'no effect'."
 # covers: text|expert_imputations_differing_from_the_observed_outcome
 claim("text|expert_imputations_differing_from_the_observed_outcome",
-      pp(expert_value("expert imputations differing from the observed outcome")))
+      expert_value("expert imputations differing from the observed outcome"))
 
 # "Six experts declined to impute counterfactual outcomes, all six of which were
 # untreated cases. By contrast, no expert assigned to a treated case declined to
@@ -511,18 +599,20 @@ claim("text|expert_imputations_differing_from_the_observed_outcome",
 # covers: text|experts_who_declined_to_impute text|declining_experts_assigned_to_an_untreated_case text|no_expert_assigned_to_a_treated_case_declined_to_impute
 declined <- expert_value("experts who declined to impute")
 declined_untreated <- expert_value("declining experts assigned to an untreated case")
-claim("text|experts_who_declined_to_impute", pp(declined))
-claim("text|declining_experts_assigned_to_an_untreated_case", pp(declined_untreated))
+claim("text|experts_who_declined_to_impute", declined)
+claim("text|declining_experts_assigned_to_an_untreated_case", declined_untreated)
 claim("text|no_expert_assigned_to_a_treated_case_declined_to_impute",
-      str_c(pp(declined - declined_untreated), " of ", pp(declined), " declining experts"))
+      declined - declined_untreated,
+      sprintf("%.0f of %.0f declining experts", declined - declined_untreated, declined),
+      digits = 0, expect = "shape")
 
 # Figure 4 ----
 # The bounds implied by the expert imputations, in both panels.
 # covers: figure_4|*
 figure_4 |>
   pwalk(\(set, person, estimate_lower, estimate_upper, ...) {
-    claim(id_for("figure_4", "low bound, ", person, ", ", set), pp(estimate_lower))
-    claim(id_for("figure_4", "high bound, ", person, ", ", set), pp(estimate_upper))
+    claim(id_for("figure_4", "low bound, ", person, ", ", set), estimate_lower)
+    claim(id_for("figure_4", "high bound, ", person, ", ", set), estimate_upper)
   })
 
 # Discussion ----
@@ -535,15 +625,15 @@ figure_4 |>
 # divergence between the article's two statements of it would be visible here.
 # covers: text|expert_imputations_conflicting_with_ours_restated_in_the_discussion
 claim("text|expert_imputations_conflicting_with_ours_restated_in_the_discussion",
-      pp(agreement_count("disagreement")))
+      agreement_count("disagreement"))
 
 # Appendix A ----
 
 # "Specifically, we identify 54 cases that transitioned from civil war between
 # 1980-2010, 6 of which are treated."
 # covers: appendix_a|end_of_conflict_cases appendix_a|treated_end_of_conflict_cases
-claim("appendix_a|end_of_conflict_cases", pp(count_value("End of conflict", "cases")))
-claim("appendix_a|treated_end_of_conflict_cases", pp(count_value("End of conflict", "treated")))
+claim("appendix_a|end_of_conflict_cases", count_value("End of conflict", "cases"))
+claim("appendix_a|treated_end_of_conflict_cases", count_value("End of conflict", "treated"))
 
 # "The incorporation of qualitative beliefs about counterfactuals shrinks the width
 # of the extreme value bounds from 100 to 41 points. The bounds come to [-3, 42]
@@ -555,15 +645,15 @@ claim("appendix_a|treated_end_of_conflict_cases", pp(count_value("End of conflic
 # covers: appendix_a|bounds_width_once_half_the_potential_outcomes_are_revealed appendix_a|bounds_width_after_imputation appendix_a|final_ate_lower_bound appendix_a|final_ate_upper_bound appendix_a|final_ate_bounds_width_from_the_rounded_endpoints appendix_a|att_summarised_as_a_point_effect
 eoc_low <- round(summary_value("eoc: final ATE lower bound"))
 eoc_high <- round(summary_value("eoc: final ATE upper bound"))
-claim("appendix_a|bounds_width_once_half_the_potential_outcomes_are_revealed",
-      bound_label(summary_value("eoc: bounds width once the world reveals half the potential outcomes")))
-claim("appendix_a|bounds_width_after_imputation",
-      bound_label(summary_value("eoc: final ATE bounds width")))
-claim("appendix_a|final_ate_lower_bound", bound_label(eoc_low))
-claim("appendix_a|final_ate_upper_bound", bound_label(eoc_high))
-claim("appendix_a|final_ate_bounds_width_from_the_rounded_endpoints", bound_label(eoc_high - eoc_low))
-claim("appendix_a|att_summarised_as_a_point_effect",
-      bound_label(summary_value("eoc: ATT final lower bound")))
+claim_bound("appendix_a|bounds_width_once_half_the_potential_outcomes_are_revealed",
+      summary_value("eoc: bounds width once the world reveals half the potential outcomes"))
+claim_bound("appendix_a|bounds_width_after_imputation",
+      summary_value("eoc: final ATE bounds width"))
+claim_bound("appendix_a|final_ate_lower_bound", eoc_low)
+claim_bound("appendix_a|final_ate_upper_bound", eoc_high)
+claim_bound("appendix_a|final_ate_bounds_width_from_the_rounded_endpoints", eoc_high - eoc_low)
+claim_bound("appendix_a|att_summarised_as_a_point_effect",
+      summary_value("eoc: ATT final lower bound"))
 
 # Appendix Tables B.1 and B.2 ----
 # The full case datasets. Each claim is the count of cells one published column
@@ -585,13 +675,29 @@ appendix_comparison <- published_appendix |>
 
 stopifnot(nrow(appendix_comparison) == nrow(published_appendix))
 
+#
+# A cell count a float erratum names (entry 11) takes its own value as the
+# correction, as claim_bound() does for a figure label.
 walk2(names(appendix_columns), appendix_columns, \(label, column) {
-  published <- appendix_comparison[[str_c(column, "_published")]]
+  printed <- appendix_comparison[[str_c(column, "_published")]]
   rewritten <- appendix_comparison[[str_c(column, "_rewrite")]]
-  agrees <- !is.na(published) & !is.na(rewritten) & published == rewritten
+  agrees <- !is.na(printed) & !is.na(rewritten) & printed == rewritten
   walk(c("B.1", "B.2"), \(which_table) {
     rows <- appendix_comparison$table == which_table
     float <- if (which_table == "B.1") "table_b1" else "table_b2"
-    claim(id_for(float, "cells printed in the ", label, " column"), pp(sum(agrees[rows])))
+    id <- id_for(float, "cells printed in the ", label, " column")
+    reproduced <- sum(agrees[rows])
+    claim(id, reproduced,
+          corrected = if (id %in% float_corrected) as.character(reproduced) else NULL)
   })
 })
+
+# Gates ----
+# assert_claims() stops the run on any MISMATCH, STALE, DRIFT, or MISSING, on a
+# quantity erratum naming a claim this file does not print or does not score
+# corrected, and on any difference between the claims printed here and the claims
+# the extraction says need a block. claim_summary() then prints the verdict counts,
+# so the exemptions are counted rather than merely allowed.
+assert_claims()
+invisible(claim_summary())
+

@@ -1,269 +1,269 @@
-claim_id,location,claim_type,value_paper
-table_3|column_d,Table 3,pipeline,"1,1,1,1,1,1,1,0,0,0"
-table_3|column_y,Table 3,pipeline,"1,1,1,1,0,0,0,1,0,0"
-table_3|column_y0_initial,Table 3,pipeline,"?,?,?,?,?,?,?,1,0,0"
-table_3|column_y1_initial,Table 3,pipeline,"1,1,1,1,0,0,0,?,?,?"
-table_3|column_y0_easy,Table 3,pipeline,"1,1,?,?,0,?,?,1,0,0"
-table_3|column_y1_easy,Table 3,pipeline,"1,1,1,1,0,0,0,1,0,?"
-table_3|column_y0_nulls,Table 3,pipeline,"1,1,?,?,0,0,0,1,0,0"
-table_3|column_y1_nulls,Table 3,pipeline,"1,1,1,1,0,0,0,1,0,?"
-table_3|column_y0_hard,Table 3,pipeline,"1,1,0,0,0,0,0,1,0,0"
-table_3|column_y1_hard,Table 3,pipeline,"1,1,1,1,0,0,0,1,0,?"
-table_3|ev_bounds_low_initial_values,Table 3,pipeline,-40
-table_3|ev_bounds_high_initial_values,Table 3,pipeline,60
-table_3|ev_bounds_low_easy_cases,Table 3,pipeline,-20
-table_3|ev_bounds_high_easy_cases,Table 3,pipeline,30
-table_3|ev_bounds_low_nulls_for_6_7,Table 3,pipeline,0
-table_3|ev_bounds_high_nulls_for_6_7,Table 3,pipeline,30
-table_3|ev_bounds_low_hard_cases,Table 3,pipeline,20
-table_3|ev_bounds_high_hard_cases,Table 3,pipeline,30
-figure_1|low_bound_before_any_data,Figure 1,pipeline,-100
-figure_1|high_bound_before_any_data,Figure 1,pipeline,100
-figure_1|low_bound_initial_values,Figure 1,pipeline,-40
-figure_1|high_bound_initial_values,Figure 1,pipeline,60
-figure_1|low_bound_easy_cases,Figure 1,pipeline,-20
-figure_1|high_bound_easy_cases,Figure 1,pipeline,30
-figure_1|low_bound_nulls_for_6_7,Figure 1,pipeline,0
-figure_1|high_bound_nulls_for_6_7,Figure 1,pipeline,30
-figure_1|low_bound_hard_cases,Figure 1,pipeline,20
-figure_1|high_bound_hard_cases,Figure 1,pipeline,30
-table_4|ev_bounds_low_unit_6_0_unit_7_0,Table 4,pipeline,0
-table_4|ev_bounds_high_unit_6_0_unit_7_0,Table 4,pipeline,30
-table_4|probability_unit_6_0_unit_7_0,Table 4,pipeline,0.56
-table_4|ev_bounds_low_unit_6_1_unit_7_0,Table 4,pipeline,-10
-table_4|ev_bounds_high_unit_6_1_unit_7_0,Table 4,pipeline,20
-table_4|probability_unit_6_1_unit_7_0,Table 4,pipeline,0.14
-table_4|ev_bounds_low_unit_6_0_unit_7_1,Table 4,pipeline,-10
-table_4|ev_bounds_high_unit_6_0_unit_7_1,Table 4,pipeline,20
-table_4|probability_unit_6_0_unit_7_1,Table 4,pipeline,0.24
-table_4|ev_bounds_low_unit_6_1_unit_7_1,Table 4,pipeline,-20
-table_4|ev_bounds_high_unit_6_1_unit_7_1,Table 4,pipeline,10
-table_4|probability_unit_6_1_unit_7_1,Table 4,pipeline,0.06
-table_4|probability_weighted_point_estimate_lower_bound,Table 4,pipeline,-5
-table_4|probability_weighted_point_estimate_upper_bound,Table 4,pipeline,25
-table_4|2_5th_quantile_of_the_lower_bound,Table 4,pipeline,-20
-table_4|97_5th_quantile_of_the_lower_bound,Table 4,pipeline,0
-table_4|2_5th_quantile_of_the_upper_bound,Table 4,pipeline,10
-table_4|97_5th_quantile_of_the_upper_bound,Table 4,pipeline,30
-table_4|probability_that_unit_6_has_y0_1,Table 4,pipeline,0.3
-table_4|probability_that_unit_7_has_y0_1,Table 4,pipeline,0.4
-table_5|democratization_negative_effect,Table 5,pipeline,2% (1)
-table_5|democratization_no_effect,Table 5,pipeline,40% (25)
-table_5|democratization_positive_effect,Table 5,pipeline,8% (5)
-table_5|democratization_unimputed,Table 5,pipeline,51% (32)
-figure_2|low_bound_before_any_data,Figure 2,pipeline,-100
-figure_2|high_bound_before_any_data,Figure 2,pipeline,100
-figure_2|low_bound_initial_values,Figure 2,pipeline,-25
-figure_2|high_bound_initial_values,Figure 2,pipeline,75
-figure_2|low_bound_disbanded_and_discredited_cases,Figure 2,pipeline,-25
-figure_2|high_bound_disbanded_and_discredited_cases,Figure 2,pipeline,72
-figure_2|low_bound_treated_cases,Figure 2,pipeline,-16
-figure_2|high_bound_treated_cases,Figure 2,pipeline,68
-figure_2|low_bound_non_transitional_cases,Figure 2,pipeline,-12
-figure_2|high_bound_non_transitional_cases,Figure 2,pipeline,62
-figure_2|low_bound_untreated_cases,Figure 2,pipeline,-2
-figure_2|high_bound_untreated_cases,Figure 2,pipeline,49
-figure_2|low_bound_unimputable_cases,Figure 2,pipeline,-2
-figure_2|high_bound_unimputable_cases,Figure 2,pipeline,49
-figure_a1|low_bound_before_any_data,Figure A.1,pipeline,-100
-figure_a1|high_bound_before_any_data,Figure A.1,pipeline,100
-figure_a1|low_bound_initial_values,Figure A.1,pipeline,-33
-figure_a1|high_bound_initial_values,Figure A.1,pipeline,67
-figure_a1|low_bound_disbanded_and_discredited_cases,Figure A.1,pipeline,-32
-figure_a1|high_bound_disbanded_and_discredited_cases,Figure A.1,pipeline,61
-figure_a1|low_bound_treated_cases,Figure A.1,pipeline,-26
-figure_a1|high_bound_treated_cases,Figure A.1,pipeline,56
-figure_a1|low_bound_non_transitional_cases,Figure A.1,pipeline,-24
-figure_a1|high_bound_non_transitional_cases,Figure A.1,pipeline,54
-figure_a1|low_bound_untreated_cases,Figure A.1,pipeline,-3
-figure_a1|high_bound_untreated_cases,Figure A.1,pipeline,42
-figure_a1|low_bound_unimputable_cases,Figure A.1,pipeline,-3
-figure_a1|high_bound_unimputable_cases,Figure A.1,pipeline,42
-figure_3|low_bound_atu_before_any_data,Figure 3,pipeline,-100
-figure_3|high_bound_atu_before_any_data,Figure 3,pipeline,100
-figure_3|low_bound_atu_initial_values,Figure 3,pipeline,-16
-figure_3|high_bound_atu_initial_values,Figure 3,pipeline,84
-figure_3|low_bound_atu_disbanded_and_discredited_cases,Figure 3,pipeline,-16
-figure_3|high_bound_atu_disbanded_and_discredited_cases,Figure 3,pipeline,80
-figure_3|low_bound_atu_treated_cases,Figure 3,pipeline,-16
-figure_3|high_bound_atu_treated_cases,Figure 3,pipeline,80
-figure_3|low_bound_atu_non_transitional_cases,Figure 3,pipeline,-12
-figure_3|high_bound_atu_non_transitional_cases,Figure 3,pipeline,74
-figure_3|low_bound_atu_untreated_cases,Figure 3,pipeline,0
-figure_3|high_bound_atu_untreated_cases,Figure 3,pipeline,58
-figure_3|low_bound_atu_unimputable_cases,Figure 3,pipeline,0
-figure_3|high_bound_atu_unimputable_cases,Figure 3,pipeline,58
-figure_3|low_bound_att_before_any_data,Figure 3,pipeline,-100
-figure_3|high_bound_att_before_any_data,Figure 3,pipeline,100
-figure_3|low_bound_att_initial_values,Figure 3,pipeline,-88
-figure_3|high_bound_att_initial_values,Figure 3,pipeline,12
-figure_3|low_bound_att_disbanded_and_discredited_cases,Figure 3,pipeline,-88
-figure_3|high_bound_att_disbanded_and_discredited_cases,Figure 3,pipeline,12
-figure_3|low_bound_att_treated_cases,Figure 3,pipeline,-15
-figure_3|high_bound_att_treated_cases,Figure 3,pipeline,-15
-figure_3|low_bound_att_non_transitional_cases,Figure 3,pipeline,-15
-figure_3|high_bound_att_non_transitional_cases,Figure 3,pipeline,-15
-figure_3|low_bound_att_untreated_cases,Figure 3,pipeline,-15
-figure_3|high_bound_att_untreated_cases,Figure 3,pipeline,-15
-figure_3|low_bound_att_unimputable_cases,Figure 3,pipeline,-15
-figure_3|high_bound_att_unimputable_cases,Figure 3,pipeline,-15
-figure_a2|low_bound_atu_before_any_data,Figure A.2,pipeline,-100
-figure_a2|high_bound_atu_before_any_data,Figure A.2,pipeline,100
-figure_a2|low_bound_atu_initial_values,Figure A.2,pipeline,-29
-figure_a2|high_bound_atu_initial_values,Figure A.2,pipeline,71
-figure_a2|low_bound_atu_disbanded_and_discredited_cases,Figure A.2,pipeline,-27
-figure_a2|high_bound_atu_disbanded_and_discredited_cases,Figure A.2,pipeline,64
-figure_a2|low_bound_atu_treated_cases,Figure A.2,pipeline,-27
-figure_a2|high_bound_atu_treated_cases,Figure A.2,pipeline,64
-figure_a2|low_bound_atu_non_transitional_cases,Figure A.2,pipeline,-26
-figure_a2|high_bound_atu_non_transitional_cases,Figure A.2,pipeline,62
-figure_a2|low_bound_atu_untreated_cases,Figure A.2,pipeline,-2
-figure_a2|high_bound_atu_untreated_cases,Figure A.2,pipeline,48
-figure_a2|low_bound_atu_unimputable_cases,Figure A.2,pipeline,-2
-figure_a2|high_bound_atu_unimputable_cases,Figure A.2,pipeline,48
-figure_a2|low_bound_att_before_any_data,Figure A.2,pipeline,-100
-figure_a2|high_bound_att_before_any_data,Figure A.2,pipeline,100
-figure_a2|low_bound_att_initial_values,Figure A.2,pipeline,-67
-figure_a2|high_bound_att_initial_values,Figure A.2,pipeline,33
-figure_a2|low_bound_att_disbanded_and_discredited_cases,Figure A.2,pipeline,-67
-figure_a2|high_bound_att_disbanded_and_discredited_cases,Figure A.2,pipeline,33
-figure_a2|low_bound_att_treated_cases,Figure A.2,pipeline,-10
-figure_a2|high_bound_att_treated_cases,Figure A.2,pipeline,-10
-figure_a2|low_bound_att_non_transitional_cases,Figure A.2,pipeline,-10
-figure_a2|high_bound_att_non_transitional_cases,Figure A.2,pipeline,-10
-figure_a2|low_bound_att_untreated_cases,Figure A.2,pipeline,-10
-figure_a2|high_bound_att_untreated_cases,Figure A.2,pipeline,-10
-figure_a2|low_bound_att_unimputable_cases,Figure A.2,pipeline,-10
-figure_a2|high_bound_att_unimputable_cases,Figure A.2,pipeline,-10
-figure_4|low_bound_us_the_20_cases_with_expert_responses,Figure 4,pipeline,-10
-figure_4|high_bound_us_the_20_cases_with_expert_responses,Figure 4,pipeline,40
-figure_4|low_bound_expert_the_20_cases_with_expert_responses,Figure 4,pipeline,-15
-figure_4|high_bound_expert_the_20_cases_with_expert_responses,Figure 4,pipeline,15
-figure_4|low_bound_us_all_63_democratization_cases,Figure 4,pipeline,-2
-figure_4|high_bound_us_all_63_democratization_cases,Figure 4,pipeline,49
-figure_4|low_bound_expert_all_63_democratization_cases,Figure 4,pipeline,-19
-figure_4|high_bound_expert_all_63_democratization_cases,Figure 4,pipeline,59
-figure_4|low_bound_combined_all_63_democratization_cases,Figure 4,pipeline,-3
-figure_4|high_bound_combined_all_63_democratization_cases,Figure 4,pipeline,41
-abstract|bounds_width_prior_to_any_analysis,Abstract,pipeline,100
-abstract|bounds_width_after_imputation,Abstract,pipeline,51
-abstract|bounds_width_after_the_expert_survey,Abstract,pipeline,44
-text|democratization_cases,Application to the Average Effect of Truth Commissions,pipeline,63
-text|treated_democratization_cases,Application to the Average Effect of Truth Commissions,pipeline,8
-text|bounds_width_before_any_data_are_collected,Application to the Average Effect of Truth Commissions,pipeline,200
-text|bounds_width_once_half_the_potential_outcomes_are_revealed,Application to the Average Effect of Truth Commissions,pipeline,100
-text|final_ate_lower_bound,Application to the Average Effect of Truth Commissions,pipeline,-2
-text|final_ate_upper_bound,Application to the Average Effect of Truth Commissions,pipeline,49
-text|final_ate_bounds_width,Application to the Average Effect of Truth Commissions,pipeline,51
-text|toy_example_treated_units_with_outcome_1,A Toy Example,pipeline,3
-text|toy_example_untreated_units_with_outcome_1,A Toy Example,pipeline,1
-text|toy_example_bounds_width_before_any_data,A Toy Example,pipeline,200
-text|toy_example_final_bounds_width,A Toy Example,pipeline,10
-text|atu_final_bounds_width,Application to the Average Effect of Truth Commissions,pipeline,58
-text|att_summarised_as_a_point_effect,Application to the Average Effect of Truth Commissions,pipeline,-15
-text|cases_imputed_as_a_non_zero_causal_effect,Application to the Average Effect of Truth Commissions,pipeline,6
-text|expert_responses_received,Expert Survey,pipeline,20
-text|democratization_cases_without_an_expert_response,Expert Survey,pipeline,43
-text|our_bounds_width_20_responding_cases,Application to the Average Effect of Truth Commissions,pipeline,50
-text|expert_bounds_width_20_responding_cases,Expert Survey,pipeline,30
-text|our_bounds_width_all_63_cases,Application to the Average Effect of Truth Commissions,pipeline,51
-text|expert_bounds_width_all_63_cases,Expert Survey,pipeline,78
-text|combined_bounds_width_all_63_cases,Application to the Average Effect of Truth Commissions,pipeline,44
-text|expert_and_author_imputations_agreed,Expert Survey,pipeline,7
-text|expert_and_author_imputations_conflicted,Expert Survey,pipeline,3
-text|we_imputed_the_experts_did_not,Expert Survey,pipeline,3
-text|the_experts_imputed_we_did_not,Expert Survey,pipeline,7
-text|cases_the_experts_imputed,Expert Survey,pipeline,14
-text|cases_we_imputed,Application to the Average Effect of Truth Commissions,pipeline,10
-text|experts_who_declined_to_impute,Expert Survey,pipeline,6
-text|declining_experts_assigned_to_an_untreated_case,Expert Survey,pipeline,6
-text|expert_imputations_differing_from_the_observed_outcome,Expert Survey,descriptive,0
-appendix_a|end_of_conflict_cases,Appendix A,pipeline,54
-appendix_a|treated_end_of_conflict_cases,Appendix A,pipeline,6
-appendix_a|bounds_width_once_half_the_potential_outcomes_are_revealed,Appendix A,pipeline,100
-appendix_a|bounds_width_after_imputation,Appendix A,pipeline,41
-appendix_a|final_ate_lower_bound,Appendix A,pipeline,-3
-appendix_a|final_ate_upper_bound,Appendix A,pipeline,42
-appendix_a|final_ate_bounds_width_from_the_rounded_endpoints,Appendix A,pipeline,45
-appendix_a|att_summarised_as_a_point_effect,Appendix A,pipeline,-10
-text|toy_example_units,A Toy Example,pipeline,10
-text|toy_example_treated_units,A Toy Example,pipeline,7
-text|toy_example_untreated_units,A Toy Example,pipeline,3
-text|toy_example_easy_imputations,A Toy Example,pipeline,5
-text|toy_example_untreated_outcomes_for_units_1_2_and_5,A Toy Example,pipeline,"1, 1, 0"
-text|toy_example_treated_outcomes_for_units_8_and_9,A Toy Example,pipeline,"1, 0"
-text|probabilistic_extension_possible_sets_of_potential_outcomes,A Toy Example,pipeline,4
-text|unobserved_potential_outcomes,Imputing Missing Potential Outcomes,pipeline,63
-text|unobserved_potential_outcomes_imputed_with_certainty,Imputing Missing Potential Outcomes,pipeline,5
-text|unobserved_potential_outcomes_imputed_probabilistically,Imputing Missing Potential Outcomes,pipeline,26
-text|unobserved_potential_outcomes_left_unimputed,Imputing Missing Potential Outcomes,pipeline,32
-text|disbanded_and_discredited_democratization_cases,Imputing Missing Potential Outcomes,pipeline,4
-text|observed_outcome_in_the_disbanded_and_discredited_cases,Imputing Missing Potential Outcomes,pipeline,0
-text|south_africa_probability_the_imputed_untreated_outcome_equals_1,Imputing Missing Potential Outcomes,pipeline,0.8
-text|disbanded_cases_probability_the_imputed_outcome_equals_1,Imputing Missing Potential Outcomes,pipeline,0.1
-text|nigeria_probability_the_imputed_untreated_outcome_equals_1,Imputing Missing Potential Outcomes,pipeline,0.1
-design|simulation_interval_level,Figure 2,definitional,95
-text|experts_disagreeing_with_our_coding_of_treatment_and_outcome,Expert Survey,pipeline,5
-text|expert_imputations_conflicting_with_ours_restated_in_the_discussion,Discussion,pipeline,3
-text|end_of_conflict_cases_stated_in_the_main_text_footnote,Application to the Average Effect of Truth Commissions,pipeline,54
-text|unimputed_cases_as_a_share_of_the_total,Application to the Average Effect of Truth Commissions,descriptive,
-text|the_bounds_around_the_ate_include_zero,Application to the Average Effect of Truth Commissions,descriptive,
-text|the_att_bounds_shrink_to_a_point,Application to the Average Effect of Truth Commissions,descriptive,
-text|the_atu_bounds_are_wider_than_the_att_bounds,Application to the Average Effect of Truth Commissions,descriptive,
-text|the_combined_bounds_are_narrower_than_our_original_bounds,Application to the Average Effect of Truth Commissions,descriptive,
-text|no_expert_assigned_to_a_treated_case_declined_to_impute,Expert Survey,descriptive,
-text|expert_bounds_are_narrower_than_ours_among_the_20_responding_cases,Expert Survey,descriptive,
-text|expert_bounds_are_wider_than_ours_among_all_63_cases,Expert Survey,descriptive,
-table_b1|cells_printed_in_the_treatment_indicator_column,Table B.1,pipeline,54
-table_b1|cells_printed_in_the_observed_outcome_column,Table B.1,pipeline,54
-table_b1|cells_printed_in_the_revealed_potential_outcome_column,Table B.1,pipeline,54
-table_b1|cells_printed_in_the_imputed_untreated_outcome_column,Table B.1,pipeline,54
-table_b1|cells_printed_in_the_imputed_treated_outcome_column,Table B.1,pipeline,54
-table_b1|cells_printed_in_the_imputation_probability_column,Table B.1,pipeline,30
-table_b1|cells_printed_in_the_unit_level_effect_column,Table B.1,pipeline,54
-table_b2|cells_printed_in_the_treatment_indicator_column,Table B.2,pipeline,63
-table_b2|cells_printed_in_the_observed_outcome_column,Table B.2,pipeline,63
-table_b2|cells_printed_in_the_revealed_potential_outcome_column,Table B.2,pipeline,63
-table_b2|cells_printed_in_the_imputed_untreated_outcome_column,Table B.2,pipeline,63
-table_b2|cells_printed_in_the_imputed_treated_outcome_column,Table B.2,pipeline,63
-table_b2|cells_printed_in_the_imputation_probability_column,Table B.2,pipeline,31
-table_b2|cells_printed_in_the_unit_level_effect_column,Table B.2,pipeline,63
-theory|biqq_prior_beneficial,Describing Counterfactuals Using Potential Outcomes,definitional,0.6
-theory|biqq_clue_given_beneficial,Describing Counterfactuals Using Potential Outcomes,definitional,0.9
-theory|biqq_clue_given_adverse,Describing Counterfactuals Using Potential Outcomes,definitional,0.2
-theory|biqq_prior_adverse,Describing Counterfactuals Using Potential Outcomes,definitional,0.4
-theory|biqq_posterior,Describing Counterfactuals Using Potential Outcomes,definitional,0.87
-theory|tetlock_attributes,Describing Counterfactuals Using Potential Outcomes,structural,6
-theory|causal_types,Table 2,definitional,4
-theory|best_case_ate,The Procedure,definitional,100
-theory|worst_case_ate,The Procedure,definitional,-100
-theory|coin_flip_probability,Extensions,definitional,0.5
-theory|probabilistic_k,Extensions,definitional,2
-theory|quantile_low,Extensions,definitional,2.5
-theory|quantile_high,Extensions,definitional,97.5
-theory|freedom_house_low,Extensions,definitional,1
-theory|freedom_house_high,Extensions,definitional,7
-theory|freedom_house_observed,Extensions,definitional,2
-theory|freedom_house_ymax,Extensions,definitional,3
-theory|freedom_house_ymin,Extensions,definitional,2
-design|easy_case_units,A Toy Example,structural,"1, 2, 5"
-design|null_case_units,A Toy Example,structural,"6, 7"
-design|hard_case_units,A Toy Example,structural,"3, 4, 10"
-design|imputation_rounds,A Toy Example,structural,3
-design|search_period_start,Application to the Average Effect of Truth Commissions,structural,1980
-design|search_period_end,Application to the Average Effect of Truth Commissions,structural,2008
-design|first_truth_commission_year,Application to the Average Effect of Truth Commissions,structural,1983
-design|treatment_probability_low,Application to the Average Effect of Truth Commissions,definitional,0
-design|treatment_probability_high,Application to the Average Effect of Truth Commissions,definitional,1
-design|outcome_window_years,Definition of Treatment and Outcomes,definitional,10
-design|bakiner_transition_years,Definition of Treatment and Outcomes,transcribed,3
-design|imputation_categories,Imputing Missing Potential Outcomes,structural,4
-design|bolivia_disbanded_year,Imputing Missing Potential Outcomes,structural,1982
-design|philippines_disbanded_year,Imputing Missing Potential Outcomes,structural,1986
-source|bolivia_disappearance_cases,Imputing Missing Potential Outcomes,transcribed,155
-source|south_africa_black_share,Imputing Missing Potential Outcomes,transcribed,85
-source|wiebelhaus_brahm_page,Imputing Missing Potential Outcomes,structural,48
-design|eoc_transition_period_start,Appendix A,structural,1980
-design|eoc_transition_period_end,Appendix A,structural,2010
-source|battle_death_threshold,Appendix A,transcribed,1000
-design|eoc_outcome_window_years,Appendix A,definitional,10
+claim_id,location,claim_type,claim,value_paper,digits,comparison,expect,needs_block,notes
+table_3|column_d,Table 3,pipeline,column d,"1,1,1,1,1,1,1,0,0,0",0,==,NA,TRUE,NA
+table_3|column_y,Table 3,pipeline,column Y,"1,1,1,1,0,0,0,1,0,0",0,==,NA,TRUE,NA
+table_3|column_y0_initial,Table 3,pipeline,column Y0_initial,"?,?,?,?,?,?,?,1,0,0",0,==,NA,TRUE,NA
+table_3|column_y1_initial,Table 3,pipeline,column Y1_initial,"1,1,1,1,0,0,0,?,?,?",0,==,NA,TRUE,NA
+table_3|column_y0_easy,Table 3,pipeline,column Y0_easy,"1,1,?,?,0,?,?,1,0,0",0,==,NA,TRUE,NA
+table_3|column_y1_easy,Table 3,pipeline,column Y1_easy,"1,1,1,1,0,0,0,1,0,?",0,==,NA,TRUE,NA
+table_3|column_y0_nulls,Table 3,pipeline,column Y0_nulls,"1,1,?,?,0,0,0,1,0,0",0,==,NA,TRUE,NA
+table_3|column_y1_nulls,Table 3,pipeline,column Y1_nulls,"1,1,1,1,0,0,0,1,0,?",0,==,NA,TRUE,NA
+table_3|column_y0_hard,Table 3,pipeline,column Y0_hard,"1,1,0,0,0,0,0,1,0,0",0,==,NA,TRUE,NA
+table_3|column_y1_hard,Table 3,pipeline,column Y1_hard,"1,1,1,1,0,0,0,1,0,?",0,==,NA,TRUE,NA
+table_3|ev_bounds_low_initial_values,Table 3,pipeline,"EV bounds low, Initial Values",-40,0,==,NA,TRUE,NA
+table_3|ev_bounds_high_initial_values,Table 3,pipeline,"EV bounds high, Initial Values",60,0,==,NA,TRUE,NA
+table_3|ev_bounds_low_easy_cases,Table 3,pipeline,"EV bounds low, Easy Cases",-20,0,==,NA,TRUE,NA
+table_3|ev_bounds_high_easy_cases,Table 3,pipeline,"EV bounds high, Easy Cases",30,0,==,NA,TRUE,NA
+table_3|ev_bounds_low_nulls_for_6_7,Table 3,pipeline,"EV bounds low, Nulls for 6&7",0,0,==,NA,TRUE,NA
+table_3|ev_bounds_high_nulls_for_6_7,Table 3,pipeline,"EV bounds high, Nulls for 6&7",30,0,==,NA,TRUE,NA
+table_3|ev_bounds_low_hard_cases,Table 3,pipeline,"EV bounds low, Hard Cases",20,0,==,NA,TRUE,NA
+table_3|ev_bounds_high_hard_cases,Table 3,pipeline,"EV bounds high, Hard Cases",30,0,==,NA,TRUE,NA
+figure_1|low_bound_before_any_data,Figure 1,pipeline,"low bound, Before Any Data",-100,0,==,NA,TRUE,NA
+figure_1|high_bound_before_any_data,Figure 1,pipeline,"high bound, Before Any Data",100,0,==,NA,TRUE,NA
+figure_1|low_bound_initial_values,Figure 1,pipeline,"low bound, Initial Values",-40,0,==,NA,TRUE,NA
+figure_1|high_bound_initial_values,Figure 1,pipeline,"high bound, Initial Values",60,0,==,NA,TRUE,NA
+figure_1|low_bound_easy_cases,Figure 1,pipeline,"low bound, Easy Cases",-20,0,==,NA,TRUE,NA
+figure_1|high_bound_easy_cases,Figure 1,pipeline,"high bound, Easy Cases",30,0,==,NA,TRUE,NA
+figure_1|low_bound_nulls_for_6_7,Figure 1,pipeline,"low bound, Nulls for 6&7",0,0,==,NA,TRUE,NA
+figure_1|high_bound_nulls_for_6_7,Figure 1,pipeline,"high bound, Nulls for 6&7",30,0,==,NA,TRUE,NA
+figure_1|low_bound_hard_cases,Figure 1,pipeline,"low bound, Hard Cases",20,0,==,NA,TRUE,NA
+figure_1|high_bound_hard_cases,Figure 1,pipeline,"high bound, Hard Cases",30,0,==,NA,TRUE,NA
+table_4|ev_bounds_low_unit_6_0_unit_7_0,Table 4,pipeline,"EV bounds low, unit 6 = 0, unit 7 = 0",0,0,==,NA,TRUE,NA
+table_4|ev_bounds_high_unit_6_0_unit_7_0,Table 4,pipeline,"EV bounds high, unit 6 = 0, unit 7 = 0",30,0,==,NA,TRUE,NA
+table_4|probability_unit_6_0_unit_7_0,Table 4,pipeline,"probability, unit 6 = 0, unit 7 = 0",0.56,2,==,NA,TRUE,NA
+table_4|ev_bounds_low_unit_6_1_unit_7_0,Table 4,pipeline,"EV bounds low, unit 6 = 1, unit 7 = 0",-10,0,==,NA,TRUE,NA
+table_4|ev_bounds_high_unit_6_1_unit_7_0,Table 4,pipeline,"EV bounds high, unit 6 = 1, unit 7 = 0",20,0,==,NA,TRUE,NA
+table_4|probability_unit_6_1_unit_7_0,Table 4,pipeline,"probability, unit 6 = 1, unit 7 = 0",0.14,2,==,NA,TRUE,NA
+table_4|ev_bounds_low_unit_6_0_unit_7_1,Table 4,pipeline,"EV bounds low, unit 6 = 0, unit 7 = 1",-10,0,==,NA,TRUE,NA
+table_4|ev_bounds_high_unit_6_0_unit_7_1,Table 4,pipeline,"EV bounds high, unit 6 = 0, unit 7 = 1",20,0,==,NA,TRUE,NA
+table_4|probability_unit_6_0_unit_7_1,Table 4,pipeline,"probability, unit 6 = 0, unit 7 = 1",0.24,2,==,NA,TRUE,NA
+table_4|ev_bounds_low_unit_6_1_unit_7_1,Table 4,pipeline,"EV bounds low, unit 6 = 1, unit 7 = 1",-20,0,==,NA,TRUE,NA
+table_4|ev_bounds_high_unit_6_1_unit_7_1,Table 4,pipeline,"EV bounds high, unit 6 = 1, unit 7 = 1",10,0,==,NA,TRUE,NA
+table_4|probability_unit_6_1_unit_7_1,Table 4,pipeline,"probability, unit 6 = 1, unit 7 = 1",0.06,2,==,NA,TRUE,NA
+table_4|probability_weighted_point_estimate_lower_bound,Probabilistic Extension,pipeline,"probability-weighted point estimate, lower bound",-5,0,==,NA,TRUE,"Printed in the text of the Probabilistic Extension section, not on the face of Table 4"
+table_4|probability_weighted_point_estimate_upper_bound,Probabilistic Extension,pipeline,"probability-weighted point estimate, upper bound",25,0,==,NA,TRUE,"Printed in the text of the Probabilistic Extension section, not on the face of Table 4"
+table_4|2_5th_quantile_of_the_lower_bound,Probabilistic Extension,pipeline,2.5th quantile of the lower bound,-20,0,==,NA,TRUE,"Printed in the text of the Probabilistic Extension section, not on the face of Table 4"
+table_4|97_5th_quantile_of_the_lower_bound,Probabilistic Extension,pipeline,97.5th quantile of the lower bound,0,0,==,NA,TRUE,"Printed in the text of the Probabilistic Extension section, not on the face of Table 4"
+table_4|2_5th_quantile_of_the_upper_bound,Probabilistic Extension,pipeline,2.5th quantile of the upper bound,10,0,==,NA,TRUE,"Printed in the text of the Probabilistic Extension section, not on the face of Table 4"
+table_4|97_5th_quantile_of_the_upper_bound,Probabilistic Extension,pipeline,97.5th quantile of the upper bound,30,0,==,NA,TRUE,"Printed in the text of the Probabilistic Extension section, not on the face of Table 4"
+table_4|probability_that_unit_6_has_y0_1,Probabilistic Extension,pipeline,probability that unit 6 has Y0 = 1,0.3,1,==,NA,TRUE,"Printed in the text of the Probabilistic Extension section, not on the face of Table 4"
+table_4|probability_that_unit_7_has_y0_1,Probabilistic Extension,pipeline,probability that unit 7 has Y0 = 1,0.4,1,==,NA,TRUE,"Printed in the text of the Probabilistic Extension section, not on the face of Table 4"
+table_5|democratization_negative_effect,Table 5,pipeline,"democratization, Negative Effect",2% (1),0,==,NA,TRUE,NA
+table_5|democratization_no_effect,Table 5,pipeline,"democratization, No Effect",40% (25),0,==,NA,TRUE,NA
+table_5|democratization_positive_effect,Table 5,pipeline,"democratization, Positive Effect",8% (5),0,==,NA,TRUE,NA
+table_5|democratization_unimputed,Table 5,pipeline,"democratization, Unimputed",51% (32),0,==,NA,TRUE,NA
+figure_2|low_bound_before_any_data,Figure 2,pipeline,"low bound, Before Any Data",-100,0,==,NA,TRUE,NA
+figure_2|high_bound_before_any_data,Figure 2,pipeline,"high bound, Before Any Data",100,0,==,NA,TRUE,NA
+figure_2|low_bound_initial_values,Figure 2,pipeline,"low bound, Initial Values",-25,0,==,NA,TRUE,NA
+figure_2|high_bound_initial_values,Figure 2,pipeline,"high bound, Initial Values",75,0,==,NA,TRUE,NA
+figure_2|low_bound_disbanded_and_discredited_cases,Figure 2,pipeline,"low bound, Disbanded and Discredited Cases",-25,0,==,NA,TRUE,NA
+figure_2|high_bound_disbanded_and_discredited_cases,Figure 2,pipeline,"high bound, Disbanded and Discredited Cases",72,0,==,NA,TRUE,NA
+figure_2|low_bound_treated_cases,Figure 2,pipeline,"low bound, Treated Cases",-16,0,==,NA,TRUE,NA
+figure_2|high_bound_treated_cases,Figure 2,pipeline,"high bound, Treated Cases",68,0,==,NA,TRUE,NA
+figure_2|low_bound_non_transitional_cases,Figure 2,pipeline,"low bound, Non-transitional Cases",-12,0,==,NA,TRUE,NA
+figure_2|high_bound_non_transitional_cases,Figure 2,pipeline,"high bound, Non-transitional Cases",62,0,==,NA,TRUE,NA
+figure_2|low_bound_untreated_cases,Figure 2,pipeline,"low bound, Untreated Cases",-2,0,==,NA,TRUE,NA
+figure_2|high_bound_untreated_cases,Figure 2,pipeline,"high bound, Untreated Cases",49,0,==,NA,TRUE,NA
+figure_2|low_bound_unimputable_cases,Figure 2,pipeline,"low bound, Unimputable Cases",-2,0,==,NA,TRUE,NA
+figure_2|high_bound_unimputable_cases,Figure 2,pipeline,"high bound, Unimputable Cases",49,0,==,NA,TRUE,NA
+figure_a1|low_bound_before_any_data,Figure A.1,pipeline,"low bound, Before Any Data",-100,0,==,NA,TRUE,NA
+figure_a1|high_bound_before_any_data,Figure A.1,pipeline,"high bound, Before Any Data",100,0,==,NA,TRUE,NA
+figure_a1|low_bound_initial_values,Figure A.1,pipeline,"low bound, Initial Values",-33,0,==,NA,TRUE,NA
+figure_a1|high_bound_initial_values,Figure A.1,pipeline,"high bound, Initial Values",67,0,==,NA,TRUE,NA
+figure_a1|low_bound_disbanded_and_discredited_cases,Figure A.1,pipeline,"low bound, Disbanded and Discredited Cases",-32,0,==,NA,TRUE,NA
+figure_a1|high_bound_disbanded_and_discredited_cases,Figure A.1,pipeline,"high bound, Disbanded and Discredited Cases",61,0,==,NA,TRUE,NA
+figure_a1|low_bound_treated_cases,Figure A.1,pipeline,"low bound, Treated Cases",-26,0,==,NA,TRUE,NA
+figure_a1|high_bound_treated_cases,Figure A.1,pipeline,"high bound, Treated Cases",56,0,==,NA,TRUE,NA
+figure_a1|low_bound_non_transitional_cases,Figure A.1,pipeline,"low bound, Non-transitional Cases",-24,0,==,NA,TRUE,NA
+figure_a1|high_bound_non_transitional_cases,Figure A.1,pipeline,"high bound, Non-transitional Cases",54,0,==,NA,TRUE,NA
+figure_a1|low_bound_untreated_cases,Figure A.1,pipeline,"low bound, Untreated Cases",-3,0,==,NA,TRUE,NA
+figure_a1|high_bound_untreated_cases,Figure A.1,pipeline,"high bound, Untreated Cases",42,0,==,NA,TRUE,NA
+figure_a1|low_bound_unimputable_cases,Figure A.1,pipeline,"low bound, Unimputable Cases",-3,0,==,NA,TRUE,NA
+figure_a1|high_bound_unimputable_cases,Figure A.1,pipeline,"high bound, Unimputable Cases",42,0,==,NA,TRUE,NA
+figure_3|low_bound_atu_before_any_data,Figure 3,pipeline,"low bound, ATU, Before Any Data",-100,0,==,NA,TRUE,NA
+figure_3|high_bound_atu_before_any_data,Figure 3,pipeline,"high bound, ATU, Before Any Data",100,0,==,NA,TRUE,NA
+figure_3|low_bound_atu_initial_values,Figure 3,pipeline,"low bound, ATU, Initial Values",-16,0,==,NA,TRUE,NA
+figure_3|high_bound_atu_initial_values,Figure 3,pipeline,"high bound, ATU, Initial Values",84,0,==,NA,TRUE,NA
+figure_3|low_bound_atu_disbanded_and_discredited_cases,Figure 3,pipeline,"low bound, ATU, Disbanded and Discredited Cases",-16,0,==,NA,TRUE,NA
+figure_3|high_bound_atu_disbanded_and_discredited_cases,Figure 3,pipeline,"high bound, ATU, Disbanded and Discredited Cases",80,0,==,NA,TRUE,NA
+figure_3|low_bound_atu_treated_cases,Figure 3,pipeline,"low bound, ATU, Treated Cases",-16,0,==,NA,TRUE,NA
+figure_3|high_bound_atu_treated_cases,Figure 3,pipeline,"high bound, ATU, Treated Cases",80,0,==,NA,TRUE,NA
+figure_3|low_bound_atu_non_transitional_cases,Figure 3,pipeline,"low bound, ATU, Non-transitional Cases",-12,0,==,NA,TRUE,NA
+figure_3|high_bound_atu_non_transitional_cases,Figure 3,pipeline,"high bound, ATU, Non-transitional Cases",74,0,==,NA,TRUE,NA
+figure_3|low_bound_atu_untreated_cases,Figure 3,pipeline,"low bound, ATU, Untreated Cases",0,0,==,NA,TRUE,NA
+figure_3|high_bound_atu_untreated_cases,Figure 3,pipeline,"high bound, ATU, Untreated Cases",58,0,==,NA,TRUE,NA
+figure_3|low_bound_atu_unimputable_cases,Figure 3,pipeline,"low bound, ATU, Unimputable Cases",0,0,==,NA,TRUE,NA
+figure_3|high_bound_atu_unimputable_cases,Figure 3,pipeline,"high bound, ATU, Unimputable Cases",58,0,==,NA,TRUE,NA
+figure_3|low_bound_att_before_any_data,Figure 3,pipeline,"low bound, ATT, Before Any Data",-100,0,==,NA,TRUE,NA
+figure_3|high_bound_att_before_any_data,Figure 3,pipeline,"high bound, ATT, Before Any Data",100,0,==,NA,TRUE,NA
+figure_3|low_bound_att_initial_values,Figure 3,pipeline,"low bound, ATT, Initial Values",-88,0,==,NA,TRUE,NA
+figure_3|high_bound_att_initial_values,Figure 3,pipeline,"high bound, ATT, Initial Values",12,0,==,NA,TRUE,NA
+figure_3|low_bound_att_disbanded_and_discredited_cases,Figure 3,pipeline,"low bound, ATT, Disbanded and Discredited Cases",-88,0,==,NA,TRUE,NA
+figure_3|high_bound_att_disbanded_and_discredited_cases,Figure 3,pipeline,"high bound, ATT, Disbanded and Discredited Cases",12,0,==,NA,TRUE,NA
+figure_3|low_bound_att_treated_cases,Figure 3,pipeline,"low bound, ATT, Treated Cases",-15,0,==,NA,TRUE,NA
+figure_3|high_bound_att_treated_cases,Figure 3,pipeline,"high bound, ATT, Treated Cases",-15,0,==,NA,TRUE,NA
+figure_3|low_bound_att_non_transitional_cases,Figure 3,pipeline,"low bound, ATT, Non-transitional Cases",-15,0,==,NA,TRUE,NA
+figure_3|high_bound_att_non_transitional_cases,Figure 3,pipeline,"high bound, ATT, Non-transitional Cases",-15,0,==,NA,TRUE,NA
+figure_3|low_bound_att_untreated_cases,Figure 3,pipeline,"low bound, ATT, Untreated Cases",-15,0,==,NA,TRUE,NA
+figure_3|high_bound_att_untreated_cases,Figure 3,pipeline,"high bound, ATT, Untreated Cases",-15,0,==,NA,TRUE,NA
+figure_3|low_bound_att_unimputable_cases,Figure 3,pipeline,"low bound, ATT, Unimputable Cases",-15,0,==,NA,TRUE,NA
+figure_3|high_bound_att_unimputable_cases,Figure 3,pipeline,"high bound, ATT, Unimputable Cases",-15,0,==,NA,TRUE,NA
+figure_a2|low_bound_atu_before_any_data,Figure A.2,pipeline,"low bound, ATU, Before Any Data",-100,0,==,NA,TRUE,NA
+figure_a2|high_bound_atu_before_any_data,Figure A.2,pipeline,"high bound, ATU, Before Any Data",100,0,==,NA,TRUE,NA
+figure_a2|low_bound_atu_initial_values,Figure A.2,pipeline,"low bound, ATU, Initial Values",-29,0,==,NA,TRUE,NA
+figure_a2|high_bound_atu_initial_values,Figure A.2,pipeline,"high bound, ATU, Initial Values",71,0,==,NA,TRUE,NA
+figure_a2|low_bound_atu_disbanded_and_discredited_cases,Figure A.2,pipeline,"low bound, ATU, Disbanded and Discredited Cases",-27,0,==,NA,TRUE,NA
+figure_a2|high_bound_atu_disbanded_and_discredited_cases,Figure A.2,pipeline,"high bound, ATU, Disbanded and Discredited Cases",64,0,==,NA,TRUE,NA
+figure_a2|low_bound_atu_treated_cases,Figure A.2,pipeline,"low bound, ATU, Treated Cases",-27,0,==,NA,TRUE,NA
+figure_a2|high_bound_atu_treated_cases,Figure A.2,pipeline,"high bound, ATU, Treated Cases",64,0,==,NA,TRUE,NA
+figure_a2|low_bound_atu_non_transitional_cases,Figure A.2,pipeline,"low bound, ATU, Non-transitional Cases",-26,0,==,NA,TRUE,NA
+figure_a2|high_bound_atu_non_transitional_cases,Figure A.2,pipeline,"high bound, ATU, Non-transitional Cases",62,0,==,NA,TRUE,NA
+figure_a2|low_bound_atu_untreated_cases,Figure A.2,pipeline,"low bound, ATU, Untreated Cases",-2,0,==,NA,TRUE,NA
+figure_a2|high_bound_atu_untreated_cases,Figure A.2,pipeline,"high bound, ATU, Untreated Cases",48,0,==,NA,TRUE,NA
+figure_a2|low_bound_atu_unimputable_cases,Figure A.2,pipeline,"low bound, ATU, Unimputable Cases",-2,0,==,NA,TRUE,NA
+figure_a2|high_bound_atu_unimputable_cases,Figure A.2,pipeline,"high bound, ATU, Unimputable Cases",48,0,==,NA,TRUE,NA
+figure_a2|low_bound_att_before_any_data,Figure A.2,pipeline,"low bound, ATT, Before Any Data",-100,0,==,NA,TRUE,NA
+figure_a2|high_bound_att_before_any_data,Figure A.2,pipeline,"high bound, ATT, Before Any Data",100,0,==,NA,TRUE,NA
+figure_a2|low_bound_att_initial_values,Figure A.2,pipeline,"low bound, ATT, Initial Values",-67,0,==,NA,TRUE,NA
+figure_a2|high_bound_att_initial_values,Figure A.2,pipeline,"high bound, ATT, Initial Values",33,0,==,NA,TRUE,NA
+figure_a2|low_bound_att_disbanded_and_discredited_cases,Figure A.2,pipeline,"low bound, ATT, Disbanded and Discredited Cases",-67,0,==,NA,TRUE,NA
+figure_a2|high_bound_att_disbanded_and_discredited_cases,Figure A.2,pipeline,"high bound, ATT, Disbanded and Discredited Cases",33,0,==,NA,TRUE,NA
+figure_a2|low_bound_att_treated_cases,Figure A.2,pipeline,"low bound, ATT, Treated Cases",-10,0,==,NA,TRUE,NA
+figure_a2|high_bound_att_treated_cases,Figure A.2,pipeline,"high bound, ATT, Treated Cases",-10,0,==,NA,TRUE,NA
+figure_a2|low_bound_att_non_transitional_cases,Figure A.2,pipeline,"low bound, ATT, Non-transitional Cases",-10,0,==,NA,TRUE,NA
+figure_a2|high_bound_att_non_transitional_cases,Figure A.2,pipeline,"high bound, ATT, Non-transitional Cases",-10,0,==,NA,TRUE,NA
+figure_a2|low_bound_att_untreated_cases,Figure A.2,pipeline,"low bound, ATT, Untreated Cases",-10,0,==,NA,TRUE,NA
+figure_a2|high_bound_att_untreated_cases,Figure A.2,pipeline,"high bound, ATT, Untreated Cases",-10,0,==,NA,TRUE,NA
+figure_a2|low_bound_att_unimputable_cases,Figure A.2,pipeline,"low bound, ATT, Unimputable Cases",-10,0,==,NA,TRUE,NA
+figure_a2|high_bound_att_unimputable_cases,Figure A.2,pipeline,"high bound, ATT, Unimputable Cases",-10,0,==,NA,TRUE,NA
+figure_4|low_bound_us_the_20_cases_with_expert_responses,Figure 4,pipeline,"low bound, us, The 20 Cases with Expert Responses",-10,0,==,NA,TRUE,NA
+figure_4|high_bound_us_the_20_cases_with_expert_responses,Figure 4,pipeline,"high bound, us, The 20 Cases with Expert Responses",40,0,==,NA,TRUE,NA
+figure_4|low_bound_expert_the_20_cases_with_expert_responses,Figure 4,pipeline,"low bound, expert, The 20 Cases with Expert Responses",-15,0,==,NA,TRUE,NA
+figure_4|high_bound_expert_the_20_cases_with_expert_responses,Figure 4,pipeline,"high bound, expert, The 20 Cases with Expert Responses",15,0,==,NA,TRUE,NA
+figure_4|low_bound_us_all_63_democratization_cases,Figure 4,pipeline,"low bound, us, All 63 Democratization Cases",-2,0,==,NA,TRUE,NA
+figure_4|high_bound_us_all_63_democratization_cases,Figure 4,pipeline,"high bound, us, All 63 Democratization Cases",49,0,==,NA,TRUE,NA
+figure_4|low_bound_expert_all_63_democratization_cases,Figure 4,pipeline,"low bound, expert, All 63 Democratization Cases",-19,0,==,NA,TRUE,NA
+figure_4|high_bound_expert_all_63_democratization_cases,Figure 4,pipeline,"high bound, expert, All 63 Democratization Cases",59,0,==,NA,TRUE,NA
+figure_4|low_bound_combined_all_63_democratization_cases,Figure 4,pipeline,"low bound, combined, All 63 Democratization Cases",-3,0,==,NA,TRUE,NA
+figure_4|high_bound_combined_all_63_democratization_cases,Figure 4,pipeline,"high bound, combined, All 63 Democratization Cases",41,0,==,NA,TRUE,NA
+abstract|bounds_width_prior_to_any_analysis,Abstract,pipeline,bounds width prior to any analysis,100,0,==,NA,TRUE,NA
+abstract|bounds_width_after_imputation,Abstract,pipeline,bounds width after imputation,51,0,==,NA,TRUE,NA
+abstract|bounds_width_after_the_expert_survey,Abstract,pipeline,bounds width after the expert survey,44,0,==,NA,TRUE,NA
+text|democratization_cases,Application to the Average Effect of Truth Commissions,pipeline,democratization cases,63,0,==,NA,TRUE,NA
+text|treated_democratization_cases,Application to the Average Effect of Truth Commissions,pipeline,treated democratization cases,8,0,==,NA,TRUE,NA
+text|bounds_width_before_any_data_are_collected,Application to the Average Effect of Truth Commissions,pipeline,bounds width before any data are collected,200,0,==,NA,TRUE,NA
+text|bounds_width_once_half_the_potential_outcomes_are_revealed,Application to the Average Effect of Truth Commissions,pipeline,bounds width once half the potential outcomes are revealed,100,0,==,NA,TRUE,NA
+text|final_ate_lower_bound,Application to the Average Effect of Truth Commissions,pipeline,final ATE lower bound,-2,0,==,NA,TRUE,NA
+text|final_ate_upper_bound,Application to the Average Effect of Truth Commissions,pipeline,final ATE upper bound,49,0,==,NA,TRUE,NA
+text|final_ate_bounds_width,Application to the Average Effect of Truth Commissions,pipeline,final ATE bounds width,51,0,==,NA,TRUE,NA
+text|toy_example_treated_units_with_outcome_1,A Toy Example,pipeline,toy example: treated units with outcome 1,3,0,==,NA,TRUE,NA
+text|toy_example_untreated_units_with_outcome_1,A Toy Example,pipeline,toy example: untreated units with outcome 1,1,0,==,NA,TRUE,NA
+text|toy_example_bounds_width_before_any_data,A Toy Example,pipeline,toy example: bounds width before any data,200,0,==,NA,TRUE,NA
+text|toy_example_final_bounds_width,A Toy Example,pipeline,toy example: final bounds width,10,0,==,NA,TRUE,NA
+text|atu_final_bounds_width,Application to the Average Effect of Truth Commissions,pipeline,ATU final bounds width,58,0,>,NA,TRUE,The sentence says greater than 58 points wide
+text|att_summarised_as_a_point_effect,Application to the Average Effect of Truth Commissions,pipeline,ATT summarised as a point effect,-15,0,==,NA,TRUE,NA
+text|cases_imputed_as_a_non_zero_causal_effect,Application to the Average Effect of Truth Commissions,pipeline,cases imputed as a non-zero causal effect,6,0,==,NA,TRUE,NA
+text|expert_responses_received,Expert Survey,pipeline,expert responses received,20,0,==,NA,TRUE,NA
+text|democratization_cases_without_an_expert_response,Expert Survey,pipeline,democratization cases without an expert response,43,0,==,NA,TRUE,NA
+text|our_bounds_width_20_responding_cases,Application to the Average Effect of Truth Commissions,pipeline,"our bounds width, 20 responding cases",50,0,==,NA,TRUE,NA
+text|expert_bounds_width_20_responding_cases,Expert Survey,pipeline,"expert bounds width, 20 responding cases",30,0,==,NA,TRUE,NA
+text|our_bounds_width_all_63_cases,Application to the Average Effect of Truth Commissions,pipeline,"our bounds width, all 63 cases",51,0,==,NA,TRUE,NA
+text|expert_bounds_width_all_63_cases,Expert Survey,pipeline,"expert bounds width, all 63 cases",78,0,==,NA,TRUE,NA
+text|combined_bounds_width_all_63_cases,Application to the Average Effect of Truth Commissions,pipeline,"combined bounds width, all 63 cases",44,0,==,NA,TRUE,NA
+text|expert_and_author_imputations_agreed,Expert Survey,pipeline,expert and author imputations agreed,7,0,==,NA,TRUE,NA
+text|expert_and_author_imputations_conflicted,Expert Survey,pipeline,expert and author imputations conflicted,3,0,==,NA,TRUE,NA
+text|we_imputed_the_experts_did_not,Expert Survey,pipeline,"we imputed, the experts did not",3,0,==,NA,TRUE,NA
+text|the_experts_imputed_we_did_not,Expert Survey,pipeline,"the experts imputed, we did not",7,0,==,NA,TRUE,NA
+text|cases_the_experts_imputed,Expert Survey,pipeline,cases the experts imputed,14,0,==,NA,TRUE,NA
+text|cases_we_imputed,Application to the Average Effect of Truth Commissions,pipeline,cases we imputed,10,0,==,NA,TRUE,NA
+text|experts_who_declined_to_impute,Expert Survey,pipeline,experts who declined to impute,6,0,==,NA,TRUE,NA
+text|declining_experts_assigned_to_an_untreated_case,Expert Survey,pipeline,declining experts assigned to an untreated case,6,0,==,NA,TRUE,NA
+text|expert_imputations_differing_from_the_observed_outcome,Expert Survey,descriptive,expert imputations differing from the observed outcome,0,0,==,NA,TRUE,NA
+appendix_a|end_of_conflict_cases,Appendix A,pipeline,end-of-conflict cases,54,0,==,NA,TRUE,NA
+appendix_a|treated_end_of_conflict_cases,Appendix A,pipeline,treated end-of-conflict cases,6,0,==,NA,TRUE,NA
+appendix_a|bounds_width_once_half_the_potential_outcomes_are_revealed,Appendix A,pipeline,bounds width once half the potential outcomes are revealed,100,0,==,NA,TRUE,NA
+appendix_a|bounds_width_after_imputation,Appendix A,pipeline,bounds width after imputation,41,0,==,NA,TRUE,NA
+appendix_a|final_ate_lower_bound,Appendix A,pipeline,final ATE lower bound,-3,0,==,NA,TRUE,NA
+appendix_a|final_ate_upper_bound,Appendix A,pipeline,final ATE upper bound,42,0,==,NA,TRUE,NA
+appendix_a|final_ate_bounds_width_from_the_rounded_endpoints,Appendix A,pipeline,final ATE bounds width from the rounded endpoints,45,0,==,NA,TRUE,NA
+appendix_a|att_summarised_as_a_point_effect,Appendix A,pipeline,ATT summarised as a point effect,-10,0,==,NA,TRUE,NA
+text|toy_example_units,A Toy Example,pipeline,toy example: units,10,0,==,NA,TRUE,NA
+text|toy_example_treated_units,A Toy Example,pipeline,toy example: treated units,7,0,==,NA,TRUE,NA
+text|toy_example_untreated_units,A Toy Example,pipeline,toy example: untreated units,3,0,==,NA,TRUE,NA
+text|toy_example_easy_imputations,A Toy Example,pipeline,toy example: easy imputations,5,0,==,NA,TRUE,NA
+text|toy_example_untreated_outcomes_for_units_1_2_and_5,A Toy Example,pipeline,"toy example: untreated outcomes for units 1, 2 and 5","1, 1, 0",0,==,NA,TRUE,NA
+text|toy_example_treated_outcomes_for_units_8_and_9,A Toy Example,pipeline,toy example: treated outcomes for units 8 and 9,"1, 0",0,==,NA,TRUE,NA
+text|probabilistic_extension_possible_sets_of_potential_outcomes,A Toy Example,pipeline,probabilistic extension: possible sets of potential outcomes,4,0,==,NA,TRUE,NA
+text|unobserved_potential_outcomes,Imputing Missing Potential Outcomes,pipeline,unobserved potential outcomes,63,0,==,NA,TRUE,NA
+text|unobserved_potential_outcomes_imputed_with_certainty,Imputing Missing Potential Outcomes,pipeline,unobserved potential outcomes imputed with certainty,5,0,==,NA,TRUE,NA
+text|unobserved_potential_outcomes_imputed_probabilistically,Imputing Missing Potential Outcomes,pipeline,unobserved potential outcomes imputed probabilistically,26,0,==,NA,TRUE,NA
+text|unobserved_potential_outcomes_left_unimputed,Imputing Missing Potential Outcomes,pipeline,unobserved potential outcomes left unimputed,32,0,==,NA,TRUE,NA
+text|disbanded_and_discredited_democratization_cases,Imputing Missing Potential Outcomes,pipeline,disbanded and discredited democratization cases,4,0,==,NA,TRUE,NA
+text|observed_outcome_in_the_disbanded_and_discredited_cases,Imputing Missing Potential Outcomes,pipeline,observed outcome in the disbanded and discredited cases,0,0,==,NA,TRUE,NA
+text|south_africa_probability_the_imputed_untreated_outcome_equals_1,Imputing Missing Potential Outcomes,pipeline,South Africa: probability the imputed untreated outcome equals 1,0.8,1,==,NA,TRUE,NA
+text|disbanded_cases_probability_the_imputed_outcome_equals_1,Imputing Missing Potential Outcomes,pipeline,disbanded cases: probability the imputed outcome equals 1,0.1,1,==,NA,TRUE,NA
+text|nigeria_probability_the_imputed_untreated_outcome_equals_1,Imputing Missing Potential Outcomes,pipeline,Nigeria: probability the imputed untreated outcome equals 1,0.1,1,==,NA,TRUE,NA
+design|simulation_interval_level,Figure 2,definitional,simulation interval level,95,0,==,NA,FALSE,NA
+text|experts_disagreeing_with_our_coding_of_treatment_and_outcome,Expert Survey,pipeline,experts disagreeing with our coding of treatment and outcome,5,0,==,absent,TRUE,NA
+text|expert_imputations_conflicting_with_ours_restated_in_the_discussion,Discussion,pipeline,"expert imputations conflicting with ours, restated in the discussion",3,0,==,NA,TRUE,NA
+text|end_of_conflict_cases_stated_in_the_main_text_footnote,Application to the Average Effect of Truth Commissions,pipeline,"end-of-conflict cases, stated in the main text footnote",54,0,==,NA,TRUE,NA
+text|unimputed_cases_as_a_share_of_the_total,Application to the Average Effect of Truth Commissions,descriptive,unimputed cases as a share of the total,NA,NA,NA,shape,TRUE,NA
+text|the_bounds_around_the_ate_include_zero,Application to the Average Effect of Truth Commissions,descriptive,the bounds around the ATE include zero,NA,NA,NA,shape,TRUE,NA
+text|the_att_bounds_shrink_to_a_point,Application to the Average Effect of Truth Commissions,descriptive,the ATT bounds shrink to a point,NA,NA,NA,shape,TRUE,NA
+text|the_atu_bounds_are_wider_than_the_att_bounds,Application to the Average Effect of Truth Commissions,descriptive,the ATU bounds are wider than the ATT bounds,NA,NA,NA,shape,TRUE,NA
+text|the_combined_bounds_are_narrower_than_our_original_bounds,Application to the Average Effect of Truth Commissions,descriptive,the combined bounds are narrower than our original bounds,NA,NA,NA,shape,TRUE,NA
+text|no_expert_assigned_to_a_treated_case_declined_to_impute,Expert Survey,descriptive,no expert assigned to a treated case declined to impute,NA,NA,NA,shape,TRUE,NA
+text|expert_bounds_are_narrower_than_ours_among_the_20_responding_cases,Expert Survey,descriptive,expert bounds are narrower than ours among the 20 responding cases,NA,NA,NA,shape,TRUE,NA
+text|expert_bounds_are_wider_than_ours_among_all_63_cases,Expert Survey,descriptive,expert bounds are wider than ours among all 63 cases,NA,NA,NA,shape,TRUE,NA
+table_b1|cells_printed_in_the_treatment_indicator_column,Table B.1,pipeline,cells printed in the treatment indicator column,54,0,==,NA,TRUE,NA
+table_b1|cells_printed_in_the_observed_outcome_column,Table B.1,pipeline,cells printed in the observed outcome column,54,0,==,NA,TRUE,NA
+table_b1|cells_printed_in_the_revealed_potential_outcome_column,Table B.1,pipeline,cells printed in the revealed potential outcome column,54,0,==,NA,TRUE,NA
+table_b1|cells_printed_in_the_imputed_untreated_outcome_column,Table B.1,pipeline,cells printed in the imputed untreated outcome column,54,0,==,NA,TRUE,NA
+table_b1|cells_printed_in_the_imputed_treated_outcome_column,Table B.1,pipeline,cells printed in the imputed treated outcome column,54,0,==,NA,TRUE,NA
+table_b1|cells_printed_in_the_imputation_probability_column,Table B.1,pipeline,cells printed in the imputation probability column,30,0,==,NA,TRUE,NA
+table_b1|cells_printed_in_the_unit_level_effect_column,Table B.1,pipeline,cells printed in the unit-level effect column,54,0,==,NA,TRUE,NA
+table_b2|cells_printed_in_the_treatment_indicator_column,Table B.2,pipeline,cells printed in the treatment indicator column,63,0,==,NA,TRUE,NA
+table_b2|cells_printed_in_the_observed_outcome_column,Table B.2,pipeline,cells printed in the observed outcome column,63,0,==,NA,TRUE,NA
+table_b2|cells_printed_in_the_revealed_potential_outcome_column,Table B.2,pipeline,cells printed in the revealed potential outcome column,63,0,==,NA,TRUE,NA
+table_b2|cells_printed_in_the_imputed_untreated_outcome_column,Table B.2,pipeline,cells printed in the imputed untreated outcome column,63,0,==,NA,TRUE,NA
+table_b2|cells_printed_in_the_imputed_treated_outcome_column,Table B.2,pipeline,cells printed in the imputed treated outcome column,63,0,==,NA,TRUE,NA
+table_b2|cells_printed_in_the_imputation_probability_column,Table B.2,pipeline,cells printed in the imputation probability column,31,0,==,NA,TRUE,NA
+table_b2|cells_printed_in_the_unit_level_effect_column,Table B.2,pipeline,cells printed in the unit-level effect column,63,0,==,NA,TRUE,NA
+theory|biqq_prior_beneficial,Describing Counterfactuals Using Potential Outcomes,definitional,biqq prior beneficial,0.6,1,==,NA,FALSE,NA
+theory|biqq_clue_given_beneficial,Describing Counterfactuals Using Potential Outcomes,definitional,biqq clue given beneficial,0.9,1,==,NA,FALSE,NA
+theory|biqq_clue_given_adverse,Describing Counterfactuals Using Potential Outcomes,definitional,biqq clue given adverse,0.2,1,==,NA,FALSE,NA
+theory|biqq_prior_adverse,Describing Counterfactuals Using Potential Outcomes,definitional,biqq prior adverse,0.4,1,==,NA,FALSE,NA
+theory|biqq_posterior,Describing Counterfactuals Using Potential Outcomes,definitional,biqq posterior,0.87,2,==,NA,FALSE,NA
+theory|tetlock_attributes,Describing Counterfactuals Using Potential Outcomes,structural,tetlock attributes,6,0,==,NA,FALSE,NA
+theory|causal_types,Table 2,definitional,causal types,4,0,==,NA,FALSE,NA
+theory|best_case_ate,The Procedure,definitional,best case ate,100,0,==,NA,FALSE,NA
+theory|worst_case_ate,The Procedure,definitional,worst case ate,-100,0,==,NA,FALSE,NA
+theory|coin_flip_probability,Extensions,definitional,coin flip probability,0.5,1,==,NA,FALSE,NA
+theory|probabilistic_k,Extensions,definitional,probabilistic k,2,0,==,NA,FALSE,NA
+theory|quantile_low,Extensions,definitional,quantile low,2.5,1,==,NA,FALSE,NA
+theory|quantile_high,Extensions,definitional,quantile high,97.5,1,==,NA,FALSE,NA
+theory|freedom_house_low,Extensions,definitional,freedom house low,1,0,==,NA,FALSE,NA
+theory|freedom_house_high,Extensions,definitional,freedom house high,7,0,==,NA,FALSE,NA
+theory|freedom_house_observed,Extensions,definitional,freedom house observed,2,0,==,NA,FALSE,NA
+theory|freedom_house_ymax,Extensions,definitional,freedom house ymax,3,0,==,NA,FALSE,NA
+theory|freedom_house_ymin,Extensions,definitional,freedom house ymin,2,0,==,NA,FALSE,NA
+design|easy_case_units,A Toy Example,structural,easy case units,"1, 2, 5",0,==,NA,FALSE,NA
+design|null_case_units,A Toy Example,structural,null case units,"6, 7",0,==,NA,FALSE,NA
+design|hard_case_units,A Toy Example,structural,hard case units,"3, 4, 10",0,==,NA,FALSE,NA
+design|imputation_rounds,A Toy Example,structural,imputation rounds,3,0,==,NA,FALSE,NA
+design|search_period_start,Application to the Average Effect of Truth Commissions,structural,search period start,1980,0,==,NA,FALSE,NA
+design|search_period_end,Application to the Average Effect of Truth Commissions,structural,search period end,2008,0,==,NA,FALSE,NA
+design|first_truth_commission_year,Application to the Average Effect of Truth Commissions,structural,first truth commission year,1983,0,==,NA,FALSE,NA
+design|treatment_probability_low,Application to the Average Effect of Truth Commissions,definitional,treatment probability low,0,0,==,NA,FALSE,NA
+design|treatment_probability_high,Application to the Average Effect of Truth Commissions,definitional,treatment probability high,1,0,==,NA,FALSE,NA
+design|outcome_window_years,Definition of Treatment and Outcomes,definitional,outcome window years,10,0,==,NA,FALSE,NA
+design|bakiner_transition_years,Definition of Treatment and Outcomes,transcribed,bakiner transition years,3,0,==,NA,FALSE,NA
+design|imputation_categories,Imputing Missing Potential Outcomes,structural,imputation categories,4,0,==,NA,FALSE,NA
+design|bolivia_disbanded_year,Imputing Missing Potential Outcomes,structural,bolivia disbanded year,1982,0,==,NA,FALSE,NA
+design|philippines_disbanded_year,Imputing Missing Potential Outcomes,structural,philippines disbanded year,1986,0,==,NA,FALSE,NA
+source|bolivia_disappearance_cases,Imputing Missing Potential Outcomes,transcribed,bolivia disappearance cases,155,0,==,NA,FALSE,NA
+source|south_africa_black_share,Imputing Missing Potential Outcomes,transcribed,south africa black share,85,0,==,NA,FALSE,NA
+source|wiebelhaus_brahm_page,Imputing Missing Potential Outcomes,structural,wiebelhaus brahm page,48,0,==,NA,FALSE,NA
+design|eoc_transition_period_start,Appendix A,structural,eoc transition period start,1980,0,==,NA,FALSE,NA
+design|eoc_transition_period_end,Appendix A,structural,eoc transition period end,2010,0,==,NA,FALSE,NA
+source|battle_death_threshold,Appendix A,transcribed,battle death threshold,1000,0,==,NA,FALSE,NA
+design|eoc_outcome_window_years,Appendix A,definitional,eoc outcome window years,10,0,==,NA,FALSE,NA

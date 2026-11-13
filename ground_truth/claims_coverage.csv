@@ -39,14 +39,14 @@ table_4|probability_unit_6_0_unit_7_1,Table 4,pipeline,0.24,TRUE,TRUE
 table_4|ev_bounds_low_unit_6_1_unit_7_1,Table 4,pipeline,-20,TRUE,TRUE
 table_4|ev_bounds_high_unit_6_1_unit_7_1,Table 4,pipeline,10,TRUE,TRUE
 table_4|probability_unit_6_1_unit_7_1,Table 4,pipeline,0.06,TRUE,TRUE
-table_4|probability_weighted_point_estimate_lower_bound,Table 4,pipeline,-5,TRUE,TRUE
-table_4|probability_weighted_point_estimate_upper_bound,Table 4,pipeline,25,TRUE,TRUE
-table_4|2_5th_quantile_of_the_lower_bound,Table 4,pipeline,-20,TRUE,TRUE
-table_4|97_5th_quantile_of_the_lower_bound,Table 4,pipeline,0,TRUE,TRUE
-table_4|2_5th_quantile_of_the_upper_bound,Table 4,pipeline,10,TRUE,TRUE
-table_4|97_5th_quantile_of_the_upper_bound,Table 4,pipeline,30,TRUE,TRUE
-table_4|probability_that_unit_6_has_y0_1,Table 4,pipeline,0.3,TRUE,TRUE
-table_4|probability_that_unit_7_has_y0_1,Table 4,pipeline,0.4,TRUE,TRUE
+table_4|probability_weighted_point_estimate_lower_bound,Probabilistic Extension,pipeline,-5,TRUE,TRUE
+table_4|probability_weighted_point_estimate_upper_bound,Probabilistic Extension,pipeline,25,TRUE,TRUE
+table_4|2_5th_quantile_of_the_lower_bound,Probabilistic Extension,pipeline,-20,TRUE,TRUE
+table_4|97_5th_quantile_of_the_lower_bound,Probabilistic Extension,pipeline,0,TRUE,TRUE
+table_4|2_5th_quantile_of_the_upper_bound,Probabilistic Extension,pipeline,10,TRUE,TRUE
+table_4|97_5th_quantile_of_the_upper_bound,Probabilistic Extension,pipeline,30,TRUE,TRUE
+table_4|probability_that_unit_6_has_y0_1,Probabilistic Extension,pipeline,0.3,TRUE,TRUE
+table_4|probability_that_unit_7_has_y0_1,Probabilistic Extension,pipeline,0.4,TRUE,TRUE
 table_5|democratization_negative_effect,Table 5,pipeline,2% (1),TRUE,TRUE
 table_5|democratization_no_effect,Table 5,pipeline,40% (25),TRUE,TRUE
 table_5|democratization_positive_effect,Table 5,pipeline,8% (5),TRUE,TRUE
